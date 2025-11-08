@@ -1,0 +1,14 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: operator-connector
+  namespace: net
+spec:
+  hostnamePrefix: mirror-connector
+  subnetRouter:
+    advertiseRoutes:
+      - 10.10.0.0/8
+      - 172.18.0.0/16
+      - 172.19.0.0/16
+  tags:
+    - tag:k8s
