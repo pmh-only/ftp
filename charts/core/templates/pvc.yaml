@@ -3,10 +3,12 @@ kind: PersistentVolumeClaim
 metadata:
   name: "core-{{ .Values.nodeName }}-pvc"
   namespace: core
+  annotations:
+    volume.kubernetes.io/selected-node: {{ .Values.nodeName }}
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: local-path
   resources:
     requests:
-      storage: 10Gi
-  volumeName: "core-{{ .Values.nodeName }}-pv"
+      storage: 100Gi
