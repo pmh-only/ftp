@@ -1,28 +1,37 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: core
-  namespace: argocd
 spec:
-  destination:
-    namespace: core
-    server: https://kubernetes.default.svc
-  ignoreDifferences:
-    - jsonPointers:
-        - /data
-      kind: Secret
-  project: default
-  source:
-    path: infra/core
-    repoURL: git@github.com:pmh-only/ftp.git
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - RespectIgnoreDifferences=true
-      - PruneLast=true
-      - ApplyOutOfSyncOnly=true
-      - CreateNamespace=true
-      - ServerSideApply=true
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - nodeName: pmhmirror
+          # - nodeName: pmhmirror2
+          # - nodeName: pmhmirror3
+  template:
+    metadata:
+      name: "core-{{.nodeName}}"
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:pmh-only/ftp.git
+        path: charts/core
+        targetRevision: HEAD
+        helm:
+          values: |-
+            nodeName: {{.nodeName}}
+      destination:
+        namespace: core
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - PruneLast=true
+          - RespectIgnoreDifferences=true
+          - ApplyOutOfSyncOnly=true
+          - CreateNamespace=true
