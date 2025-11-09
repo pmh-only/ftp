@@ -11,11 +11,11 @@ spec:
       labels:
         app: syncrepo
     spec:
+      imagePullSecrets:
+        - name: registry-secret
       initContainers:
         - name: initsync
           image: ghcr.io/pmh-only/syncrepo:latest
-          imagePullSecrets:
-            - name: registry-secret
           env:
             - name: SYNC_MODE
               value: initsync
@@ -29,8 +29,6 @@ spec:
       containers:
       - name: syncrepo
         image: ghcr.io/pmh-only/syncrepo:latest
-        imagePullSecrets:
-          - name: registry-secret
         env:
           - name: SOURCE_URL
             value: rsync://mirror.funami.tech/arch/
