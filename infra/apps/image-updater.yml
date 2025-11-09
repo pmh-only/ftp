@@ -20,6 +20,7 @@ spec:
             prefix: ghcr.io
             api_url: https://ghcr.io
             credentials: pullsecret:argocd/registry-secret
+          git.commit-message-template: "build: {{ .AppName }}, `{{ .NewTag }}`"
         extraArgs:
           - --interval=30s
     repoURL: https://argoproj.github.io/argo-helm

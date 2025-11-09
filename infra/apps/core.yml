@@ -18,6 +18,8 @@ spec:
         argocd-image-updater.argoproj.io/image-list: syncrepo=ghcr.io/pmh-only/syncrepo:latest
         argocd-image-updater.argoproj.io/syncrepo.update-strategy: digest
         argocd-image-updater.argoproj.io/syncrepo.helm.image-spec: syncrepo.image
+        argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/repository-secret
+        argocd-image-updater.argoproj.io/write-back-target: "helmvalues:/infra/core/values.yaml"
     spec:
       project: default
       source:
