@@ -14,6 +14,7 @@ spec:
       values: |-
         fullnameOverride: argocd-image-updater
         config:
+          logLevel: debug
           registries:
           - name: Github Registry
             prefix: ghcr.io
