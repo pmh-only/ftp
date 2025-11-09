@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: syncrepo
+spec:
+  selector:
+    matchLabels:
+      app: syncrepo
+  template:
+    metadata:
+      labels:
+        app: syncrepo
+    spec:
+      initContainers:
+        - name: initsync
+          image: ghcr.io/pmh-only/syncrepo:latest
+          env:
+            - name: SYNC_MODE
+              value: initsync
+            - name: SOURCE_URL
+              value: rsync://mirror.rackspace.com/archlinux/
+            - name: LASTUPDATE_URL
+              value: https://mirror.rackspace.com/archlinux/lastupdate
+          volumeMounts:
+          - name: data
+            mountPath: /data
+      containers:
+      - name: syncrepo
+        image: ghcr.io/pmh-only/syncrepo:latest
+        env:
+          - name: SOURCE_URL
+            value: rsync://mirror.funami.tech/arch/
+          - name: LASTUPDATE_URL
+            value: https://mirror.funami.tech/arch/lastupdate
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: "core-{{ .Values.nodeName }}-pvc"
