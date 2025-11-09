@@ -32,7 +32,7 @@ spec:
             mountPath: /data
       containers:
       - name: syncrepo
-        image: "ghcr.io/pmh-only/syncrepo:{{ .Values.syncrepo.tag | default "latest" }}"
+        image: {{ .Values.syncrepo.image | default "ghcr.io/pmh-only/syncrepo:latest" }}
         tty: true
         env:
           - name: SOURCE_URL
