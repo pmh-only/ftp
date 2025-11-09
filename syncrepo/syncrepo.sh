@@ -101,4 +101,10 @@ rsync_cmd \
 	"${source_url}" \
 	"${target}"
 
+rc=$?
+# Ignore exit code 23-PartialTransfer for ignoring unfixable upstream errors
+if [ "$rc" -ne 0 ] && [ "$rc" -ne 23 ]; then
+	exit "$rc"
+fi
+
 echo "Last sync was $(date -d @$(cat ${target}/lastsync))"
