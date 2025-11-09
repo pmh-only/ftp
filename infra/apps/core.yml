@@ -18,7 +18,7 @@ spec:
       project: default
       source:
         repoURL: git@github.com:pmh-only/ftp.git
-        path: charts/core
+        path: infra/core
         targetRevision: HEAD
         helm:
           values: |-
