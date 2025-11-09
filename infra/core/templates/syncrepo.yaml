@@ -16,6 +16,7 @@ spec:
       initContainers:
         - name: initsync
           image: ghcr.io/pmh-only/syncrepo:latest
+          tty: true
           env:
             - name: SYNC_MODE
               value: initsync
@@ -29,6 +30,7 @@ spec:
       containers:
       - name: syncrepo
         image: ghcr.io/pmh-only/syncrepo:latest
+        tty: true
         env:
           - name: SOURCE_URL
             value: rsync://mirror.funami.tech/arch/
