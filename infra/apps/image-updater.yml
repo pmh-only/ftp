@@ -20,9 +20,22 @@ spec:
             prefix: ghcr.io
             api_url: https://ghcr.io
             credentials: pullsecret:argocd/registry-secret
-          git.commit-message-template: "build: {{ .AppName }}, `{{ .NewTag }}`"
+          gitCommitTemplate: "build: {{ .AppName }}, `{{ .NewTag }}`"
+          gitCommitUser: "[bot]pmh-only/ftp"
+          gitCommitMail: "242914034+ftpbot@users.noreply.github.com"
+          gitCommitSignOff: true
+          gitCommitSigningKey: /secret/sshPrivateKey
+          gitCommitSigningMethod: ssh
         extraArgs:
           - --interval=30s
+        volumeMounts:
+          - name: secret-volume
+            mountPath: /secret
+            readOnly: true
+        volumes:
+          - name: secret-volume
+            secret:
+              secretName: repository-secret
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: x
   syncPolicy:
