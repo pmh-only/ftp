@@ -1,3 +1,3 @@
 nodeName: example
 syncrepo:
-  image: ghcr.io/pmh-only/syncrepo:latest@sha256:ada00a1d1b85f2573e617e00a736331d81f09b2ca1d0407bd37dc9236257d092
+  image: ghcr.io/pmh-only/syncrepo:latest@sha256:798b8e381bba10211234b6417efe8b86f51f2658cb6eca0f0b7e9780ddd9647d
