@@ -18,7 +18,7 @@ if [[ $SYNC_MODE == "initsync" ]]; then
     exit 0
   fi
 
-  /app/syncrepo.sh &
+  /app/syncrepo.sh initsync &
 
   child=$! 
   wait "$child"
