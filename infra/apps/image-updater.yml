@@ -20,11 +20,11 @@ spec:
             prefix: ghcr.io
             api_url: https://ghcr.io
             credentials: pullsecret:argocd/registry-secret
-          gitCommitTemplate: "build({{ .AppName }}): `{{ .NewTag }}`"
+          gitCommitTemplate: "build({{ .AppName }}): `{{ (index .AppChanges 0).NewTag }}`"
           gitCommitUser: "[bot]pmh-only/ftp"
           gitCommitMail: "242914034+ftpbot@users.noreply.github.com"
           gitCommitSignOff: true
-          gitCommitSigningKey: /secret/id_ed25519.pub
+          gitCommitSigningKey: /secret/id_ed25519
           gitCommitSigningMethod: ssh
         extraArgs:
           - --interval=30s
