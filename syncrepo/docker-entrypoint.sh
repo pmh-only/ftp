@@ -4,6 +4,13 @@ set -e
 SYNC_MODE=${SYNC_MODE:-"normal"}
 INTERVAL=3600
 
+_term() { 
+  echo "Caught SIGTERM signal!" 
+  kill -TERM "$child" 2>/dev/null
+}
+
+trap _term SIGTERM SIGINT
+
 
 if [[ $SYNC_MODE == "initsync" ]]; then
   if [[ -f "/data/initsync.lck" ]]; then
@@ -11,7 +18,11 @@ if [[ $SYNC_MODE == "initsync" ]]; then
     exit 0
   fi
 
-  /app/syncrepo.sh
+  /app/syncrepo.sh &
+
+  child=$! 
+  wait "$child"
+
   touch /data/initsync.lck
 fi
 
@@ -22,7 +33,10 @@ if [[ $SYNC_MODE == "normal" ]]; then
   while true; do
     sleep $((RANDOM % $INTERVAL))
 
-    /app/syncrepo.sh
+    /app/syncrepo.sh &    
+
+    child=$! 
+    wait "$child"  
 
     sleep $(($INTERVAL - $(date +%s) % $INTERVAL))
   done
