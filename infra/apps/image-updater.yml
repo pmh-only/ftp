@@ -23,19 +23,8 @@ spec:
           gitCommitTemplate: "build({{ .AppName }}): `{{ (index .AppChanges 0).NewTag }}`"
           gitCommitUser: "[bot]pmh-only/ftp"
           gitCommitMail: "242914034+ftpbot@users.noreply.github.com"
-          gitCommitSignOff: true
-          gitCommitSigningKey: /secret/id_ed25519
-          gitCommitSigningMethod: ssh
         extraArgs:
           - --interval=30s
-        volumeMounts:
-          - name: secret-volume
-            mountPath: /secret
-            readOnly: true
-        volumes:
-          - name: secret-volume
-            secret:
-              secretName: repository-secret
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: x
   syncPolicy:
