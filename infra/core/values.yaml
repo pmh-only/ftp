@@ -1,1 +1,4 @@
 nodeName: example
+
+syncrepo:
+  tag: latest

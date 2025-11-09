@@ -17,6 +17,7 @@ spec:
       annotations:
         argocd-image-updater.argoproj.io/image-list: syncrepo=gchcr.io/pmh-only/syncrepo:latest
         argocd-image-updater.argoproj.io/syncrepo.update-strategy: digest
+        argocd-image-updater.argoproj.io/syncrepo.helm.image-tag: syncrepo.tag
     spec:
       project: default
       source:
