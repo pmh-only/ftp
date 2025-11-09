@@ -1,16 +1,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: syncrepo
+  name: "syncrepo-{{ .Values.nodeName }}"
 spec:
   selector:
     matchLabels:
       app: syncrepo
+      node: {{ .Values.nodeName }}
   template:
     metadata:
       labels:
         app: syncrepo
+        node: {{ .Values.nodeName }}
     spec:
+      nodeName: {{ .Values.nodeName }}
       imagePullSecrets:
         - name: registry-secret
       initContainers:
