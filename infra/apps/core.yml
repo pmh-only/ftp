@@ -14,6 +14,9 @@ spec:
   template:
     metadata:
       name: "core-{{.nodeName}}"
+      annotations:
+        argocd-image-updater.argoproj.io/image-list: syncrepo=gchcr.io/pmh-only/syncrepo:latest
+        argocd-image-updater.argoproj.io/syncrepo.update-strategy: digest
     spec:
       project: default
       source:
