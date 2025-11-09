@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache rsync bash openssl
+RUN apk add --no-cache rsync bash openssl curl
 
 WORKDIR /app
 
