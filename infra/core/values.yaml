@@ -1,4 +1,4 @@
 nodeName: example
 
 syncrepo:
-  tag: latest
+  image: ghcr.io/pmh-only/syncrepo:latest

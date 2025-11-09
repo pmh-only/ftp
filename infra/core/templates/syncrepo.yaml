@@ -18,7 +18,7 @@ spec:
         - name: registry-secret
       initContainers:
         - name: initsync
-          image: "ghcr.io/pmh-only/syncrepo:{{ .Values.syncrepo.tag | default "latest" }}"
+          image: {{ .Values.syncrepo.image | default "ghcr.io/pmh-only/syncrepo:latest" }}
           tty: true
           env:
             - name: SYNC_MODE
