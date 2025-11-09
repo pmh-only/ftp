@@ -91,6 +91,7 @@ if [[ $1 != "initsync" ]] && [[ -f "$target/lastupdate" ]] && diff -b <(curl -Ls
 	exit 0
 fi
 
+set +e
 rsync_cmd \
 	--exclude='*.links.tar.gz*' \
 	--exclude='/archive' \
