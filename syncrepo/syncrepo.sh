@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 #
 # This file is modified version of Arch Linux official mirror template.
 # You can see the original file here:

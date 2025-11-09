@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+set -e
 
 SYNC_MODE=${SYNC_MODE:-"normal"}
 INTERVAL=3600
+
 
 if [[ $SYNC_MODE == "initsync" ]]; then
   if [[ -f "/data/initsync.lck" ]]; then
