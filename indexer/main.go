@@ -110,7 +110,7 @@ func main() {
 					continue
 				}
 
-				linkToStat, err := os.Stat(targetPath)
+				linkToStat, err := os.Stat(path.Join(dirPath, targetPath))
 				if err != nil {
 					fmt.Printf("Error reading symbolic link target: %v\n", err)
 					continue
