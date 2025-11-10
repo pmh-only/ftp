@@ -60,7 +60,7 @@ func main() {
 			return
 		}
 
-		entries, err := os.ReadDir(dirPath)
+		directory, err := os.Open(dirPath)
 		if err != nil {
 			http.Error(w, marshalJSON(ErrorModel{
 				Success: false,
@@ -69,6 +69,8 @@ func main() {
 			return
 		}
 
+		defer directory.Close()
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Header().Set("Transfer-Encoding", "chunked")
 		w.WriteHeader(http.StatusOK)
@@ -76,17 +78,28 @@ func main() {
 		fmt.Fprintln(w, "{\"success\":true,\"files\":[")
 		flusher.Flush()
 
-		for i, e := range entries {
+		fileIndex := 0
+		for {
+			entries, err := directory.Readdir(1)
+			if err != nil {
+				if err.Error() == "EOF" {
+					break
+				}
+
+				log.Fatalf("Error reading directory entries: %v", err)
+			}
+
+			if len(entries) == 0 {
+				break // No more entries to read
+			}
+
+			e := entries[0]
+
 			select {
 			case <-r.Context().Done():
 				log.Println("client cancelled")
 				return
 			default:
-			}
-
-			info, err := e.Info()
-			if err != nil {
-				continue
 			}
 
 			name := e.Name()
@@ -101,7 +114,7 @@ func main() {
 			}
 
 			linkedTo := ""
-			if info.Mode()&os.ModeSymlink != 0 {
+			if e.Mode()&os.ModeSymlink != 0 {
 				ftype = "LINK_TO_"
 
 				targetPath, err := os.Readlink(path.Join(dirPath, name))
@@ -126,30 +139,26 @@ func main() {
 				linkedTo = targetPath
 			}
 
-			size := fmt.Sprint(info.Size())
+			size := ptr(e.Size())
 			if e.IsDir() {
-				size = "DIR"
+				size = nil
 			}
 
+			fmt.Fprintln(w, ",")
 			fmt.Fprint(
 				w, marshalJSON(FileModel{
 					Name:       displayName,
 					Type:       ftype,
 					Bytes:      size,
 					FullPath:   path.Join("/"+cleaned, displayName),
-					LastUpdate: info.ModTime(),
+					LastUpdate: e.ModTime(),
 					LinkedTo:   linkedTo,
 				}))
 
-			if i == len(entries)-1 {
-				fmt.Fprintln(w)
-			} else {
-				fmt.Fprintln(w, ",")
-			}
-
-			if i%20 == 0 {
+			if fileIndex%20 == 0 {
 				flusher.Flush()
 			}
+			fileIndex++
 		}
 
 		fmt.Fprintln(w, "]}")

@@ -23,3 +23,7 @@ func marshalJSON(object any) string {
 
 	return string(jsonData)
 }
+
+func ptr[T any](v T) *T {
+	return &v
+}
