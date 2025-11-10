@@ -56,7 +56,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - curl -f https://localhost:443/healthz || exit 1
+                - curl -f http://localhost:80/healthz || exit 1
             initialDelaySeconds: 5
             timeoutSeconds: 30
             successThreshold: 1
@@ -67,7 +67,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - curl -f https://localhost:443/healthz || exit 1
+                - curl -f http://localhost:80/healthz || exit 1
             initialDelaySeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
