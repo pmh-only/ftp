@@ -2,32 +2,30 @@ package main
 
 import (
 	"fmt"
-	"html"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 func main() {
 	log.Println("indexer started...")
 
-	targetPath := "/data/static"
+	targetPath := getEnv("TARGET_PATH", "/data/static")
 	absRoot, err := filepath.Abs(targetPath)
 	if err != nil {
 		panic(err)
 	}
 
-	fs := http.FileServer(http.Dir("./assets"))
-	http.Handle("GET /_assets/", http.StripPrefix("/_assets/", fs))
-
 	http.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		flusher, ok := w.(http.Flusher)
 		if !ok {
-			http.Error(w, "Streaming not supported", http.StatusInternalServerError)
+			http.Error(w, marshalJSON(ErrorModel{
+				Success: false,
+				Message: "INITIALIZE_STREAM_FAILED",
+			}), http.StatusInternalServerError)
 			return
 		}
 
@@ -38,38 +36,44 @@ func main() {
 
 		sep := string(os.PathSeparator)
 		if !strings.HasPrefix(dirPath, absRoot+sep) && dirPath != absRoot {
-			http.Error(w, "forbidden", http.StatusForbidden)
+			http.Error(w, marshalJSON(ErrorModel{
+				Success: false,
+				Message: "PATH_TRAVERSAL_DETECTED",
+			}), http.StatusForbidden)
 			return
 		}
 
 		realPath, err := filepath.EvalSymlinks(dirPath)
 		if err != nil {
-			http.Error(w, "not found", http.StatusNotFound)
+			http.Error(w, marshalJSON(ErrorModel{
+				Success: false,
+				Message: "DIRECTORY_NOT_FOUND",
+			}), http.StatusNotFound)
 			return
 		}
 
 		if !strings.HasPrefix(realPath, absRoot+sep) && realPath != absRoot {
-			http.Error(w, "forbidden", http.StatusForbidden)
+			http.Error(w, marshalJSON(ErrorModel{
+				Success: false,
+				Message: "PATH_TRAVERSAL_WITH_LINK_DETECTED",
+			}), http.StatusForbidden)
 			return
 		}
 
 		entries, err := os.ReadDir(dirPath)
 		if err != nil {
-			http.Error(w, "Cannot read directory", http.StatusInternalServerError)
+			http.Error(w, marshalJSON(ErrorModel{
+				Success: false,
+				Message: "DIRECTORY_READ_FAILURE",
+			}), http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("Transfer-Encoding", "chunked")
+		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprintf(w, "<!doctype html><html><head><title>Index of /%s</title>\n",
-			html.EscapeString(cleaned))
-		fmt.Fprint(w, "<link rel='stylesheet' type='text/css' href='/_assets/styles.css'>\n")
-		fmt.Fprint(w, "<script src='/_assets/script.js'></script></head><body>\n")
-		fmt.Fprintf(w, "<h1>Index of /%s</h1>\n", html.EscapeString(cleaned))
-		fmt.Fprint(w, "<table border='1' cellpadding='4' cellspacing='0'>\n")
-		fmt.Fprint(w, "<tr><th>Name</th><th>Size (bytes)</th><th>Modified</th></tr>\n")
-		fmt.Fprint(w, "<tr><td><a href='.'>.</a></td><td></td><td></td></tr>\n")
-		fmt.Fprint(w, "<tr><td><a href='..'>.,</a></td><td></td><td></td></tr>\n")
+		fmt.Fprintln(w, "{\"success\":true,\"files\":[")
 		flusher.Flush()
 
 		for i, e := range entries {
@@ -91,28 +95,64 @@ func main() {
 				displayName += "/"
 			}
 
-			size := fmt.Sprint(formatBytes(info.Size()))
+			ftype := "FILE"
+			if e.IsDir() {
+				ftype = "DIRECTORY"
+			}
+
+			linkedTo := ""
+			if info.Mode()&os.ModeSymlink != 0 {
+				ftype = "LINK_TO_"
+
+				targetPath, err := os.Readlink(path.Join(dirPath, name))
+				if err != nil {
+					fmt.Printf("Error reading symbolic link target: %v\n", err)
+					continue
+				}
+
+				linkToStat, err := os.Stat(targetPath)
+				if err != nil {
+					fmt.Printf("Error reading symbolic link target: %v\n", err)
+					continue
+				}
+
+				if linkToStat.IsDir() {
+					ftype += "DIRECTORY"
+					displayName += "/"
+				} else {
+					ftype += "FILE"
+				}
+
+				linkedTo = targetPath
+			}
+
+			size := fmt.Sprint(info.Size())
 			if e.IsDir() {
 				size = "DIR"
 			}
 
-			modTime := info.ModTime().Format(time.RFC1123)
+			fmt.Fprint(
+				w, marshalJSON(FileModel{
+					Name:       displayName,
+					Type:       ftype,
+					Bytes:      size,
+					FullPath:   path.Join("/"+cleaned, displayName),
+					LastUpdate: info.ModTime(),
+					LinkedTo:   linkedTo,
+				}))
 
-			fmt.Fprintf(
-				w,
-				"<tr><td><a href='%s'>%s</a></td><td align='right'>%s</td><td>%s</td></tr>\n",
-				html.EscapeString(displayName),
-				html.EscapeString(displayName),
-				size,
-				html.EscapeString(modTime),
-			)
+			if i == len(entries)-1 {
+				fmt.Fprintln(w)
+			} else {
+				fmt.Fprintln(w, ",")
+			}
 
 			if i%20 == 0 {
 				flusher.Flush()
 			}
 		}
 
-		fmt.Fprint(w, "</table></body></html>")
+		fmt.Fprintln(w, "]}")
 		flusher.Flush()
 	})
 

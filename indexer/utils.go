@@ -1,18 +1,25 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
+	"os"
 )
 
-func formatBytes(b int64) string {
-	const unit = 1024
-	if b < unit {
-		return fmt.Sprintf("%d Bytes", b)
+func getEnv(key, _default string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
 	}
-	div, exp := int64(unit), 0
-	for n := b / unit; n >= unit; n /= unit {
-		div *= unit
-		exp++
+
+	return _default
+}
+
+func marshalJSON(object any) string {
+	jsonData, err := json.Marshal(object)
+	if err != nil {
+		log.Fatalln(err)
+		return ""
 	}
-	return fmt.Sprintf("%.1f %ciB", float64(b)/float64(div), "KMGTPE"[exp])
+
+	return string(jsonData)
 }
