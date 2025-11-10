@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "webserver-{{ .Values.nodeName }}"
+  namespace: core
+  labels:
+    app: webserver
+spec:
+  selector:
+    matchLabels:
+      app: webserver
+      node: {{ .Values.nodeName }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: webserver
+        node: {{ .Values.nodeName }}
+    spec:
+      nodeName: {{ .Values.nodeName }}
+      terminationGracePeriodSeconds: 30
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: registry-secret
+      initContainers:
+        - name: waitforinitsync
+          image: alpine:latest
+          command:
+            - sh
+            - -c
+            - while [[ ! -f /data/initsync.lck ]]; do sleep 1; done
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: true
+      containers:
+        - name: webserver
+          image: {{ .Values.webserver.image | default "ghcr.io/pmh-only/webserver:latest" }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl -f https://localhost:443/healthz || exit 1
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - curl -f https://localhost:443/healthz || exit 1
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            periodSeconds: 10
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+            - containerPort: 443
+              protocol: UDP
+              name: http3
+          volumeMounts:
+            - name: tls
+              mountPath: /etc/nginx/tls
+              readOnly: true
+            - name: data
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: tls
+          secret:
+            secretName: tls-secret
+        - name: data
+          persistentVolumeClaim:
+            claimName: "core-{{ .Values.nodeName }}-pvc"

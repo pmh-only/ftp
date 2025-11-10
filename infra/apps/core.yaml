@@ -15,9 +15,11 @@ spec:
     metadata:
       name: "core-{{.nodeName}}"
       annotations:
-        argocd-image-updater.argoproj.io/image-list: syncrepo=ghcr.io/pmh-only/syncrepo:latest
+        argocd-image-updater.argoproj.io/image-list: syncrepo=ghcr.io/pmh-only/syncrepo:latest,webserver=ghcr.io/pmh-only/webserver:latest
         argocd-image-updater.argoproj.io/syncrepo.update-strategy: digest
         argocd-image-updater.argoproj.io/syncrepo.helm.image-spec: syncrepo.image
+        argocd-image-updater.argoproj.io/webserver.update-strategy: digest
+        argocd-image-updater.argoproj.io/webserver.helm.image-spec: webserver.image
         argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/repository-secret
         argocd-image-updater.argoproj.io/write-back-target: "helmvalues:/infra/core/values.yaml"
     spec:
@@ -41,3 +43,28 @@ spec:
           - RespectIgnoreDifferences=true
           - ApplyOutOfSyncOnly=true
           - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: core-commons
+  namespace: argocd
+spec:
+  destination:
+    namespace: core
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: infra/core_commons
+    repoURL: git@github.com:pmh-only/ftp.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - RespectIgnoreDifferences=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+      - ServerSideApply=true
