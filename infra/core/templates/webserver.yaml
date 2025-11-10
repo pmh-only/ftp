@@ -81,6 +81,9 @@ spec:
             - containerPort: 443
               protocol: UDP
               name: http3
+          env:
+            - name: NODE_NAME
+              value: {{ .Values.nodeName }}
           volumeMounts:
             - name: tls
               mountPath: /etc/nginx/tls
