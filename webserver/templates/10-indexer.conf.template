@@ -1,7 +1,0 @@
-map "" $node_name {
-  default "$NODE_NAME";
-}
-
-upstream indexer {
-  server indexer-$node_name.core.svc.cluster.local:8080;
-}
