@@ -21,6 +21,9 @@ func main() {
 		panic(err)
 	}
 
+	fs := http.FileServer(http.Dir("./assets"))
+	http.Handle("GET /_assets/", http.StripPrefix("/_assets/", fs))
+
 	http.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		flusher, ok := w.(http.Flusher)
 		if !ok {
@@ -58,13 +61,15 @@ func main() {
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		fmt.Fprintf(w, "<!doctype html><html><head><title>Index of /%s</title></head><body>\n",
+		fmt.Fprintf(w, "<!doctype html><html><head><title>Index of /%s</title>\n",
 			html.EscapeString(cleaned))
+		fmt.Fprint(w, "<link rel='stylesheet' type='text/css' href='/_assets/styles.css'>\n")
+		fmt.Fprint(w, "<script src='/_assets/script.js'></script></head><body>\n")
 		fmt.Fprintf(w, "<h1>Index of /%s</h1>\n", html.EscapeString(cleaned))
 		fmt.Fprint(w, "<table border='1' cellpadding='4' cellspacing='0'>\n")
-		fmt.Fprint(w, "<link rel='stylesheet' type='text/css' href='/_assets/styles.css'>\n")
-		fmt.Fprint(w, "<script src='/_assets/script.js'>\n")
 		fmt.Fprint(w, "<tr><th>Name</th><th>Size (bytes)</th><th>Modified</th></tr>\n")
+		fmt.Fprint(w, "<tr><td><a href='.'>.</a></td><td></td><td></td></tr>\n")
+		fmt.Fprint(w, "<tr><td><a href='..'>.,</a></td><td></td><td></td></tr>\n")
 		flusher.Flush()
 
 		for i, e := range entries {
@@ -86,16 +91,16 @@ func main() {
 				displayName += "/"
 			}
 
-			size := info.Size()
+			size := fmt.Sprint(formatBytes(info.Size()))
 			if e.IsDir() {
-				size = 0
+				size = "DIR"
 			}
 
-			modTime := info.ModTime().Format(time.RFC3339)
+			modTime := info.ModTime().Format(time.RFC1123)
 
 			fmt.Fprintf(
 				w,
-				"<tr><td><a href='%s'>%s</a></td><td align='right'>%d</td><td>%s</td></tr>\n",
+				"<tr><td><a href='%s'>%s</a></td><td align='right'>%s</td><td>%s</td></tr>\n",
 				html.EscapeString(displayName),
 				html.EscapeString(displayName),
 				size,
@@ -110,9 +115,6 @@ func main() {
 		fmt.Fprint(w, "</table></body></html>")
 		flusher.Flush()
 	})
-
-	fs := http.FileServer(http.Dir("./assets"))
-	http.Handle("/_assets/", http.StripPrefix("/_assets/", fs))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
