@@ -20,7 +20,7 @@ spec:
             prefix: ghcr.io
             api_url: https://ghcr.io
             credentials: pullsecret:argocd/registry-secret
-          gitCommitTemplate: "build({{ .AppName }}): `{{ (index .AppChanges 0).NewTag }}`"
+          gitCommitTemplate: "build({{ range .AppChanges -}}{{ .Image }},{{ end -}}): image update {{ range .AppChanges -}}`{{ .NewTag }}`,{{ end -}}"
           gitCommitUser: "[bot]pmh-only/ftp"
           gitCommitMail: "242914034+ftpbot@users.noreply.github.com"
         extraArgs:
