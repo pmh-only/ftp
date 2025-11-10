@@ -7,6 +7,8 @@ spec:
   selector:
     app: webserver
   type: LoadBalancer
+  externalTrafficPolicy: Local
+  internalTrafficPolicy: Local
   ports:
     - name: http
       protocol: TCP
