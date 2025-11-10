@@ -16,6 +16,7 @@ ARG group=1000
 USER $user:$group
 WORKDIR /app
 
+COPY assets assets
 COPY --from=build /app/main .
 
 ENTRYPOINT ["/app/main"]

@@ -58,10 +58,12 @@ func main() {
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-		fmt.Fprintf(w, "<!doctype html><html><head><title>Index of %s</title></head><body>\n",
+		fmt.Fprintf(w, "<!doctype html><html><head><title>Index of /%s</title></head><body>\n",
 			html.EscapeString(cleaned))
-		fmt.Fprintf(w, "<h1>Index of %s</h1>\n", html.EscapeString(cleaned))
+		fmt.Fprintf(w, "<h1>Index of /%s</h1>\n", html.EscapeString(cleaned))
 		fmt.Fprint(w, "<table border='1' cellpadding='4' cellspacing='0'>\n")
+		fmt.Fprint(w, "<link rel='stylesheet' type='text/css' href='/_assets/styles.css'>\n")
+		fmt.Fprint(w, "<script src='/_assets/script.js'>\n")
 		fmt.Fprint(w, "<tr><th>Name</th><th>Size (bytes)</th><th>Modified</th></tr>\n")
 		flusher.Flush()
 
@@ -93,7 +95,8 @@ func main() {
 
 			fmt.Fprintf(
 				w,
-				"<tr><td>%s</td><td align='right'>%d</td><td>%s</td></tr>\n",
+				"<tr><td><a href='%s'>%s</a></td><td align='right'>%d</td><td>%s</td></tr>\n",
+				html.EscapeString(displayName),
 				html.EscapeString(displayName),
 				size,
 				html.EscapeString(modTime),
@@ -107,6 +110,9 @@ func main() {
 		fmt.Fprint(w, "</table></body></html>")
 		flusher.Flush()
 	})
+
+	fs := http.FileServer(http.Dir("./assets"))
+	http.Handle("/_assets/", http.StripPrefix("/_assets/", fs))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
