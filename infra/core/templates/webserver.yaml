@@ -98,3 +98,29 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: "core-{{ .Values.nodeName }}-pvc"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler 
+metadata:
+  name: "webserver-{{ .Values.nodeName }}-hpa"
+  namespace: core
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: "webserver-{{ .Values.nodeName }}"
+  minReplicas: 2
+  maxReplicas: 64
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
