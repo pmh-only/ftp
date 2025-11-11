@@ -22,7 +22,7 @@ func main() {
 	mux.Handle("GET /_assets/", http.StripPrefix("/_assets/", fs))
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		ua := strings.ToLower(r.Header.Get("User-Agent"))
-		ov := strings.ToLower(r.Header.Get("X-Override-Type"))
+		ov := strings.ToLower(r.Header.Get("X-Override-For"))
 
 		if strings.HasPrefix(ua, "mozilla/") && ov != "machine" {
 			http.ServeFile(w, r, "./public/index.html")

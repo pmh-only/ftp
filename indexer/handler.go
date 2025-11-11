@@ -79,7 +79,10 @@ func newMachineReadableHandler(absRoot string) http.HandlerFunc {
 			entry := entries[0]
 			fileModel := buildFileModel(entry, dirPath, cleaned)
 
-			fmt.Fprintln(w, ",")
+			if fileIndex != 0 {
+				fmt.Fprintln(w, ",")
+			}
+
 			fmt.Fprint(w, marshalJSON(fileModel))
 
 			if fileIndex%20 == 0 {
@@ -88,7 +91,7 @@ func newMachineReadableHandler(absRoot string) http.HandlerFunc {
 			fileIndex++
 		}
 
-		fmt.Fprintln(w, "]}")
+		fmt.Fprintln(w, "\n]}")
 		flusher.Flush()
 	}
 }
