@@ -4,27 +4,6 @@
   width: 100%;
 }
 
-.logo {
-  padding: 20px;
-  min-width: 180px;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  user-select: none;
-}
-
-.logo h1 {
-  color: #212121;
-  font-family: 'Merriweather Variable', serif;
-  font-size: 34px;
-}
-
-.logo span {
-  color: #fe1c55;
-  font-weight: normal;
-}
-
 .main .index_view {
   flex-grow: 1;
 }

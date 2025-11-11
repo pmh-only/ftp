@@ -1,6 +1,6 @@
 
 import './IndexView.css'
-import { useEffect, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import { List } from 'react-window'
 import RowComponent from './RowComponent'
 import type { FileModel } from './models'
@@ -11,6 +11,7 @@ import { Folders } from 'lucide-react'
 function IndexView() {
   const url = new URL(window.location.href)
 
+  const listRef = createRef<{ element: HTMLDivElement }>()
   const [items, setItems] = useState<FileModel[]>([])
   const [path, setPath] = useState<string>(url.pathname)
   const [linkedFrom, setLinkedFrom] = useState<string>(url.searchParams.get('l') ?? '')
@@ -24,6 +25,15 @@ function IndexView() {
       setLinkedFrom(url.searchParams.get('l') ?? '')
     })
   }, [])
+
+  useEffect(() => {
+    listRef.current?.element?.addEventListener('scroll', () => {
+      if ((listRef.current?.element?.scrollTop ?? 0) > 0)
+        listRef.current?.element.classList.add('scrolled')
+      else
+        listRef.current?.element.classList.remove('scrolled')
+    })
+  }, [listRef])
 
   useEffect(() => {
     let cancelled = false
@@ -92,7 +102,7 @@ function IndexView() {
     <div className="container">
       <h1>Index of {path}</h1>
       <div className="desc">
-        <p>Found {items.length} file(s).</p>
+        <p>Found {items.length} item{items.length !== 1 ? 's' : ''}.</p>
         {linkedFrom.length > 0 ? (
           <p>
             Linked from:&#32;
@@ -119,6 +129,7 @@ function IndexView() {
         <AutoSizer style={{ height: '100%', width: '100%' }}>
           {(style) =>
             <List
+              listRef={listRef as any}
               rowComponent={RowComponent}
               rowCount={items.length}
               rowHeight={25}

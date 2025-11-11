@@ -1,0 +1,20 @@
+.hero {
+  padding: 20px;
+  min-width: 180px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  user-select: none;
+}
+
+.hero h1 {
+  color: #212121;
+  font-family: 'Merriweather Variable', serif;
+  font-size: 34px;
+}
+
+.hero span {
+  color: #fe1c55;
+  font-weight: normal;
+}
