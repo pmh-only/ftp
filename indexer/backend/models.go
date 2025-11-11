@@ -24,8 +24,10 @@ type FileModel struct {
 func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 	name := entry.Name()
 	displayName := name
+	fullPath := path.Join("/"+cleaned, displayName)
 	if entry.IsDir() {
 		displayName += "/"
+		fullPath += "/"
 	}
 
 	ftype := "FILE"
@@ -39,8 +41,14 @@ func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 
 		ftype = linkType
 		if linkedToPtr != nil {
-			linkedTo = *linkedToPtr
+			linkedTo = "/" + path.Join(cleaned, *linkedToPtr)
 		}
+	}
+
+	if ftype == "LINK_DIRECTORY" {
+		displayName += "/"
+		linkedTo += "/"
+		fullPath += "/"
 	}
 
 	size := ptr(entry.Size())
@@ -52,7 +60,7 @@ func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 		Name:       displayName,
 		Type:       ftype,
 		Bytes:      size,
-		FullPath:   path.Join("/"+cleaned, displayName),
+		FullPath:   fullPath,
 		LastUpdate: entry.ModTime(),
 		LinkedTo:   linkedTo,
 	}

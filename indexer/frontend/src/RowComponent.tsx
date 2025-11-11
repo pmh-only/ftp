@@ -5,20 +5,21 @@ import { File, FileSymlink, Folder, FolderSymlink } from "lucide-react";
 
 function RowComponent({
   index,
+  navigate,
   items,
   style
 }: RowComponentProps<{
-  items: FileModel[]
+  items: FileModel[],
+  navigate: (path: string) => void
 }>) {
   const item = items[index]
 
   return (
     <div style={style} className="item">
-      <a
-        data-tooltip-id="linkedto"
-        data-tooltip-content={"Symbolic Linked: " + item.linkedTo}
-        data-tooltip-place="left"
-        href={item.fullPath}>
+      <a onClick={(ev) => {
+        ev.preventDefault()
+        navigate(item.fullPath)
+      }} href={item.fullPath}>
         {item.type === 'FILE' && <File className="icon" />}
         {item.type === 'DIRECTORY' && <Folder className="icon" />}
         {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="icon" />}

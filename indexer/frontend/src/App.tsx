@@ -7,19 +7,21 @@ import type { FileModel } from './models'
 import { failSafeJSONParse } from './utils'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Folders } from 'lucide-react'
-import { Tooltip } from 'react-tooltip'
 
 
 function App() {
   const [items, setItems] = useState<FileModel[]>([])
+  const [path, setPath] = useState<string>(window.location.pathname)
 
   useEffect(() => {
     let cancelled = false
 
-    document.title = window.location.pathname + ' - ftp.io.kr'
+    document.title = path + ' - ftp.io.kr'
+    history.pushState({}, "", path)
 
     async function listDirectory() {
-      const res = await fetch(window.location.pathname, {
+      const url = (import.meta.env.DEV ? 'http://localhost:8080' : '') + path
+      const res = await fetch(url, {
         headers: { 'X-Override-For': 'machine' },
         cache: 'no-cache'
       })
@@ -53,23 +55,34 @@ function App() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [path])
 
   function itemSorter(items: FileModel[]): FileModel[] {
     const alphabeticalSorted = items.sort((a, b) =>
       a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
 
     return [
-      ...alphabeticalSorted.filter((v) => v.type === 'DIRECTORY'),
-      ...alphabeticalSorted.filter((v) => v.type !== 'DIRECTORY'),
+      ...alphabeticalSorted.filter((v) => v.type.includes('DIRECTORY')),
+      ...alphabeticalSorted.filter((v) => !v.type.includes('DIRECTORY')),
     ]
+  }
+
+  function navigate(newPath: string) {
+    setItems([])
+    setPath(newPath)
   }
 
   return (
     <div className="container">
-      <h1>Index of {window.location.pathname}</h1>
+      <h1>Index of {path}</h1>
       <p>Found {items.length} file(s)</p>
-      <a href=".."><Folders className='icon' /> Parent Directory</a>
+      <a onClick={(e) => {
+        e.preventDefault()
+        if (path !== '/')
+          navigate(path.split('/').slice(0, -2).join('/') + '/')
+      }} href="..">
+        <Folders className='icon' /> Parent Directory
+      </a>
       <div className="content">
         <AutoSizer style={{ height: '100%', width: '100%' }}>
           {(style) =>
@@ -79,11 +92,10 @@ function App() {
               rowHeight={25}
               style={style}
               className="items"
-              rowProps={{ items }}
+              rowProps={{ items, navigate }}
             />
           }
         </AutoSizer>
-        <Tooltip id="linkedto" />
       </div>
     </div>
   )
