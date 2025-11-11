@@ -18,7 +18,7 @@ function App() {
     document.title = window.location.pathname + ' - ftp.io.kr'
 
     async function listDirectory() {
-      const res = await fetch('http://localhost:8080' + window.location.pathname, {
+      const res = await fetch(window.location.pathname, {
         headers: { 'X-Override-For': 'machine' }
       })
 
