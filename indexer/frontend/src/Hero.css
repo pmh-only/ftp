@@ -1,11 +1,15 @@
 .hero {
   padding: 20px;
   min-width: 180px;
+  overflow: auto;
   font-size: 12px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   user-select: none;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #22222555 transparent;
 }
 
 .hero h1 {
@@ -17,4 +21,10 @@
 .hero span {
   color: #fe1c55;
   font-weight: normal;
+}
+
+@media (max-width: 800px) {
+  .hero div {
+    display: none;
+  }
 }
