@@ -6,9 +6,11 @@ import 'normalize.css'
 import './index.css'
 import '@fontsource-variable/roboto/index.css'
 import '@fontsource-variable/merriweather/index.css'
+import { Tooltip } from 'react-tooltip'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
+    <Tooltip id="tooltip" />
   </StrictMode>,
 )

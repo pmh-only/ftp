@@ -16,15 +16,22 @@ function RowComponent({
 
   return (
     <div style={{ ...style, '--i': index } as any} className="item">
-      <a className="fname" onClick={(ev) => {
-        ev.preventDefault()
+      <a
+        data-tooltip-id="tooltip"
+        data-tooltip-content={"Linked to " + item.linkedTo}
+        data-tooltip-hidden={item.linkedTo === undefined}
+        data-tooltip-place="right"
+        className="fname"
+        href={item.fullPath}
+        onClick={(ev) => {
+          ev.preventDefault()
 
-        if (item.linkedTo !== undefined)
-          navigate(item.linkedTo, item.fullPath)
-        else
-          navigate(item.fullPath)
-
-      }} href={item.fullPath}>
+          if (item.linkedTo !== undefined)
+            navigate(item.linkedTo, item.fullPath)
+          else
+            navigate(item.fullPath)
+        }}
+      >
         {item.type === 'FILE' && <File className="icon" />}
         {item.type === 'DIRECTORY' && <Folder className="icon" />}
         {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="icon" />}
