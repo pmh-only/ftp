@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 	"time"
 )
 
@@ -35,13 +36,18 @@ func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 		ftype = "DIRECTORY"
 	}
 
+	size := ptr(entry.Size())
 	linkedTo := ""
 	if entry.Mode()&os.ModeSymlink != 0 {
-		linkType, linkedToPtr := buildFileLinkedTo(dirPath, name)
+		linkType, linkedToPtr, sizePtr := buildFileLinkedTo(dirPath, name)
 
 		ftype = linkType
 		if linkedToPtr != nil {
 			linkedTo = "/" + path.Join(cleaned, *linkedToPtr)
+		}
+
+		if sizePtr != nil {
+			size = sizePtr
 		}
 	}
 
@@ -51,8 +57,7 @@ func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 		fullPath += "/"
 	}
 
-	size := ptr(entry.Size())
-	if entry.IsDir() {
+	if strings.Contains(ftype, "DIRECTORY") {
 		size = nil
 	}
 
@@ -66,22 +71,22 @@ func buildFileModel(entry os.FileInfo, dirPath, cleaned string) FileModel {
 	}
 }
 
-func buildFileLinkedTo(dirPath, name string) (ftype string, linkedTo *string) {
+func buildFileLinkedTo(dirPath, name string) (ftype string, linkedTo *string, size *int64) {
 	targetPath, err := os.Readlink(path.Join(dirPath, name))
 	if err != nil {
 		fmt.Printf("Error reading symbolic link target: %v\n", err)
-		return "LINK", nil
+		return "LINK", nil, nil
 	}
 
 	linkToStat, err := os.Stat(path.Join(dirPath, targetPath))
 	if err != nil {
 		fmt.Printf("Error reading symbolic link target: %v\n", err)
-		return "LINK", &targetPath
+		return "LINK", &targetPath, nil
 	}
 
 	if linkToStat.IsDir() {
-		return "LINK_DIRECTORY", &targetPath
+		return "LINK_DIRECTORY", &targetPath, nil
 	}
 
-	return "LINK_FILE", &targetPath
+	return "LINK_FILE", &targetPath, ptr(linkToStat.Size())
 }
