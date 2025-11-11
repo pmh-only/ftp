@@ -14,15 +14,19 @@ function IndexView() {
   const listRef = createRef<{ element: HTMLDivElement }>()
   const [items, setItems] = useState<FileModel[]>([])
   const [path, setPath] = useState<string>(url.pathname)
-  const [linkedFrom, setLinkedFrom] = useState<string>(url.searchParams.get('l') ?? '')
+  const [linkedFrom, setLinkedFrom] = useState<string>('')
+  const [linkedFromParent, setLinkedFromParent] = useState<string>('')
 
   useEffect(() => {
     window.addEventListener('popstate', () => {
       const url = new URL(window.location.href)
 
-      setItems([])
+      if (window.history.state?.isPathChanged ?? false)
+        setItems([])
+
       setPath(url.pathname)
-      setLinkedFrom(url.searchParams.get('l') ?? '')
+      setLinkedFrom(window.history.state?.linkedFrom ?? '')
+      setLinkedFromParent(window.history.state?.linkedFromParent ?? '')
     })
   }, [])
 
@@ -88,14 +92,13 @@ function IndexView() {
   }
 
   function navigate(newPath: string, newLinkedFrom = '') {
-    setItems([])
+    if (path !== newPath)
+      setItems([])
+
     setPath(newPath)
     setLinkedFrom(newLinkedFrom)
 
-    history.pushState({
-      path,
-      linkedFrom
-    }, "", newPath + (newLinkedFrom.length > 0 ? "?l=" + newLinkedFrom : ''))
+    window.history.pushState({ linkedFromParent: path, linkedFrom: newLinkedFrom, isPathChanged: path !== newPath }, "", newPath)
   }
 
   return (
@@ -108,11 +111,8 @@ function IndexView() {
             Linked from:&#32;
             <a onClick={(ev) => {
               ev.preventDefault()
-              setItems([])
-              setPath(window.history.state.path)
-              setLinkedFrom(window.history.state.linkedFrom)
               window.history.back()
-            }} href={linkedFrom}>
+            }} href={linkedFromParent}>
               <Folders className='icon' /> {linkedFrom}
             </a>
           </p>

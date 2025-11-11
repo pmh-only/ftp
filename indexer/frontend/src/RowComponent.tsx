@@ -18,7 +18,12 @@ function RowComponent({
     <div style={{ ...style, '--i': index } as any} className="item">
       <a className="fname" onClick={(ev) => {
         ev.preventDefault()
-        navigate(item.fullPath, item.type.includes('LINK') ? window.location.pathname : '')
+
+        if (item.linkedTo !== undefined)
+          navigate(item.linkedTo, item.fullPath)
+        else
+          navigate(item.fullPath)
+
       }} href={item.fullPath}>
         {item.type === 'FILE' && <File className="icon" />}
         {item.type === 'DIRECTORY' && <Folder className="icon" />}
