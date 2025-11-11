@@ -5,6 +5,7 @@ import App from './App.tsx'
 import 'normalize.css'
 import './index.css'
 import '@fontsource-variable/roboto/index.css'
+import '@fontsource-variable/merriweather/index.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

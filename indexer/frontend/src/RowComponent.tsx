@@ -10,15 +10,15 @@ function RowComponent({
   style
 }: RowComponentProps<{
   items: FileModel[],
-  navigate: (path: string) => void
+  navigate: (path: string, linkedFrom?: string) => void
 }>) {
   const item = items[index]
 
   return (
-    <div style={style} className="item">
-      <a onClick={(ev) => {
+    <div style={{ ...style, '--i': index } as any} className="item">
+      <a className="fname" onClick={(ev) => {
         ev.preventDefault()
-        navigate(item.fullPath)
+        navigate(item.fullPath, item.type.includes('LINK') ? window.location.pathname : '')
       }} href={item.fullPath}>
         {item.type === 'FILE' && <File className="icon" />}
         {item.type === 'DIRECTORY' && <Folder className="icon" />}

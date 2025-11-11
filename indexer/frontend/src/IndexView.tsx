@@ -1,0 +1,136 @@
+
+import './IndexView.css'
+import { useEffect, useState } from 'react'
+import { List } from 'react-window'
+import RowComponent from './RowComponent'
+import type { FileModel } from './models'
+import { failSafeJSONParse } from './utils'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { Folders } from 'lucide-react'
+
+function IndexView() {
+  const url = new URL(window.location.href)
+
+  const [items, setItems] = useState<FileModel[]>([])
+  const [path, setPath] = useState<string>(url.pathname)
+  const [linkedFrom, setLinkedFrom] = useState<string>(url.searchParams.get('l') ?? '')
+
+  useEffect(() => {
+    window.addEventListener('popstate', () => {
+      const url = new URL(window.location.href)
+
+      setItems([])
+      setPath(url.pathname)
+      setLinkedFrom(url.searchParams.get('l') ?? '')
+    })
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    document.title = path + ' - ftp.io.kr'
+
+    async function listDirectory() {
+      const url = (import.meta.env.DEV ? 'http://localhost:8080' : '') + path
+      const res = await fetch(url, {
+        headers: { 'X-Override-For': 'machine' },
+        cache: 'no-cache'
+      })
+
+      if (cancelled) return
+      if (res.body === null) {
+        alert('Directory listing failed.')
+        return
+      }
+
+      const reader = res.body.getReader()
+      for (; ;) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const text = new TextDecoder().decode(value)
+
+        for (const object of text.split(/,?\n/)) {
+          const objectData = failSafeJSONParse(object)
+          if (typeof objectData?.name !== 'string')
+            continue
+
+          items.push(objectData)
+          setItems([...itemSorter(items)])
+        }
+      }
+    }
+
+    listDirectory()
+
+    return () => {
+      cancelled = true
+    }
+  }, [path])
+
+  function itemSorter(items: FileModel[]): FileModel[] {
+    const alphabeticalSorted = items.sort((a, b) =>
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+
+    return [
+      ...alphabeticalSorted.filter((v) => v.type.includes('DIRECTORY')),
+      ...alphabeticalSorted.filter((v) => !v.type.includes('DIRECTORY')),
+    ]
+  }
+
+  function navigate(newPath: string, newLinkedFrom = '') {
+    setItems([])
+    setPath(newPath)
+    setLinkedFrom(newLinkedFrom)
+
+    history.pushState({
+      path,
+      linkedFrom
+    }, "", newPath + (newLinkedFrom.length > 0 ? "?l=" + newLinkedFrom : ''))
+  }
+
+  return (
+    <div className="container">
+      <h1>Index of {path}</h1>
+      <div className="desc">
+        <p>Found {items.length} file(s).</p>
+        {linkedFrom.length > 0 ? (
+          <p>
+            Linked from:&#32;
+            <a onClick={(ev) => {
+              ev.preventDefault()
+              setItems([])
+              setPath(window.history.state.path)
+              setLinkedFrom(window.history.state.linkedFrom)
+              window.history.back()
+            }} href={linkedFrom}>
+              <Folders className='icon' /> {linkedFrom}
+            </a>
+          </p>
+        ) : <></>}
+      </div>
+      <a onClick={(ev) => {
+        ev.preventDefault()
+        if (path !== '/')
+          navigate(path.split('/').slice(0, -2).join('/') + '/')
+      }} href="..">
+        <Folders className='icon' /> Parent Directory
+      </a>
+      <div className="content">
+        <AutoSizer style={{ height: '100%', width: '100%' }}>
+          {(style) =>
+            <List
+              rowComponent={RowComponent}
+              rowCount={items.length}
+              rowHeight={25}
+              style={style}
+              className="items"
+              rowProps={{ items, navigate }}
+            />
+          }
+        </AutoSizer>
+      </div>
+    </div>
+  )
+}
+
+export default IndexView
