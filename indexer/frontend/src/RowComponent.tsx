@@ -27,7 +27,6 @@ function RowComponent({
         {item.name}
       </a>
 
-      {item.linkedTo !== undefined ? <p>-&gt; {item.linkedTo}</p> : <></>}
       {item.bytes !== undefined ? <p>{formatBytes(item.bytes)}</p> : <></>}
       <p className="time">{new Date(item.lastUpdate).toLocaleString()}</p>
     </div>

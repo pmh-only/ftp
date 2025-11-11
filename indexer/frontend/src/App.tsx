@@ -83,9 +83,8 @@ function App() {
             />
           }
         </AutoSizer>
+        <Tooltip id="linkedto" />
       </div>
-
-      <Tooltip id="linkedto" />
     </div>
   )
 }
