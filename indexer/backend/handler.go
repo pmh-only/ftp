@@ -49,6 +49,11 @@ func newMachineReadableHandler(absRoot string) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		w.Header().Set("Transfer-Encoding", "chunked")
+
+		if _, ok := os.LookupEnv("CORS_ENABLED"); ok {
+			w.Header().Add("Access-Control-Allow-Origin", "*")
+		}
+
 		w.WriteHeader(http.StatusOK)
 
 		fmt.Fprintln(w, "{\"success\":true,\"files\":[")

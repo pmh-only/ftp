@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -19,7 +20,15 @@ func main() {
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("public"))
 
-	mux.Handle("GET /_assets/", http.StripPrefix("/_assets/", fs))
+	if _, ok := os.LookupEnv("CORS_ENABLED"); ok {
+		mux.HandleFunc("OPTIONS /", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Access-Control-Allow-Origin", "*")
+			w.Header().Add("Access-Control-Allow-Headers", "*")
+			w.WriteHeader(http.StatusOK)
+		})
+	}
+
+	mux.Handle("GET /_assets/", fs)
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		ua := strings.ToLower(r.Header.Get("User-Agent"))
 		ov := strings.ToLower(r.Header.Get("X-Override-For"))
