@@ -105,25 +105,28 @@ function IndexView() {
     <div className="container">
       <h1>Index of {path}</h1>
       <div className="desc">
-        <p>Found {items.length} item{items.length !== 1 ? 's' : ''}.</p>
-        {linkedFrom.length > 0 ? (
-          <p>
-            Linked from:&#32;
-            <a onClick={(ev) => {
-              ev.preventDefault()
-              window.history.back()
-            }} href={linkedFromParent}>
-              <Folders className='icon' /> {linkedFrom}
-            </a>
-          </p>
-        ) : <></>}
+        <p>
+          Found {items.length} item{items.length !== 1 ? 's' : ''}.
+          {linkedFrom.length > 0 ? (
+            <>
+              &#32;
+              Linked from:
+              <a onClick={(ev) => {
+                ev.preventDefault()
+                window.history.back()
+              }} href={linkedFromParent}>
+                &#32;{linkedFrom}
+              </a>
+            </>
+          ) : <></>}
+        </p>
       </div>
-      <a onClick={(ev) => {
+      <a className="parent" onClick={(ev) => {
         ev.preventDefault()
         if (path !== '/')
           navigate(path.split('/').slice(0, -2).join('/') + '/')
       }} href="..">
-        <Folders className='icon' /> Parent Directory
+        <Folders className="icon" />Parent Directory
       </a>
       <div className="content">
         <AutoSizer style={{ height: '100%', width: '100%' }}>

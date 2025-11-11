@@ -25,35 +25,26 @@
 
 .item {
   display: flex;
-  align-items: center;
   gap: 16px;
+}
+
+.item > * {
+  display: flex;
+  align-items: center;
+}
+
+.parent {
+  display: flex;
+  align-items: center;
 }
 
 .icon {
   height: 1em;
 }
 
-.container a {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
 .item .time {
   font-size: 10px;
   color: #aaa;
-}
-
-.desc {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.desc>p {
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
 
 @keyframes fade-in {
