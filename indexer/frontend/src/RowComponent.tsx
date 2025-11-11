@@ -15,7 +15,7 @@ function RowComponent({
   const item = items[index]
 
   return (
-    <div style={{ ...style, '--i': index } as any} className="item">
+    <div style={style} className="item">
       <a
         data-tooltip-id="tooltip"
         data-tooltip-content={"Linked to " + item.linkedTo}
@@ -24,6 +24,9 @@ function RowComponent({
         className="fname"
         href={item.fullPath}
         onClick={(ev) => {
+          if (item.type.includes('FILE'))
+            return
+
           ev.preventDefault()
 
           if (item.linkedTo !== undefined)
