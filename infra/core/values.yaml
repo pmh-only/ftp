@@ -4,4 +4,4 @@ syncrepo:
 webserver:
   image: ghcr.io/pmh-only/webserver@sha256:094bb7399464eceb2834132ae6b1534e9656044097214ebb83a5e479a1d82a52
 indexer:
-  image: ghcr.io/pmh-only/indexer:latest@sha256:b5520bace8cb3c30ec41fac5f7cd9d63b35fe76e178867c68f37dab38e96ee82
+  image: ghcr.io/pmh-only/indexer:latest@sha256:b6fab1539d3f96ec7e31dee7538644e24eba15d2529b3791523ce31215766dbb
