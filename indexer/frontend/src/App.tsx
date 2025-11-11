@@ -19,7 +19,8 @@ function App() {
 
     async function listDirectory() {
       const res = await fetch(window.location.pathname, {
-        headers: { 'X-Override-For': 'machine' }
+        headers: { 'X-Override-For': 'machine' },
+        cache: 'no-cache'
       })
 
       if (cancelled) return
