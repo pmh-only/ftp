@@ -14,7 +14,11 @@ function RowComponent({
 
   return (
     <div style={style} className="item">
-      <a href={item.fullPath}>
+      <a
+        data-tooltip-id="linkedto"
+        data-tooltip-content={"Symbolic Linked: " + item.linkedTo}
+        data-tooltip-place="left"
+        href={item.fullPath}>
         {item.type === 'FILE' && <File className="icon" />}
         {item.type === 'DIRECTORY' && <Folder className="icon" />}
         {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="icon" />}

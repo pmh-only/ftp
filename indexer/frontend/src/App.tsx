@@ -7,6 +7,7 @@ import type { FileModel } from './models'
 import { failSafeJSONParse } from './utils'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { Folders } from 'lucide-react'
+import { Tooltip } from 'react-tooltip'
 
 
 function App() {
@@ -83,6 +84,8 @@ function App() {
           }
         </AutoSizer>
       </div>
+
+      <Tooltip id="linkedto" />
     </div>
   )
 }
