@@ -1,11 +1,7 @@
-helm:
-  parameters:
-  - name: syncrepo.image
-    value: ghcr.io/pmh-only/syncrepo:latest@sha256:de5cfd92899e952923d24bcdd5e1dcd85857926e5e0ca06d081839de92475ab5
-    forcestring: true
-  - name: webserver.image
-    value: ghcr.io/pmh-only/webserver:latest@sha256:80a6af48cde20cfb3e1398430d7b292a1cbd5a187ffd14f2f8e59e5cd7e980d4
-    forcestring: true
-  - name: indexer.image
-    value: ghcr.io/pmh-only/indexer:latest@sha256:fdd6cbf53191171e73e45ab9941686077de0e290554a3e81b3ddd956c11e0d51
-    forcestring: true
+nodeName: example
+syncrepo:
+  image: ghcr.io/pmh-only/syncrepo:latest
+webserver:
+  image: ghcr.io/pmh-only/webserver:latest
+indexer:
+  image: ghcr.io/pmh-only/indexer:latest
