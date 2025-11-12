@@ -42,7 +42,7 @@ func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) F
 
 		ftype = linkType
 		if linkedToPtr != nil {
-			linkedTo = path.Join(logicalDirPath, *linkedToPtr)
+			linkedTo = path.Join("/"+logicalDirPath, *linkedToPtr)
 		}
 
 		if sizePtr != nil {

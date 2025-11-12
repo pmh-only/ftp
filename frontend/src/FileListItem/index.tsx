@@ -19,7 +19,7 @@ function FileListerItem({
   return (
     <li style={style} className="flex gap-2 items-center text-nowrap">
       <a
-        className="flex items-center gap-1 text-accent hover:text-accent-content grow shrink overflow-hidden text-ellipsis"
+        className="h-full flex items-center gap-1 text-accent hover:text-accent-content hover:underline grow shrink overflow-hidden text-ellipsis"
         onClick={(ev) => {
           if (item.type?.includes('FILE'))
             return
