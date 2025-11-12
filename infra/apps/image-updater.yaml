@@ -14,15 +14,15 @@ spec:
       values: |-
         fullnameOverride: argocd-image-updater
         config:
-          logLevel: debug
+          "log.level": debug
+          "git.commit-message-template": "build({{ range .AppChanges -}}{{ .Image }},{{ end -}}): image update {{ range .AppChanges -}}`{{ .NewTag }}`,{{ end -}}"
+          "git.user": "[bot]pmh-only/ftp"
+          "git.email": "242914034+ftpbot@users.noreply.github.com"
           registries:
-          - name: Github Registry
-            prefix: ghcr.io
-            api_url: https://ghcr.io
-            credentials: pullsecret:argocd/registry-secret
-          gitCommitTemplate: "build({{ range .AppChanges -}}{{ .Image }},{{ end -}}): image update {{ range .AppChanges -}}`{{ .NewTag }}`,{{ end -}}"
-          gitCommitUser: "[bot]pmh-only/ftp"
-          gitCommitMail: "242914034+ftpbot@users.noreply.github.com"
+            - name: Github Registry
+              prefix: ghcr.io
+              api_url: https://ghcr.io
+              credentials: pullsecret:argocd/registry-secret
         extraArgs:
           - --interval=30s
     repoURL: https://argoproj.github.io/argo-helm

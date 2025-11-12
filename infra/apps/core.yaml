@@ -14,16 +14,6 @@ spec:
   template:
     metadata:
       name: "core-{{.nodeName}}"
-      annotations:
-        argocd-image-updater.argoproj.io/image-list: syncrepo=ghcr.io/pmh-only/syncrepo:latest,webserver=ghcr.io/pmh-only/webserver:latest,indexer=ghcr.io/pmh-only/indexer:latest
-        argocd-image-updater.argoproj.io/syncrepo.update-strategy: digest
-        argocd-image-updater.argoproj.io/syncrepo.helm.image-spec: syncrepo.image
-        argocd-image-updater.argoproj.io/webserver.update-strategy: digest
-        argocd-image-updater.argoproj.io/webserver.helm.image-spec: webserver.image
-        argocd-image-updater.argoproj.io/indexer.update-strategy: digest
-        argocd-image-updater.argoproj.io/indexer.helm.image-spec: indexer.image
-        argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/repository-secret
-        argocd-image-updater.argoproj.io/write-back-target: "helmvalues:/infra/core/values.yaml"
     spec:
       project: default
       source:

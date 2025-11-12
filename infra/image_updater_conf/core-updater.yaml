@@ -1,0 +1,30 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: core-updater
+spec:
+  namespace: argocd
+  commonUpdateSettings:
+    updateStrategy: "digest"
+  writeBackConfig:
+    method: git:secret:argocd/repository-secret
+    gitConfig:
+      writeBackTarget: helmvalues:/infra/core/values.yaml
+  applicationRefs:
+    - namePattern: "core-*"
+      images:
+        - alias: "syncrepo"
+          imageName: "ghcr.io/pmh-only/syncrepo:latest"
+          manifestTargets:
+            helm:
+              spec: "syncrepo.image"
+        - alias: "webserver"
+          imageName: "ghcr.io/pmh-only/webserver:latest"
+          manifestTargets:
+            helm:
+              spec: "webserver.image"
+        - alias: "indexer"
+          imageName: "ghcr.io/pmh-only/indexer:latest"
+          manifestTargets:
+            helm:
+              spec: "indexer.image"
