@@ -27,6 +27,8 @@ spec:
               value: rsync://mirror.rackspace.com/archlinux/
             - name: LASTUPDATE_URL
               value: https://mirror.rackspace.com/archlinux/lastupdate
+            - name: INDEXER_URL
+              value: "http://indexer-{{ .Values.nodeName }}:8080"
           volumeMounts:
           - name: data
             mountPath: /data
@@ -39,6 +41,8 @@ spec:
             value: rsync://mirror.funami.tech/arch/
           - name: LASTUPDATE_URL
             value: https://mirror.funami.tech/arch/lastupdate
+          - name: INDEXER_URL
+            value: "http://indexer-{{ .Values.nodeName }}:8080"
         volumeMounts:
         - name: data
           mountPath: /data

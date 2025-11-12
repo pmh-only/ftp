@@ -7,7 +7,6 @@ ARG group=1000
 USER $user:$group
 WORKDIR /app
 
-COPY backend/main-${TARGETARCH} ./main
-COPY frontend/dist/ public/
+COPY main-${TARGETARCH} ./main
 
 ENTRYPOINT ["/app/main"]

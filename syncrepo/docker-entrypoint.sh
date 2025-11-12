@@ -11,7 +11,6 @@ _term() {
 
 trap _term SIGTERM SIGINT
 
-
 if [[ $SYNC_MODE == "initsync" ]]; then
   if [[ -f "/data/initsync.lck" ]]; then
     echo "syncrepo executed in initsync mode but initsync is already finished. exit."
@@ -23,7 +22,23 @@ if [[ $SYNC_MODE == "initsync" ]]; then
   child=$! 
   wait "$child"
 
+  find "/data/static" -name '.~tmp~' -exec rm -r {} +
+  curl "$INDEXER_URL/gen?path=@" || echo
+
   touch /data/initsync.lck
+fi
+
+if [[ $SYNC_MODE == "debug" ]]; then
+  echo "DEBUG! running in debug sync mode"
+
+  mkdir /data/reports || echo
+  export REPORT_PATH="/data/reports/$(date +"%Y-%m-%d.%H.%M.%S")"
+  /app/syncrepo.sh &
+
+  child=$! 
+  wait "$child"  
+
+  curl "$INDEXER_URL/gen?path=$REPORT_PATH" || echo
 fi
 
 if [[ $SYNC_MODE == "normal" ]]; then
@@ -33,10 +48,16 @@ if [[ $SYNC_MODE == "normal" ]]; then
   while true; do
     sleep $((RANDOM % $INTERVAL))
 
-    /app/syncrepo.sh &    
+    mkdir /data/reports || echo
+    export REPORT_PATH="/data/reports/$(date +"%Y-%m-%d.%H.%M.%S")"
+    
+    /app/syncrepo.sh &
 
     child=$! 
     wait "$child"  
+
+    find "/data/static" -name '.~tmp~' -exec rm -r {} +
+    curl "$INDEXER_URL/gen?path=$REPORT_PATH" || echo
 
     sleep $(($INTERVAL - $(date +%s) % $INTERVAL))
   done

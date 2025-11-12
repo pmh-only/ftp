@@ -76,7 +76,7 @@ rsync_cmd() {
 	fi
 	
 	cmd+=(-rlptH --safe-links --delete-delay --delay-updates
-		"--timeout=600" --no-motd -h -v --progress)
+		"--timeout=600" --no-motd -h --itemize-changes --out-format='%i %n')
 
 	if ((bwlimit>0)); then
 		cmd+=("--bwlimit=$bwlimit")
@@ -100,12 +100,11 @@ rsync_cmd \
 	--exclude='/pool/*-debug' \
 	--exclude='/*-debug' \
 	"${source_url}" \
-	"${target}"
+	"${target}" | tee "${REPORT_PATH:-"/dev/null"}"
 
 rc=$?
+
 # Ignore exit code 23-PartialTransfer for ignoring unfixable upstream errors
 if [ "$rc" -ne 0 ] && [ "$rc" -ne 23 ]; then
 	exit "$rc"
 fi
-
-echo "Last sync was $(date -d @$(cat ${target}/lastsync))"
