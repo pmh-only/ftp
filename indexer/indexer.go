@@ -13,16 +13,24 @@ func startIndexingLoop(targetDirectories []string) {
 		log.Printf("Indexing loop item (%d/%d): %s\n", i+1, len(targetDirectories), targetDirectory)
 
 		index := indexDirectory(targetDirectory)
-		indexFilePath := path.Join("/data/indexes/", targetDirectory, "index.json")
+		index = sortFileModels(index)
 
-		indexContent, err := json.Marshal(index)
-		if err != nil {
-			fmt.Println("Error during marshal file model", indexFilePath)
-			continue
+		indexFilePath := path.Join("/data/indexes/", targetDirectory, "index.jsonl")
+		marshalString := []byte{}
+
+		for _, indexItem := range index {
+			indexItemContent, err := json.Marshal(indexItem)
+			if err != nil {
+				fmt.Println("Error during marshal file model", indexFilePath)
+				continue
+			}
+
+			marshalString = append(marshalString, indexItemContent...)
+			marshalString = append(marshalString, "\n"...)
 		}
 
 		_ = os.MkdirAll(path.Dir(indexFilePath), 0755)
-		err = os.WriteFile(indexFilePath, indexContent, 0644)
+		err := os.WriteFile(indexFilePath, marshalString, 0644)
 		if err != nil {
 			fmt.Println("Error during write file model", indexFilePath)
 			continue
