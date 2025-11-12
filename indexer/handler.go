@@ -21,14 +21,16 @@ func handleGenRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "process accepted")
 	log.Println("indexer request received.", reportPath)
 
-	if reportPath == "@" {
-		targetDirectories := getAllTarget()
+	go func() {
+		if reportPath == "@" {
+			targetDirectories := getAllTarget()
+			startIndexingLoop(targetDirectories)
+			return
+		}
+
+		targetDirectories := extractTargetDirectories(reportPath)
+		log.Println("extracted target directories. count: ", len(targetDirectories))
+
 		startIndexingLoop(targetDirectories)
-		return
-	}
-
-	targetDirectories := extractTargetDirectories(reportPath)
-	log.Println("extracted target directories. count: ", len(targetDirectories))
-
-	startIndexingLoop(targetDirectories)
+	}()
 }
