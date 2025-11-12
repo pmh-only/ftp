@@ -3,6 +3,9 @@ kind: ApplicationSet
 metadata:
   name: core
 spec:
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/source/helm/parameters
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
