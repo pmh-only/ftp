@@ -17,14 +17,20 @@ spec:
           imageName: "ghcr.io/pmh-only/syncrepo:latest"
           manifestTargets:
             helm:
+              tag: "syncrepo.tag"
+              name: "syncrepo.name"
               spec: "syncrepo.image"
         - alias: "webserver"
           imageName: "ghcr.io/pmh-only/webserver:latest"
           manifestTargets:
             helm:
+              tag: "webserver.tag"
+              name: "webserver.name"
               spec: "webserver.image"
         - alias: "indexer"
           imageName: "ghcr.io/pmh-only/indexer:latest"
           manifestTargets:
             helm:
+              tag: "indexer.tag"
+              name: "indexer.name"
               spec: "indexer.image"
