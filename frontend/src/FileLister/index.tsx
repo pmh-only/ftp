@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import './style.css'
 import type { FileModel } from '../model'
-import { ArrowLeft, Folders, TextCursor } from 'lucide-react'
+import { ArrowLeft, Folders } from 'lucide-react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
