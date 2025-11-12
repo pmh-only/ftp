@@ -10,7 +10,7 @@ spec:
     method: argocd
     # method: git:secret:argocd/repository-secret
     gitConfig:
-      writeBackTarget: helmvalues:/infra/core/values.yaml
+      writeBackTarget: helmvalues
   applicationRefs:
     - namePattern: "core-*"
       images:
