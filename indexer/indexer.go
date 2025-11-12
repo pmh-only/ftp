@@ -10,7 +10,7 @@ import (
 
 func startIndexingLoop(targetDirectories []string) {
 	for i, targetDirectory := range targetDirectories {
-		log.Printf("Indexing loop item (%d/%d): %s\n", i+1, len(targetDirectory), targetDirectory)
+		log.Printf("Indexing loop item (%d/%d): %s\n", i+1, len(targetDirectories), targetDirectory)
 
 		index := indexDirectory(targetDirectory)
 		indexFilePath := path.Join("/data/indexes/", targetDirectory, "index.json")
