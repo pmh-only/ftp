@@ -6,6 +6,8 @@ import (
 	"path"
 	"strings"
 	"time"
+
+	_ "time/tzdata"
 )
 
 type FileModel struct {
