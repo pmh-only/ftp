@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - webserver/**
+      - frontend/**
 
 permissions:
   contents: read
