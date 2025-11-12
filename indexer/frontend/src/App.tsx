@@ -6,12 +6,9 @@ function App() {
   return (
     <main className="main">
       <Hero />
-      <div className="index_view">
-        <IndexView />
-      </div>
+      <IndexView />
     </main>
   )
 }
-
 
 export default App

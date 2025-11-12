@@ -5,11 +5,13 @@
   font-size: 12px;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   gap: 24px;
   user-select: none;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: #22222555 transparent;
+  position: sticky;
+  top: 0px;
+  background-color: #faf7f5;
+  min-height: min-content;
 }
 
 .hero h1 {

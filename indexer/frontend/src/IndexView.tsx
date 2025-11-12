@@ -1,43 +1,34 @@
-
 import './IndexView.css'
-import { createRef, useEffect, useState } from 'react'
-import { List } from 'react-window'
-import RowComponent from './RowComponent'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import type { FileModel } from './models'
-import { failSafeJSONParse } from './utils'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import { failSafeJSONParse, formatBytes } from './utils'
 import { Folders } from 'lucide-react'
+import { File, FileSymlink, Folder, FolderSymlink } from "lucide-react";
 
 function IndexView() {
   const url = new URL(window.location.href)
 
-  const listRef = createRef<{ element: HTMLDivElement }>()
   const [items, setItems] = useState<FileModel[]>([])
   const [path, setPath] = useState<string>(url.pathname)
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
+  const [forceReload, setForceReload] = useState<number>(0)
 
   useEffect(() => {
-    window.addEventListener('popstate', () => {
+    const handlePopState = () => {
       const url = new URL(window.location.href)
+      const state = window.history.state || {}
 
-      if (window.history.state?.isPathChanged ?? false)
-        setItems([])
-
+      setItems([])
       setPath(url.pathname)
-      setLinkedFrom(window.history.state?.linkedFrom ?? '')
-      setLinkedFromParent(window.history.state?.linkedFromParent ?? '')
-    })
-  }, [])
+      setLinkedFrom(state.linkedFrom ?? '')
+      setLinkedFromParent(state.linkedFromParent ?? '')
+      setForceReload(prev => prev + 1)
+    }
 
-  useEffect(() => {
-    listRef.current?.element?.addEventListener('scroll', () => {
-      if ((listRef.current?.element?.scrollTop ?? 0) > 0)
-        listRef.current?.element.classList.add('scrolled')
-      else
-        listRef.current?.element.classList.remove('scrolled')
-    })
-  }, [listRef])
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -57,6 +48,9 @@ function IndexView() {
       }
 
       const reader = res.body.getReader()
+      const tempItems: FileModel[] = []
+      const BATCH_SIZE = 100
+
       for (; ;) {
         const { done, value } = await reader.read()
         if (done) break
@@ -68,9 +62,16 @@ function IndexView() {
           if (typeof objectData?.name !== 'string')
             continue
 
-          items.push(objectData)
-          setItems([...itemSorter(items)])
+          tempItems.push(objectData)
+
+          if (tempItems.length % BATCH_SIZE === 0) {
+            setItems([...tempItems])
+          }
         }
+      }
+
+      if (!cancelled) {
+        setItems([...tempItems])
       }
     }
 
@@ -79,30 +80,44 @@ function IndexView() {
     return () => {
       cancelled = true
     }
-  }, [path])
+  }, [path, forceReload])
 
-  function itemSorter(items: FileModel[]): FileModel[] {
-    const alphabeticalSorted = items.sort((a, b) =>
+  const sortedItems = useMemo(() => {
+    const alphabeticalSorted = [...items].sort((a, b) =>
       a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
 
     return [
       ...alphabeticalSorted.filter((v) => v.type.includes('DIRECTORY')),
       ...alphabeticalSorted.filter((v) => !v.type.includes('DIRECTORY')),
     ]
-  }
+  }, [items])
 
-  function navigate(newPath: string, newLinkedFrom = '') {
-    if (path !== newPath)
-      setItems([])
+  const navigate = useCallback((newPath: string, symlinkFullPath = '', symlinkParent = '') => {
+    const isPathChanged = path !== newPath
 
+    setItems([])
     setPath(newPath)
-    setLinkedFrom(newLinkedFrom)
+    setLinkedFrom(symlinkFullPath)
+    setLinkedFromParent(symlinkParent)
 
-    window.history.pushState({ linkedFromParent: path, linkedFrom: newLinkedFrom, isPathChanged: path !== newPath }, "", newPath)
-  }
+    if (!isPathChanged)
+      setForceReload(prev => prev + 1)
+
+    window.history.pushState({
+      linkedFromParent: symlinkParent,
+      linkedFrom: symlinkFullPath,
+      isPathChanged: isPathChanged
+    }, "", newPath)
+  }, [path])
+
+  const handleParentClick = useCallback((ev: React.MouseEvent) => {
+    ev.preventDefault()
+    if (path !== '/')
+      navigate(path.split('/').slice(0, -2).join('/') + '/')
+  }, [path, navigate])
 
   return (
-    <div className="container">
+    <div className="index_view">
       <h1>Index of {path}</h1>
       <div className="desc">
         <p>
@@ -113,7 +128,7 @@ function IndexView() {
               Linked from:
               <a onClick={(ev) => {
                 ev.preventDefault()
-                window.history.back()
+                navigate(linkedFromParent)
               }} href={linkedFromParent}>
                 &#32;{linkedFrom}
               </a>
@@ -121,28 +136,46 @@ function IndexView() {
           ) : <></>}
         </p>
       </div>
-      <a className="parent" onClick={(ev) => {
-        ev.preventDefault()
-        if (path !== '/')
-          navigate(path.split('/').slice(0, -2).join('/') + '/')
-      }} href="..">
-        <Folders className="icon" />Parent Directory
+      <a className="parent" onClick={handleParentClick} href="..">
+        <Folders className="icon" />
+        <p>Parent Directory</p>
       </a>
-      <div className="content">
-        <AutoSizer style={{ height: '100%', width: '100%' }}>
-          {(style) =>
-            <List
-              listRef={listRef as any}
-              rowComponent={RowComponent}
-              rowCount={items.length}
-              rowHeight={25}
-              style={style}
-              className="items"
-              rowProps={{ items, navigate }}
-            />
-          }
-        </AutoSizer>
-      </div>
+      <ul className="items">
+        {sortedItems.map((item, i) => (
+          <li key={i}>
+            <a
+              className="item"
+              onClick={(ev) => {
+                if (item.type.includes('FILE'))
+                  return
+
+                ev.preventDefault()
+
+                if (item.linkedTo !== undefined)
+                  navigate(item.linkedTo, item.fullPath, path)
+                else
+                  navigate(item.fullPath)
+              }}
+              href={item.fullPath}>
+
+              {item.type === 'FILE' && <File className="icon" />}
+              {item.type === 'DIRECTORY' && <Folder className="icon" />}
+              {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="icon" />}
+              {item.type === 'LINK_FILE' && <FileSymlink className="icon" />}
+
+              <span
+                data-tooltip-id="tooltip"
+                data-tooltip-content={"Linked to " + item.linkedTo}
+                data-tooltip-hidden={item.linkedTo === undefined}
+                data-tooltip-place="right"
+                className="fname">{item.name}</span>
+
+              <span className="size">{item.bytes !== undefined && formatBytes(item.bytes)}</span>
+              <span className="last">{new Date(item.lastUpdate).toLocaleString()}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

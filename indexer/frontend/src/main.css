@@ -2,6 +2,7 @@
   font-family: 'Roboto Variable', Arial, Helvetica, sans-serif;
   background-color: #faf7f5;
   color: #222225;
+  overflow: hidden;
 }
 
 * {
@@ -12,27 +13,15 @@ html,
 body,
 h1,
 h2,
+ul,
 p {
   padding: 0;
   margin: 0;
 }
 
-html {
+#root {
   width: 100dvw;
   height: 100dvh;
-  overflow: hidden;
-}
-
-body {
-  width: 100%;
-  height: 100%;
-  display: flex;
-}
-
-#root {
-  width: 100%;
-  height: 100%;
-  width: 100%;
 }
 
 a {

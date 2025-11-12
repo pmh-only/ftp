@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 
 import 'normalize.css'
-import './index.css'
+import './main.css'
 import '@fontsource-variable/roboto/index.css'
 import '@fontsource-variable/merriweather/index.css'
 import { Tooltip } from 'react-tooltip'
