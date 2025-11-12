@@ -18,6 +18,7 @@ function FileLister({ className }: Props) {
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
   const [forceReload, setForceReload] = useState<number>(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const handlePopState = () => {
@@ -40,6 +41,8 @@ function FileLister({ className }: Props) {
     document.title = path + ' - ftp.io.kr'
 
     async function listDirectory() {
+      setLoading(true)
+      
       const url = (import.meta.env.DEV ? '/api' : '') + path
       const res = await fetch(url, {
         headers: { 'X-Override-To': 'machine' }
@@ -77,6 +80,8 @@ function FileLister({ className }: Props) {
           setItems(currentJson)
         } catch { }
       }
+
+      setLoading(false)
     }
 
     listDirectory()
@@ -141,6 +146,8 @@ function FileLister({ className }: Props) {
         </div>
       </div>
 
+      {loading && <progress className="progress progress-accent"></progress>}
+
       <AutoSizer className="grow">
         {(style) =>
           <List
@@ -148,7 +155,7 @@ function FileLister({ className }: Props) {
             rowCount={items.length}
             rowHeight={24}
             style={style}
-            className="flex"
+            className="flex pb-6"
             rowProps={{ items, navigate, path }}
           />
         }

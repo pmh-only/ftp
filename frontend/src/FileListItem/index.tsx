@@ -19,7 +19,7 @@ function FileListerItem({
   return (
     <li style={style} className="flex gap-2 items-center text-nowrap">
       <a
-        className="h-full flex items-center gap-1 text-accent hover:text-accent-content hover:underline grow shrink overflow-hidden text-ellipsis"
+        className="h-full flex gap-1 text-accent hover:text-accent-content hover:underline grow shrink overflow-hidden"
         onClick={(ev) => {
           if (item.type?.includes('FILE'))
             return
@@ -38,7 +38,14 @@ function FileListerItem({
         {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="w-[1em] h-[1em] shrink-0" />}
         {item.type === 'LINK_FILE' && <FileSymlink className="w-[1em] h-[1em] shrink-0" />}
 
-        {item.name}
+        <span
+          className='overflow-hidden text-ellipsis'
+          data-tooltip-id="tooltip"
+          data-tooltip-content={"Linked to " + item.linkedTo}
+          data-tooltip-hidden={item.linkedTo === undefined}
+          data-tooltip-place="right">
+          {item.name}
+        </span>
       </a>
       {item.bytes !== undefined ? <span>{item.bytesReadable}</span> : <></>}
       <span className="self-end text-xs opacity-70">{item.lastUpdateReadable}</span>
