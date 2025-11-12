@@ -58,13 +58,22 @@ func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) F
 		size = nil
 	}
 
+	loc, _ := time.LoadLocation("Asia/Seoul")
+
+	bytesReadable := ""
+	if size != nil {
+		bytesReadable = formatBytes(*size)
+	}
+
 	return FileModel{
-		Name:       displayName,
-		Type:       ftype,
-		Bytes:      size,
-		FullPath:   fullPath,
-		LastUpdate: entry.ModTime(),
-		LinkedTo:   linkedTo,
+		Name:               displayName,
+		Type:               ftype,
+		LinkedTo:           linkedTo,
+		Bytes:              size,
+		BytesReadable:      bytesReadable,
+		FullPath:           fullPath,
+		LastUpdate:         entry.ModTime(),
+		LastUpdateReadable: entry.ModTime().In(loc).Format("2006-01-02 15:04:05") + " KST",
 	}
 }
 

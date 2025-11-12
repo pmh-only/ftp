@@ -1,8 +1,10 @@
 export interface FileModel {
-  name: string
-  type: string
+  name: string | undefined
+  type: string | undefined
   linkedTo: string | undefined
   bytes: number | undefined
-  fullPath: string
-  lastUpdate: string
+  bytesReadable: number | undefined
+  fullPath: string | undefined
+  lastUpdate: string | undefined
+  lastUpdateReadable: string | undefined
 }

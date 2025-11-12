@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import './style.css'
 import type { FileModel } from '../model'
-import { formatBytes } from '../utils'
+import { jsonrepair } from 'jsonrepair'
 
 function App() {
   const url = new URL(window.location.href)
@@ -15,12 +15,29 @@ function App() {
 
     async function listDirectory() {
       const res = await fetch(path, {
-        headers: { 'X-Override-To': 'machine' },
-        cache: 'no-cache'
+        headers: { 'X-Override-To': 'machine' }
       })
 
       if (cancelled) return
-      setItems(await res.json())
+      if (res.body === null) {
+        alert('Directory listing failed.')
+        return
+      }
+
+      const reader = res.body.getReader()
+      let incompleteBody = ''
+
+      for (; ;) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const text = new TextDecoder().decode(value)
+        incompleteBody += text
+
+        const currentJson = JSON.parse(jsonrepair(incompleteBody)) as FileModel[]
+
+        setItems(currentJson)
+      }
     }
 
     listDirectory()
@@ -42,8 +59,8 @@ function App() {
           <li key={v.fullPath} className="item">
             <span>{v.type}</span>
             <span><a href={v.linkedTo ?? v.fullPath}>{v.name}</a></span>
-            {v.bytes !== undefined ? <span>{formatBytes(v.bytes)}</span> : <></>}
-            <span>{new Date(v.lastUpdate).toLocaleString()}</span>
+            {v.bytes !== undefined ? <span>{v.bytesReadable}</span> : <></>}
+            <span>{v.lastUpdateReadable}</span>
           </li>
         )}
       </ul>
