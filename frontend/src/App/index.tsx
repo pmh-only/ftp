@@ -32,14 +32,14 @@ function App() {
 
   return (
     <div>
-      <p>Index of {window.location.pathname}</p>
+      <h1>Index of {window.location.pathname}</h1>
       <p>{items.length} item{items.length === 1 ? '' : 's'} found.</p>
 
-      <a href="..">Parent Directory</a>
+      <p><a href="..">Parent Directory</a></p>
 
-      <ul>
+      <ul className="items">
         {items.map((v) =>
-          <li key={v.fullPath}>
+          <li key={v.fullPath} className="item">
             <span>{v.type}</span>
             <span><a href={v.linkedTo ?? v.fullPath}>{v.name}</a></span>
             {v.bytes !== undefined ? <span>{formatBytes(v.bytes)}</span> : <></>}

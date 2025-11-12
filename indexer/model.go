@@ -9,12 +9,14 @@ import (
 )
 
 type FileModel struct {
-	Name       string    `json:"name"`
-	Type       string    `json:"type"`
-	LinkedTo   string    `json:"linkedTo,omitempty"`
-	Bytes      *int64    `json:"bytes,omitempty"`
-	FullPath   string    `json:"fullPath"`
-	LastUpdate time.Time `json:"lastUpdate"`
+	Name               string    `json:"name"`
+	Type               string    `json:"type"`
+	LinkedTo           string    `json:"linkedTo,omitempty"`
+	Bytes              *int64    `json:"bytes,omitempty"`
+	BytesReadable      string    `json:"bytesReadable,omitempty"`
+	FullPath           string    `json:"fullPath"`
+	LastUpdate         time.Time `json:"lastUpdate"`
+	LastUpdateReadable string    `json:"lastUpdateReadable"`
 }
 
 func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) FileModel {
@@ -38,7 +40,7 @@ func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) F
 
 		ftype = linkType
 		if linkedToPtr != nil {
-			linkedTo = "/" + path.Join(logicalDirPath, *linkedToPtr)
+			linkedTo = path.Join(logicalDirPath, *linkedToPtr)
 		}
 
 		if sizePtr != nil {
