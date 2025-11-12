@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+html {
+  overflow: hidden;
+}
+
+h1 {
+  margin: 0px;
+}

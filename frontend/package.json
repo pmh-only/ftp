@@ -10,9 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "jsonrepair": "^3.13.1",
+    "@tailwindcss/vite": "^4.1.17",
+    "daisyui": "^5.5.0",
+    "lucide-react": "^0.553.0",
+    "normalize.css": "^8.0.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "react-virtualized-auto-sizer": "^1.0.26",
+    "react-window": "^2.2.3",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
