@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import './style.css'
 import type { FileModel } from '../model'
-import { ArrowLeft, Folders } from 'lucide-react'
+import { ArrowLeft, Check, Folders } from 'lucide-react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
@@ -18,7 +18,6 @@ function FileLister({ className }: Props) {
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
   const [forceReload, setForceReload] = useState<number>(0)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const handlePopState = () => {
@@ -41,8 +40,6 @@ function FileLister({ className }: Props) {
     document.title = path + ' - ftp.io.kr'
 
     async function listDirectory() {
-      setLoading(true)
-      
       const url = (import.meta.env.DEV ? '/api' : '') + path
       const res = await fetch(url, {
         headers: { 'X-Override-To': 'machine' }
@@ -80,8 +77,6 @@ function FileLister({ className }: Props) {
           setItems(currentJson)
         } catch { }
       }
-
-      setLoading(false)
     }
 
     listDirectory()
@@ -119,34 +114,31 @@ function FileLister({ className }: Props) {
     <div className={className + " items-start gap-2"}>
       <h1>Index of {path}</h1>
       <div className="flex gap-2 w-full">
-        <div
-          role="button"
+        <button
+          disabled={path === '/'}
           className="btn btn-accent flex gap-1 h-full aspect-square relative"
           onClick={handleParentClick}>
           <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />
-        </div>
-        <div role="alert" className="grow alert alert-soft w-full">
-          <p className="flex items-center gap-2">
-            <span><b>{items.length}</b> item{items.length === 1 ? '' : 's'} found.</span>
-            {linkedFrom.length > 0 ? (
-              <>
-                Linked from:
-                <a
-                  className="flex items-center gap-1 text-accent hover:text-accent-content"
-                  onClick={(ev) => {
-                    ev.preventDefault()
-                    navigate(linkedFromParent)
-                  }} href={linkedFromParent}>
-                  <Folders className="w-[1em] h-[1em]" />
-                  {linkedFrom}
-                </a>
-              </>
-            ) : <></>}
-          </p>
+        </button>
+        <div role="alert" className="grow alert alert-soft w-full flex gap-2">
+          <p><Check className="w-[1em] h-[1em] shrink-0" /></p>
+          <p className="grow flex-1"><b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!</p>
+          {linkedFrom.length > 0 ? (
+            <p className="flex gap-2">
+              Redirected from:
+              <a
+                className="flex items-center gap-1"
+                onClick={(ev) => {
+                  ev.preventDefault()
+                  navigate(linkedFromParent)
+                }} href={linkedFromParent}>
+                <Folders className="w-[1em] h-[1em]" />
+                {linkedFrom}
+              </a>
+            </p>
+          ) : <></>}
         </div>
       </div>
-
-      {loading && <progress className="progress progress-accent"></progress>}
 
       <AutoSizer className="grow">
         {(style) =>

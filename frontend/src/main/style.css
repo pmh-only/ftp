@@ -8,3 +8,7 @@ html {
 h1 {
   margin: 0px;
 }
+
+a {
+  @apply text-accent hover:text-accent-content hover:underline;
+}

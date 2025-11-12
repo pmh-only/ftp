@@ -19,7 +19,7 @@ function FileListerItem({
   return (
     <li style={style} className="flex gap-2 items-center text-nowrap">
       <a
-        className="h-full flex gap-1 text-accent hover:text-accent-content hover:underline grow shrink overflow-hidden"
+        className="h-full flex gap-1 grow shrink overflow-hidden"
         onClick={(ev) => {
           if (item.type?.includes('FILE'))
             return
@@ -48,7 +48,7 @@ function FileListerItem({
         </span>
       </a>
       {item.bytes !== undefined ? <span>{item.bytesReadable}</span> : <></>}
-      <span className="self-end text-xs opacity-70">{item.lastUpdateReadable}</span>
+      <span className="self-end text-xs opacity-70 hidden sm:block">{item.lastUpdateReadable}</span>
     </li>
   )
 }
