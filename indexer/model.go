@@ -67,6 +67,15 @@ func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) F
 		bytesReadable = formatBytes(*size)
 	}
 
+	lastUpdate := entry.ModTime()
+	if ftype == "LINK_DIRECTORY" {
+		lastUpdate = findDirLastUpdatedDate(linkedTo, lastUpdate)
+	}
+
+	if ftype == "DIRECTORY" {
+		lastUpdate = findDirLastUpdatedDate(fullPath, lastUpdate)
+	}
+
 	return FileModel{
 		Name:               displayName,
 		Type:               ftype,
@@ -74,8 +83,8 @@ func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) F
 		Bytes:              size,
 		BytesReadable:      bytesReadable,
 		FullPath:           fullPath,
-		LastUpdate:         entry.ModTime(),
-		LastUpdateReadable: entry.ModTime().In(loc).Format("2006-01-02 15:04:05") + " KST",
+		LastUpdate:         lastUpdate,
+		LastUpdateReadable: lastUpdate.In(loc).Format("2006-01-02 15:04:05") + " KST",
 	}
 }
 

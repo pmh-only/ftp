@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func getEnv(key, _default string) string {
@@ -42,6 +44,29 @@ func getAllTarget() []string {
 	}
 
 	return target
+}
+
+func findDirLastUpdatedDate(rootPath string, defaultTime time.Time) time.Time {
+	result := defaultTime
+
+	err := filepath.Walk(path.Join("/data/static", rootPath), func(physicalPath string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Printf("Error accessing path %q: %v\n", physicalPath, err)
+			return err
+		}
+
+		if !info.IsDir() && result.Compare(info.ModTime()) < 0 {
+			result = info.ModTime()
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("Error walking the path %q: %v\n", rootPath, err)
+	}
+
+	return result
 }
 
 func formatBytes(b int64) string {
