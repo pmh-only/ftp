@@ -2,6 +2,7 @@ import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
 import './style.css'
 import { File, FileSymlink, Folder, FolderSymlink } from 'lucide-react'
+import { getLastUpdateRelative } from './utils'
 
 function FileListerItem({
   index,
@@ -15,6 +16,7 @@ function FileListerItem({
   navigate: (path: string, linkedFrom?: string, base?: string) => void
 }>) {
   const item = items[index]
+  const [lastUpdateRelative, lastUpdateRelativeLevel] = getLastUpdateRelative(item)
 
   return (
     <li style={style} className="flex gap-2 items-center text-nowrap">
@@ -46,8 +48,14 @@ function FileListerItem({
           data-tooltip-place="right">
           {item.name}
         </span>
+
       </a>
+
       {item.bytes !== undefined ? <span className="text-sm">{item.bytesReadable}</span> : <></>}
+
+      {lastUpdateRelative !== '' &&
+        <span className={"text-sm " + lastUpdateRelativeLevel}>{lastUpdateRelative}</span>}
+
       <span className="text-xs opacity-70 hidden sm:block">{item.lastUpdateReadable}</span>
     </li>
   )
