@@ -1,4 +1,5 @@
 import './style.css'
+import '@fontsource-variable/oswald/index.css';
 
 interface Props {
   className?: string
@@ -7,8 +8,8 @@ interface Props {
 function Hero({ className }: Props) {
   return (
     <div className={className + " select-none pr-6"}>
-      <h1 className="font-bold">
-        <span className="font-light">ftp</span>.io.kr.
+      <h1 className="font-bold italic font-display">
+        <span className="font-thin">ftp</span>.io.kr.
       </h1>
 
       <div className="hidden xl:flex text-xs flex-col gap-6 py-4">

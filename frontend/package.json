@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/oswald": "^5.2.8",
     "@tailwindcss/vite": "^4.1.17",
     "daisyui": "^5.5.0",
     "lucide-react": "^0.553.0",

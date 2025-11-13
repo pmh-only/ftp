@@ -19,7 +19,7 @@ function FileListerItem({
   return (
     <li style={style} className="flex gap-2 items-center text-nowrap">
       <a
-        className="h-full flex gap-1 grow shrink overflow-hidden"
+        className="h-full flex gap-1 grow shrink overflow-hidden items-center"
         onClick={(ev) => {
           if (item.type?.includes('FILE'))
             return
@@ -33,10 +33,10 @@ function FileListerItem({
         }}
         href={item.linkedTo ?? item.fullPath}>
 
-        {item.type === 'FILE' && <File className="w-[1em] h-[1em] shrink-0" />}
-        {item.type === 'DIRECTORY' && <Folder className="w-[1em] h-[1em] shrink-0" />}
-        {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="w-[1em] h-[1em] shrink-0" />}
-        {item.type === 'LINK_FILE' && <FileSymlink className="w-[1em] h-[1em] shrink-0" />}
+        {item.type === 'FILE' && <File className="w-[1em] h-6 shrink-0" />}
+        {item.type === 'DIRECTORY' && <Folder className="w-[1em] h-6 shrink-0" />}
+        {item.type === 'LINK_DIRECTORY' && <FolderSymlink className="w-[1em] h-6 shrink-0" />}
+        {item.type === 'LINK_FILE' && <FileSymlink className="w-[1em] h-6 shrink-0" />}
 
         <span
           className='overflow-hidden text-ellipsis'
@@ -47,8 +47,8 @@ function FileListerItem({
           {item.name}
         </span>
       </a>
-      {item.bytes !== undefined ? <span>{item.bytesReadable}</span> : <></>}
-      <span className="self-end text-xs opacity-70 hidden sm:block">{item.lastUpdateReadable}</span>
+      {item.bytes !== undefined ? <span className="text-sm">{item.bytesReadable}</span> : <></>}
+      <span className="text-xs opacity-70 hidden sm:block">{item.lastUpdateReadable}</span>
     </li>
   )
 }
