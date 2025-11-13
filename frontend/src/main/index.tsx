@@ -4,7 +4,7 @@ import { Tooltip } from 'react-tooltip'
 
 import App from '../App'
 
-import '@fontsource-variable/inter/index.css'
+import '@fontsource-variable/noto-sans-kr/index.css'
 import '@fontsource-variable/oswald/index.css'
 
 import './style.css'

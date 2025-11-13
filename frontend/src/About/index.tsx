@@ -5,13 +5,20 @@ interface Props {
 function About({ className }: Props) {
   return (
     <div className={className + ' overflow-y-auto p-2 flex gap-6'}>
-      <div
-        className="hero bg-base-300 h-full max-h-42 md:max-h-64 rounded-2xl"
-        style={{ backgroundImage: 'url(/_assets/aboutbg.webp)' }}>
-        <div className="flex flex-col justify-end items-start p-6 pb-8 w-full h-full gap-2 italic">
-          <h1 className="font-bold italic font-display text-6xl">
-            <span className="font-thin">ftp</span>.io.kr.
-          </h1>
+      <div className="flex flex-col-reverse lg:flex-row gap-6">
+        <div className="grow flex-1 bg-base-300 rounded-2xl p-6 text-sm font-light">
+          <h2 className="text-lg font-normal">Welcome aboard!</h2>
+          <p>This website, <a href="#">ftp.io.kr</a> serves the public package mirror server for <a href="https://archlinux.org/" target="_blank">Arch Linux</a>, a lightweight and flexible Linux® distribution that tries to Keep It Simple.</p>
+        </div>
+
+        <div
+          className="grow flex-1 hero bg-base-300 rounded-2xl lg:max-w-xl"
+          style={{ backgroundImage: 'url(/_assets/aboutbg.webp)' }}>
+          <div className="flex flex-col justify-end items-start p-6 pb-8 w-full h-64 gap-2 italic">
+            <h1 className="font-bold italic font-display text-6xl">
+              <span className="font-thin">ftp</span>.io.kr.
+            </h1>
+          </div>
         </div>
       </div>
 

@@ -16,8 +16,8 @@ function Hero({ className }: Props) {
           <h1 className="font-bold italic font-display text-4xl">
             <span className="font-thin">ftp</span>.io.kr.
           </h1>
-          {tab === 'ABOUT' && <div className="text-xs self-end bg-accent text-accent-content px-2">about</div>}
-          {tab === 'DIR_EXPLORER' && <div className="text-xs self-end bg-accent text-accent-content px-2">dir explorer</div>}
+          {tab === 'ABOUT' && <div className="text-xs self-end bg-accent text-accent-content px-2">about mirror</div>}
+          {tab === 'DIR_EXPLORER' && <div className="text-xs self-end bg-accent text-accent-content px-2">file explorer</div>}
         </div>
       </div>
 
@@ -48,19 +48,21 @@ function Hero({ className }: Props) {
         </div>
       </div>
 
-      <div role="tablist" className="tabs tabs-box">
-        <a
-          role="tab"
-          onClick={() => setTab('ABOUT')}
-          className={'tab ' + (tab === 'ABOUT' && 'tab-active')}>
-          About
-        </a>
-        <a
-          role="tab"
-          onClick={() => setTab('DIR_EXPLORER')}
-          className={'tab ' + (tab === 'DIR_EXPLORER' && 'tab-active')}>
-          Files
-        </a>
+      <div className="flex md:w-full justify-center">
+        <div role="tablist" className="tabs tabs-box">
+          <a
+            role="tab"
+            onClick={() => setTab('ABOUT')}
+            className={'tab ' + (tab === 'ABOUT' && 'tab-active')}>
+            About
+          </a>
+          <a
+            role="tab"
+            onClick={() => setTab('DIR_EXPLORER')}
+            className={'tab ' + (tab === 'DIR_EXPLORER' && 'tab-active')}>
+            Files
+          </a>
+        </div>
       </div>
     </div>
   )

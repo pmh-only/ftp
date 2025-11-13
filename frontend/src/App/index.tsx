@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div className="w-dvw h-dvh flex justify-center">
-      <div className="flex w-full max-w-6xl flex-col p-6 md:flex-row gap-6">
+      <div className="flex w-full lg:px-24 flex-col p-6 md:flex-row gap-6">
         <Hero className="" />
 
         {tab === 'ABOUT' && <About className="flex-1 grow flex flex-col" />}
