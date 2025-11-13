@@ -184,7 +184,9 @@ function FileLister({ className }: Props) {
               ))}
           </ul>
         </div>
-        <p>with love.</p>
+        <p className="text-sm hidden sm:block">
+          <a href="//youtu.be/sgNkCrAhTGc" target="_blank">with love.</a>
+        </p>
       </div>
     </div>
   )
