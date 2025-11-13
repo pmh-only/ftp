@@ -5,16 +5,16 @@ import { ArrowLeft, ArrowRight, Folders, Home } from 'lucide-react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
+import { useAtom } from 'jotai'
+import { pathState } from '../state'
 
 interface Props {
   className?: string
 }
 
 function FileLister({ className }: Props) {
-  const url = new URL(window.location.href)
-
   const [items, setItems] = useState<FileModel[]>([])
-  const [path, setPath] = useState<string>(url.pathname)
+  const [path, setPath] = useAtom(pathState)
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
   const [forceReload, setForceReload] = useState<number>(0)
@@ -133,7 +133,7 @@ function FileLister({ className }: Props) {
           </div>
           <p className="grow flex-1"><b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!</p>
           {linkedFrom.length > 0 ? (
-            <p className="flex gap-2">
+            <p className="gap-2 hidden sm:flex">
               Redirected from:
               <a
                 className="flex items-center gap-1"

@@ -4,8 +4,9 @@ import { Tooltip } from 'react-tooltip'
 
 import App from '../App'
 
-import 'normalize.css'
 import '@fontsource-variable/inter/index.css'
+import '@fontsource-variable/oswald/index.css'
+
 import './style.css'
 
 createRoot(document.getElementById('root')!).render(

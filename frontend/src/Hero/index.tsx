@@ -1,19 +1,23 @@
+import { useAtom } from 'jotai';
+import { tabState } from '../state';
 import './style.css'
-import '@fontsource-variable/oswald/index.css';
 
 interface Props {
   className?: string
 }
 
 function Hero({ className }: Props) {
+  const [tab, setTab] = useAtom(tabState)
+
   return (
     <div className={className + " flex items-end md:items-start md:flex-col select-none pr-6 w-full md:w-auto md:min-h-full"}>
       <div className="grow md:grow-0">
         <div className="flex flex-col w-fit leading-none">
-          <h1 className="font-bold italic font-display">
+          <h1 className="font-bold italic font-display text-4xl">
             <span className="font-thin">ftp</span>.io.kr.
           </h1>
-          <div className="text-xs self-end bg-accent text-accent-content px-2">dir explorer</div>
+          {tab === 'ABOUT' && <div className="text-xs self-end bg-accent text-accent-content px-2">about</div>}
+          {tab === 'DIR_EXPLORER' && <div className="text-xs self-end bg-accent text-accent-content px-2">dir explorer</div>}
         </div>
       </div>
 
@@ -44,9 +48,20 @@ function Hero({ className }: Props) {
         </div>
       </div>
 
-      <button className="btn btn-soft btn-accent md:w-full">
-        Learn more
-      </button>
+      <div role="tablist" className="tabs tabs-box">
+        <a
+          role="tab"
+          onClick={() => setTab('ABOUT')}
+          className={'tab ' + (tab === 'ABOUT' && 'tab-active')}>
+          About
+        </a>
+        <a
+          role="tab"
+          onClick={() => setTab('DIR_EXPLORER')}
+          className={'tab ' + (tab === 'DIR_EXPLORER' && 'tab-active')}>
+          Files
+        </a>
+      </div>
     </div>
   )
 }

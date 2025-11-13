@@ -12,6 +12,10 @@ h1 {
   margin: 0px;
 }
 
-a {
+a:not(.tab) {
   @apply text-accent hover:underline;
+}
+
+.font-display {
+  font-family: 'Oswald Variable', sans-serif;
 }
