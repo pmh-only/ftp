@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import './style.css'
 import type { FileModel } from '../model'
-import { ArrowLeft, Check, Folders, Home } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Folders, Home } from 'lucide-react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
@@ -117,7 +117,8 @@ function FileLister({ className }: Props) {
           disabled={path === '/'}
           className="btn btn-accent flex gap-1 h-full aspect-square relative join-item"
           onClick={handleParentClick}>
-          <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />
+          {path === '/' && <ArrowRight className="w-[1.4em] h-[1.4em] absolute" />}
+          {path !== '/' && <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />}
         </button>
         <div role="alert" className="grow alert alert-soft w-full flex gap-2 join-item">
           <p><Check className="w-[1em] h-[1em] shrink-0" /></p>

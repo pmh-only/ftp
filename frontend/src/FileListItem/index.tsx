@@ -19,7 +19,7 @@ function FileListerItem({
   const [lastUpdateRelative, lastUpdateRelativeLevel] = getLastUpdateRelative(item)
 
   return (
-    <li style={style} className="flex gap-2 items-center text-nowrap">
+    <li style={style} className="flex gap-2 items-center text-nowrap hover:bg-accent-content">
       <a
         className="h-full flex gap-1 grow shrink overflow-hidden items-center"
         onClick={(ev) => {
