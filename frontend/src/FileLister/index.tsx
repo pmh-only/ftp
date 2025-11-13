@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import './style.css'
 import type { FileModel } from '../model'
-import { ArrowLeft, ArrowRight, Check, Folders, Home } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Folders, Home } from 'lucide-react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
@@ -18,6 +18,7 @@ function FileLister({ className }: Props) {
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
   const [forceReload, setForceReload] = useState<number>(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const handlePopState = () => {
@@ -40,6 +41,7 @@ function FileLister({ className }: Props) {
     document.title = path + ' - ftp.io.kr'
 
     async function listDirectory() {
+      setLoading(true)
       const url = (import.meta.env.DEV ? '/api' : '') + path
       const res = await fetch(url, {
         headers: { 'X-Override-To': 'machine' }
@@ -77,6 +79,8 @@ function FileLister({ className }: Props) {
           setItems(currentJson)
         } catch { }
       }
+
+      setLoading(false)
     }
 
     listDirectory()
@@ -121,7 +125,12 @@ function FileLister({ className }: Props) {
           {path !== '/' && <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />}
         </button>
         <div role="alert" className="grow alert alert-soft w-full flex gap-2 join-item">
-          <p><Check className="w-[1em] h-[1em] shrink-0" /></p>
+          <div className="inline-grid *:[grid-area:1/1]">
+            {loading && <div className="status status-error animate-ping"></div>}
+            {loading && <div className="status status-error"></div>}
+            {!loading && <div className="status status-success animate-ping"></div>}
+            {!loading && <div className="status status-success "></div>}
+          </div>
           <p className="grow flex-1"><b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!</p>
           {linkedFrom.length > 0 ? (
             <p className="flex gap-2">
