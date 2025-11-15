@@ -10,7 +10,7 @@ function Hero({ className }: Props) {
   const [tab, setTab] = useAtom(tabState)
 
   return (
-    <div className={className + " flex items-end md:items-start md:flex-col select-none pr-6 w-full md:w-auto md:min-h-full"}>
+    <div className={className + " flex items-end md:items-start md:flex-col pr-6 w-full md:w-auto md:min-h-full"}>
       <div className="grow md:grow-0">
         <div className="flex flex-col w-fit leading-none">
           <h1 className="font-bold italic font-display text-4xl">

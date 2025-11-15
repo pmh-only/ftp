@@ -5,6 +5,7 @@
 
 html {
   overflow: hidden;
+  user-select: none;
   font-family: 'Noto Sans KR Variable', Arial, Helvetica, sans-serif;
 }
 
@@ -13,7 +14,7 @@ h1 {
 }
 
 a:not(.tab) {
-  @apply text-accent hover:underline;
+  @apply text-accent hover:underline hover:bg-accent-content;
 }
 
 .font-display {
