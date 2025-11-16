@@ -48,11 +48,11 @@ func getWalkModels() []*FileModel {
 
 			parentModel.Bytes += model.Bytes
 			parentModel.BytesReadable = formatBytes(parentModel.Bytes)
+			parentModel.TotalChildrenCount += 1
 
 			if parentModel.LastUpdate.Before(model.LastUpdate) {
 				parentModel.LastUpdate = model.LastUpdate
 				parentModel.LastUpdateReadable = model.LastUpdateReadable
-				parentModel.TotalChildrenCount += 1
 			}
 
 			if i == len(pathSlices)-1 {
