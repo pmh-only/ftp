@@ -13,7 +13,7 @@ interface Props {
 }
 
 function FileLister({ className }: Props) {
-  const [items, setItems] = useState<FileModel[]>([])
+  const [items, setItems] = useState<FileModel | undefined>()
   const [path, setPath] = useAtom(pathState)
   const [linkedFrom, setLinkedFrom] = useState<string>('')
   const [linkedFromParent, setLinkedFromParent] = useState<string>('')
@@ -25,7 +25,7 @@ function FileLister({ className }: Props) {
       const url = new URL(window.location.href)
       const state = window.history.state || {}
 
-      setItems([])
+      setItems(undefined)
       setPath(url.pathname)
       setLinkedFrom(state.linkedFrom ?? '')
       setLinkedFromParent(state.linkedFromParent ?? '')
@@ -66,16 +66,13 @@ function FileLister({ className }: Props) {
         try {
           let current = incompleteBody
 
-          if (!incompleteBody.endsWith('"}]')) current += '"}]'
-          else if (!incompleteBody.endsWith('}]')) current += '}]'
+          if (!incompleteBody.endsWith('}]}')) current += '}]}'
 
-          const currentJson = JSON.parse(current) as FileModel[]
-
-          if (!Array.isArray(currentJson)) continue
+          const currentJson = JSON.parse(current) as FileModel
 
           setItems(currentJson)
         } catch (e) {
-          console.error(e)
+          // console.error(e)
         }
       }
 
@@ -93,7 +90,7 @@ function FileLister({ className }: Props) {
     (newPath: string, symlinkFullPath = '', symlinkParent = '') => {
       const isPathChanged = path !== newPath
 
-      setItems([])
+      setItems(undefined)
       setPath(newPath)
       setLinkedFrom(symlinkFullPath)
       setLinkedFromParent(symlinkParent)
@@ -151,7 +148,8 @@ function FileLister({ className }: Props) {
             {!loading && <div className="status status-success "></div>}
           </div>
           <p className="grow flex-1">
-            <b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!
+            <b>{items?.directChildren?.length}</b> item
+            {items?.directChildren?.length === 1 ? '' : 's'} found!
           </p>
           {linkedFrom.length > 0 ? (
             <p className="gap-2 hidden sm:flex">
@@ -175,16 +173,18 @@ function FileLister({ className }: Props) {
       </div>
 
       <AutoSizer className="grow">
-        {(style) => (
-          <List
-            rowComponent={FileListerItem}
-            rowCount={items.length}
-            rowHeight={24}
-            style={style}
-            className="flex"
-            rowProps={{ items, navigate, path }}
-          />
-        )}
+        {(style) =>
+          items?.directChildren && (
+            <List
+              rowComponent={FileListerItem}
+              rowCount={items.directChildren.length}
+              rowHeight={24}
+              style={style}
+              className="flex"
+              rowProps={{ items, navigate, path }}
+            />
+          )
+        }
       </AutoSizer>
 
       <div className="flex w-full text-sm">

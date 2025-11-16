@@ -7,4 +7,6 @@ export interface FileModel {
   fullPath: string | undefined
   lastUpdate: string | undefined
   lastUpdateReadable: string | undefined
+  directChildren: FileModel[] | undefined
+  totalChildrenCount: number | undefined
 }

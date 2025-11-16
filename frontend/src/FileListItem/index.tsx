@@ -11,11 +11,13 @@ function FileListerItem({
   navigate,
   style
 }: RowComponentProps<{
-  items: FileModel[]
+  items: FileModel
   path: string
   navigate: (path: string, linkedFrom?: string, base?: string) => void
 }>) {
-  const item = items[index]
+  const item = items.directChildren?.[index]
+  if (!item) return <></>
+
   const [lastUpdateRelative, lastUpdateRelativeLevel] =
     getLastUpdateRelative(item)
 
@@ -41,10 +43,10 @@ function FileListerItem({
         {item.type === 'DIRECTORY' && (
           <Folder className="w-[1em] h-6 shrink-0" />
         )}
-        {item.type === 'LINK_DIRECTORY' && (
+        {item.type === 'DIRECTORY_LINKED' && (
           <FolderSymlink className="w-[1em] h-6 shrink-0" />
         )}
-        {item.type === 'LINK_FILE' && (
+        {item.type === 'FILE_LINKED' && (
           <FileSymlink className="w-[1em] h-6 shrink-0" />
         )}
 
@@ -59,7 +61,7 @@ function FileListerItem({
         </span>
       </a>
 
-      {item.bytes !== undefined ? (
+      {item.bytesReadable && !item.type?.includes('LINKED') ? (
         <span className="text-sm">{item.bytesReadable}</span>
       ) : (
         <></>
