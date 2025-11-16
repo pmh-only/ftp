@@ -59,6 +59,7 @@ function FileLister({ className }: Props) {
       for (;;) {
         const { done, value } = await reader.read()
         if (done) break
+        if (cancelled) return
 
         const text = new TextDecoder().decode(value)
         incompleteBody += text
