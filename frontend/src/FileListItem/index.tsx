@@ -67,7 +67,7 @@ function FileListerItem({
 
       {item.bytesReadable ? (
         <span className="text-sm">
-          {item.type?.includes('LINKED') && <ArrowRight className="w-[1em] h-6" />}
+          {item.type === 'FILE_LINKED' && <ArrowRight className="w-[1em] h-6" />}
           {item.bytesReadable}
         </span>
       ) : (
