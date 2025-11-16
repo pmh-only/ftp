@@ -107,7 +107,27 @@ function About({ className }: Props) {
           </div>
         </div>
 
-        <div className="grow flex-1 bg-base-300 rounded-2xl p-6 text-sm font-light flex flex-col justify-end gap-3 items-start"></div>
+        <div className="grow flex-1 bg-base-300 rounded-2xl p-6 text-sm font-light flex flex-col justify-center gap-3 items-center">
+          <div className="stats">
+            <div className="stat place-items-center">
+              <div className="stat-title">Downloads</div>
+              <div className="stat-value">31K</div>
+              <div className="stat-desc">From January 1st to February 1st</div>
+            </div>
+
+            <div className="stat place-items-center">
+              <div className="stat-title">Users</div>
+              <div className="stat-value text-secondary">4,200</div>
+              <div className="stat-desc text-secondary">↗︎ 40 (2%)</div>
+            </div>
+
+            <div className="stat place-items-center">
+              <div className="stat-title">New Registers</div>
+              <div className="stat-value">1,200</div>
+              <div className="stat-desc">↘︎ 90 (14%)</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

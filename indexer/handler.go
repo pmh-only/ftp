@@ -7,30 +7,14 @@ import (
 )
 
 func handleGenRequest(w http.ResponseWriter, r *http.Request) {
-	url := r.URL
-	query := url.Query()
-
-	reportPath := query.Get("path")
-	if len(reportPath) < 1 {
-		log.Println("indexer request received but report path not provided.")
-		http.Error(w, "Failed", http.StatusBadRequest)
-		return
-	}
-
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintln(w, "process accepted")
-	log.Println("indexer request received.", reportPath)
+	log.Println("indexer request received.")
 
-	go func() {
-		if reportPath == "@" {
-			targetDirectories := getAllTarget()
-			startIndexingLoop(targetDirectories)
-			return
-		}
+	go startIndexJob()
+}
 
-		targetDirectories := extractTargetDirectories(reportPath)
-		log.Println("extracted target directories. count: ", len(targetDirectories))
-
-		startIndexingLoop(targetDirectories)
-	}()
+func startIndexJob() {
+	models := getWalkModels()
+	createIndex(models)
 }

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"io/fs"
+	"log"
 	"os"
-	"path"
 	"strings"
 	"time"
 
@@ -11,99 +11,125 @@ import (
 )
 
 type FileModel struct {
-	Name               string    `json:"name"`
-	Type               string    `json:"type"`
-	LinkedTo           string    `json:"linkedTo,omitempty"`
-	Bytes              *int64    `json:"bytes,omitempty"`
-	BytesReadable      string    `json:"bytesReadable,omitempty"`
-	FullPath           string    `json:"fullPath"`
-	LastUpdate         time.Time `json:"lastUpdate"`
-	LastUpdateReadable string    `json:"lastUpdateReadable"`
+	Name               string       `json:"name"`
+	Type               string       `json:"type"`
+	LinkedTo           string       `json:"linkedTo,omitempty"`
+	Bytes              int64        `json:"bytes"`
+	BytesReadable      string       `json:"bytesReadable"`
+	FullPath           string       `json:"fullPath"`
+	LastUpdate         time.Time    `json:"lastUpdate"`
+	LastUpdateReadable string       `json:"lastUpdateReadable"`
+	DirectChildren     []*FileModel `json:"directChildren"`
+	TotalChildrenCount int64        `json:"totalChildrenCount"`
 }
 
-func buildFileModel(entry os.FileInfo, physicalDirPath, logicalDirPath string) FileModel {
+func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel {
+	loc, err := time.LoadLocation("Asia/Seoul")
+	if err != nil {
+		log.Fatalln("Error has been occured during get location data", err)
+		return nil
+	}
+
+	info, err := entry.Info()
+	if err != nil {
+		log.Println("Error", err.Error(), "has been occured when fetching data into:", path, "skip.")
+		return nil
+	}
+
+	isDir := entry.IsDir()
+	isSymLink := info.Mode()&os.ModeSymlink != 0
+	logicalPath := strings.Replace(path, staticDir, "", 1)
+
 	name := entry.Name()
-	displayName := name
-	fullPath := path.Join("/"+logicalDirPath, displayName)
-	if entry.IsDir() {
-		displayName += "/"
-		fullPath += "/"
+	if len(logicalPath) < 1 {
+		logicalPath = "/"
+		name = "root"
 	}
 
 	ftype := "FILE"
-	if entry.IsDir() {
+	if isDir {
 		ftype = "DIRECTORY"
 	}
 
-	size := ptr(entry.Size())
+	if isSymLink {
+		ftype += "_LINKED"
+	}
+
 	linkedTo := ""
-	if entry.Mode()&os.ModeSymlink != 0 {
-		linkType, linkedToPtr, sizePtr := buildFileLinkedTo(physicalDirPath, name)
+	linkedToPhysical := ""
 
-		ftype = linkType
-		if linkedToPtr != nil {
-			linkedTo = path.Join("/"+logicalDirPath, *linkedToPtr)
+	if isSymLink {
+		linkedToPhysical, err = os.Readlink(path)
+
+		if err != nil {
+			log.Println("Error", err.Error(), "has been occured when read symlink data for:", path, "skip.")
+			return nil
 		}
 
-		if sizePtr != nil {
-			size = sizePtr
+		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
+	}
+
+	var byteSize int64 = 0
+	if !isDir && !isSymLink {
+		byteSize = info.Size()
+	}
+
+	byteSizeReadable := formatBytes(byteSize)
+
+	lastUpdate := info.ModTime()
+	if isSymLink {
+		info, err := os.Stat(linkedToPhysical)
+		if err != nil {
+			// log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", path, "skip.")
+			return nil
 		}
+
+		lastUpdate = info.ModTime()
 	}
 
-	if ftype == "LINK_DIRECTORY" {
-		displayName += "/"
-		linkedTo += "/"
-		fullPath += "/"
-	}
+	lastUpdateReadable := lastUpdate.In(loc).Format("2006-01-02 15:04:05") + " KST"
 
-	if strings.Contains(ftype, "DIRECTORY") {
-		size = nil
-	}
-
-	loc, _ := time.LoadLocation("Asia/Seoul")
-
-	bytesReadable := ""
-	if size != nil {
-		bytesReadable = formatBytes(*size)
-	}
-
-	lastUpdate := entry.ModTime()
-	if ftype == "LINK_DIRECTORY" {
-		lastUpdate = findDirLastUpdatedDate(linkedTo, lastUpdate)
-	}
-
-	if ftype == "DIRECTORY" {
-		lastUpdate = findDirLastUpdatedDate(fullPath, lastUpdate)
-	}
-
-	return FileModel{
-		Name:               displayName,
+	return &FileModel{
+		Name:               name,
 		Type:               ftype,
 		LinkedTo:           linkedTo,
-		Bytes:              size,
-		BytesReadable:      bytesReadable,
-		FullPath:           fullPath,
+		Bytes:              byteSize,
+		BytesReadable:      byteSizeReadable,
+		FullPath:           logicalPath,
 		LastUpdate:         lastUpdate,
-		LastUpdateReadable: lastUpdate.In(loc).Format("2006-01-02 15:04:05") + " KST",
+		LastUpdateReadable: lastUpdateReadable,
+		DirectChildren:     []*FileModel{},
+		TotalChildrenCount: 0,
 	}
 }
 
-func buildFileLinkedTo(dirPath, name string) (ftype string, linkedTo *string, size *int64) {
-	targetPath, err := os.Readlink(path.Join(dirPath, name))
-	if err != nil {
-		fmt.Printf("Error reading symbolic link target: %v\n", err)
-		return "LINK", nil, nil
+func (model FileModel) CopyWithNoRecursive() FileModel {
+	directChildren := []*FileModel{}
+	for _, directChild := range model.DirectChildren {
+		directChildren = append(directChildren, &FileModel{
+			Name:               directChild.Name,
+			Type:               directChild.Type,
+			LinkedTo:           directChild.LinkedTo,
+			Bytes:              directChild.Bytes,
+			BytesReadable:      directChild.BytesReadable,
+			FullPath:           directChild.FullPath,
+			LastUpdate:         directChild.LastUpdate,
+			LastUpdateReadable: directChild.LastUpdateReadable,
+			DirectChildren:     nil,
+			TotalChildrenCount: directChild.TotalChildrenCount,
+		})
 	}
 
-	linkToStat, err := os.Stat(path.Join(dirPath, targetPath))
-	if err != nil {
-		fmt.Printf("Error reading symbolic link target: %v\n", err)
-		return "LINK", &targetPath, nil
+	return FileModel{
+		Name:               model.Name,
+		Type:               model.Type,
+		LinkedTo:           model.LinkedTo,
+		Bytes:              model.Bytes,
+		BytesReadable:      model.BytesReadable,
+		FullPath:           model.FullPath,
+		LastUpdate:         model.LastUpdate,
+		LastUpdateReadable: model.LastUpdateReadable,
+		DirectChildren:     directChildren,
+		TotalChildrenCount: model.TotalChildrenCount,
 	}
-
-	if linkToStat.IsDir() {
-		return "LINK_DIRECTORY", &targetPath, nil
-	}
-
-	return "LINK_FILE", &targetPath, ptr(linkToStat.Size())
 }
