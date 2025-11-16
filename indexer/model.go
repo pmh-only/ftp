@@ -80,7 +80,7 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 
 		ftype = "FILE_LINKED"
 		if info.IsDir() {
-			ftype = "DIRECTORT_LINKED"
+			ftype = "DIRECTORY_LINKED"
 		}
 
 		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
