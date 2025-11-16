@@ -52,8 +52,11 @@ func getWalkModels() []*FileModel {
 				continue
 			}
 
-			parentModel.Bytes += model.Bytes
-			parentModel.BytesReadable = formatBytes(parentModel.Bytes)
+			if !strings.HasSuffix(model.Type, "_LINKED") {
+				parentModel.Bytes += model.Bytes
+				parentModel.BytesReadable = formatBytes(parentModel.Bytes)
+			}
+
 			parentModel.TotalChildrenCount += 1
 
 			if parentModel.LastUpdate.Before(model.LastUpdate) {

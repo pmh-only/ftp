@@ -59,10 +59,16 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 	}
 
 	linkedTo := ""
-	linkedToPhysical := ""
 
-	if isSymLink {
-		linkedToPhysical, err = os.Readlink(filePath)
+	var byteSize int64 = 0
+	if !isDir && !isSymLink {
+		byteSize = info.Size()
+	}
+
+	lastUpdate := info.ModTime()
+
+	if !isDir && isSymLink {
+		linkedToPhysical, err := os.Readlink(filePath)
 		linkedToPhysical = path.Join(path.Dir(filePath), linkedToPhysical)
 
 		if err != nil {
@@ -70,38 +76,26 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 			return nil
 		}
 
-		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
-	}
-
-	var byteSize int64 = 0
-	if !isDir && !isSymLink {
-		byteSize = info.Size()
-	}
-
-	byteSizeReadable := formatBytes(byteSize)
-
-	lastUpdate := info.ModTime()
-	if isSymLink {
 		info, err := os.Stat(linkedToPhysical)
 		if err != nil {
 			// log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", filePath, "skip.")
 			return nil
 		}
 
+		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
+		byteSize = info.Size()
 		lastUpdate = info.ModTime()
 	}
-
-	lastUpdateReadable := lastUpdate.In(loc).Format("2006-01-02 15:04:05") + " KST"
 
 	return &FileModel{
 		Name:               name,
 		Type:               ftype,
 		LinkedTo:           linkedTo,
 		Bytes:              byteSize,
-		BytesReadable:      byteSizeReadable,
+		BytesReadable:      formatBytes(byteSize),
 		FullPath:           logicalPath,
 		LastUpdate:         lastUpdate,
-		LastUpdateReadable: lastUpdateReadable,
+		LastUpdateReadable: lastUpdate.In(loc).Format("2006-01-02 15:04:05") + " KST",
 		DirectChildren:     []*FileModel{},
 		TotalChildrenCount: 0,
 	}
