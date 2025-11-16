@@ -29,12 +29,12 @@ function FileLister({ className }: Props) {
       setPath(url.pathname)
       setLinkedFrom(state.linkedFrom ?? '')
       setLinkedFromParent(state.linkedFromParent ?? '')
-      setForceReload(prev => prev + 1)
+      setForceReload((prev) => prev + 1)
     }
 
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
+  }, [setPath])
 
   useEffect(() => {
     let cancelled = false
@@ -56,7 +56,7 @@ function FileLister({ className }: Props) {
       const reader = res.body.getReader()
       let incompleteBody = ''
 
-      for (; ;) {
+      for (;;) {
         const { done, value } = await reader.read()
         if (done) break
 
@@ -66,18 +66,17 @@ function FileLister({ className }: Props) {
         try {
           let current = incompleteBody
 
-          if (!incompleteBody.endsWith("\"}]"))
-            current += "\"}]"
-          else if (!incompleteBody.endsWith("}]"))
-            current += "}]"
+          if (!incompleteBody.endsWith('"}]')) current += '"}]'
+          else if (!incompleteBody.endsWith('}]')) current += '}]'
 
           const currentJson = JSON.parse(current) as FileModel[]
 
-          if (!Array.isArray(currentJson))
-            continue
+          if (!Array.isArray(currentJson)) continue
 
           setItems(currentJson)
-        } catch { }
+        } catch (e) {
+          console.error(e)
+        }
       }
 
       setLoading(false)
@@ -90,48 +89,70 @@ function FileLister({ className }: Props) {
     }
   }, [path, forceReload])
 
-  const navigate = useCallback((newPath: string, symlinkFullPath = '', symlinkParent = '') => {
-    const isPathChanged = path !== newPath
+  const navigate = useCallback(
+    (newPath: string, symlinkFullPath = '', symlinkParent = '') => {
+      const isPathChanged = path !== newPath
 
-    setItems([])
-    setPath(newPath)
-    setLinkedFrom(symlinkFullPath)
-    setLinkedFromParent(symlinkParent)
+      setItems([])
+      setPath(newPath)
+      setLinkedFrom(symlinkFullPath)
+      setLinkedFromParent(symlinkParent)
 
-    if (!isPathChanged)
-      setForceReload(prev => prev + 1)
+      if (!isPathChanged) setForceReload((prev) => prev + 1)
 
-    window.history.pushState({
-      linkedFromParent: symlinkParent,
-      linkedFrom: symlinkFullPath,
-      isPathChanged: isPathChanged
-    }, "", newPath)
-  }, [path])
+      window.history.pushState(
+        {
+          linkedFromParent: symlinkParent,
+          linkedFrom: symlinkFullPath,
+          isPathChanged: isPathChanged
+        },
+        '',
+        newPath
+      )
+    },
+    [setPath, path]
+  )
 
-  const handleParentClick = useCallback((ev: React.MouseEvent) => {
-    ev.preventDefault()
-    if (path !== '/')
-      navigate(path.split('/').slice(0, -2).join('/') + '/')
-  }, [path, navigate])
+  const handleParentClick = useCallback(
+    (ev: React.MouseEvent) => {
+      ev.preventDefault()
+      if (path !== '/') navigate(path.split('/').slice(0, -2).join('/') + '/')
+    },
+    [path, navigate]
+  )
 
   return (
-    <div className={className + " gap-2"}>
+    <div className={className + ' gap-2'}>
       <div className="flex w-full join">
         <button
           disabled={path === '/'}
           className="btn btn-accent flex gap-1 h-full aspect-square relative join-item"
-          onClick={handleParentClick}>
-          {path === '/' && <ArrowRight className="w-[1.4em] h-[1.4em] absolute" />}
-          {path !== '/' && <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />}
+          onClick={handleParentClick}
+        >
+          {path === '/' && (
+            <ArrowRight className="w-[1.4em] h-[1.4em] absolute" />
+          )}
+          {path !== '/' && (
+            <ArrowLeft className="w-[1.4em] h-[1.4em] absolute" />
+          )}
         </button>
-        <div role="alert" className="grow alert alert-soft w-full flex gap-2 join-item">
+        <div
+          role="alert"
+          className="grow alert alert-soft w-full flex gap-2 join-item"
+        >
           <div className="inline-grid *:[grid-area:1/1]">
-            {loading && <div className="status status-error animate-ping"></div>}
+            {loading && (
+              <div className="status status-error animate-ping"></div>
+            )}
             {loading && <div className="status status-error"></div>}
-            {!loading && <div className="status status-success animate-ping"></div>}
+            {!loading && (
+              <div className="status status-success animate-ping"></div>
+            )}
             {!loading && <div className="status status-success "></div>}
           </div>
-          <p className="grow flex-1"><b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!</p>
+          <p className="grow flex-1">
+            <b>{items.length}</b> item{items.length === 1 ? '' : 's'} found!
+          </p>
           {linkedFrom.length > 0 ? (
             <p className="gap-2 hidden sm:flex">
               Redirected from:
@@ -140,17 +161,21 @@ function FileLister({ className }: Props) {
                 onClick={(ev) => {
                   ev.preventDefault()
                   navigate(linkedFromParent)
-                }} href={linkedFromParent}>
+                }}
+                href={linkedFromParent}
+              >
                 <Folders className="w-[1em] h-[1em]" />
                 {linkedFrom}
               </a>
             </p>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
       <AutoSizer className="grow">
-        {(style) =>
+        {(style) => (
           <List
             rowComponent={FileListerItem}
             rowCount={items.length}
@@ -159,7 +184,7 @@ function FileLister({ className }: Props) {
             className="flex"
             rowProps={{ items, navigate, path }}
           />
-        }
+        )}
       </AutoSizer>
 
       <div className="flex w-full text-sm">
@@ -169,9 +194,10 @@ function FileLister({ className }: Props) {
               <a
                 onClick={(ev) => {
                   ev.preventDefault()
-                  navigate("/")
+                  navigate('/')
                 }}
-                href="/">
+                href="/"
+              >
                 <Home className="w-[1em] h-5" />
               </a>
             </li>
@@ -186,7 +212,8 @@ function FileLister({ className }: Props) {
                       ev.preventDefault()
                       navigate(`/${a.slice(0, i + 1).join('/')}/`)
                     }}
-                    href={`/${a.slice(0, i + 1).join('/')}/`}>
+                    href={`/${a.slice(0, i + 1).join('/')}/`}
+                  >
                     {v}
                   </a>
                 </li>
@@ -194,7 +221,9 @@ function FileLister({ className }: Props) {
           </ul>
         </div>
         <p className="text-sm hidden sm:block">
-          <a href="//youtu.be/sgNkCrAhTGc" target="_blank">with love.</a>
+          <a href="//youtu.be/sgNkCrAhTGc" target="_blank">
+            with love.
+          </a>
         </p>
       </div>
     </div>
