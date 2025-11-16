@@ -149,8 +149,9 @@ function FileLister({ className }: Props) {
             {!loading && <div className="status status-success "></div>}
           </div>
           <p className="grow flex-1">
-            <b>{items?.directChildren?.length}</b> item
-            {items?.directChildren?.length === 1 ? '' : 's'} found!
+            <b>{items?.directChildren?.length ?? 0}</b> item
+            {items?.directChildren?.length === 1 ? '' : 's'} (
+            {items?.bytesReadable ?? '0 Bytes'}) found!
           </p>
           {linkedFrom.length > 0 ? (
             <p className="gap-2 hidden sm:flex">
