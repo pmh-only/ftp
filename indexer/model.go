@@ -19,8 +19,8 @@ type FileModel struct {
 	FullPath           string       `json:"fullPath"`
 	LastUpdate         time.Time    `json:"lastUpdate"`
 	LastUpdateReadable string       `json:"lastUpdateReadable"`
-	DirectChildren     []*FileModel `json:"directChildren"`
 	TotalChildrenCount int64        `json:"totalChildrenCount"`
+	DirectChildren     []*FileModel `json:"directChildren"`
 }
 
 func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel {
