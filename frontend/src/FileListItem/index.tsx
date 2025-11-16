@@ -27,7 +27,7 @@ function FileListerItem({
       className="flex gap-2 items-center text-nowrap hover:bg-accent-content"
     >
       <a
-        className="h-full flex gap-1 grow shrink overflow-hidden items-center"
+        className="h-full flex gap-1 grow shrink overflow-hidden items-end"
         onClick={(ev) => {
           if (item.type?.includes('FILE')) return
 
@@ -58,6 +58,10 @@ function FileListerItem({
           data-tooltip-place="right"
         >
           {item.name}
+        </span>
+
+        <span className="text-xs">
+          {item.type === 'DIRECTORY' && `${item.totalChildrenCount} items`}
         </span>
       </a>
 

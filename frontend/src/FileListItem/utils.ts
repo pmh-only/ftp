@@ -4,7 +4,11 @@ const rtf = new Intl.RelativeTimeFormat('en')
 const now = Date.now()
 
 export function getLastUpdateRelative(item: FileModel): [string, string] {
-  const lastUpdate = +new Date(item.lastUpdate ?? Infinity)
+  if (!item.lastUpdate) {
+    return ['', '']
+  }
+
+  const lastUpdate = +new Date(item.lastUpdate)
   const lastUpdateRelativeNumber = now - lastUpdate
 
   if (lastUpdateRelativeNumber < 1000) return ['now', 'text-red-500']
