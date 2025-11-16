@@ -46,7 +46,7 @@ func getWalkModels() []*FileModel {
 				parentPath += strings.Join(pathSlices[:i], "/") + "/"
 			}
 
-			log.Println(model.FullPath, "->", parentPath, "#", i, len(pathSlices)-1)
+			// log.Println(model.FullPath, "->", parentPath, "#", i, len(pathSlices)-1)
 			parentModel, ok := files[parentPath]
 			if !ok {
 				continue
