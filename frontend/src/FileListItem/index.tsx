@@ -65,8 +65,8 @@ function FileListerItem({
         </span>
       </a>
 
-      {item.bytesReadable ? (
-        <span className="text-sm">
+      {item.bytesReadable !== undefined && item.type !== "DIRECTORY_LINKED" ? (
+        <span className="text-sm flex justify-center gap-1">
           {item.type === 'FILE_LINKED' && <ArrowRight className="w-[1em] h-6" />}
           {item.bytesReadable}
         </span>

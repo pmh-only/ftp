@@ -54,10 +54,6 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 		logicalPath += "/"
 	}
 
-	if isSymLink {
-		ftype += "_LINKED"
-	}
-
 	linkedTo := ""
 
 	var byteSize int64 = 0
@@ -80,6 +76,11 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 		if err != nil {
 			// log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", filePath, "skip.")
 			return nil
+		}
+
+		ftype = "FILE_LINKED"
+		if info.IsDir() {
+			ftype = "DIRECTORT_LINKED"
 		}
 
 		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
