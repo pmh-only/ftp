@@ -42,13 +42,15 @@ func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel 
 
 	name := entry.Name()
 	if len(logicalPath) < 1 {
-		logicalPath = "/"
+		logicalPath = ""
 		name = "root"
 	}
 
 	ftype := "FILE"
 	if isDir {
 		ftype = "DIRECTORY"
+		name += "/"
+		logicalPath += "/"
 	}
 
 	if isSymLink {
@@ -80,7 +82,7 @@ func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel 
 	if isSymLink {
 		info, err := os.Stat(linkedToPhysical)
 		if err != nil {
-			// log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", path, "skip.")
+			log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", path, "skip.")
 			return nil
 		}
 
