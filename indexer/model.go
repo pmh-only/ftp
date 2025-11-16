@@ -4,6 +4,7 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"path"
 	"strings"
 	"time"
 
@@ -23,7 +24,7 @@ type FileModel struct {
 	DirectChildren     []*FileModel `json:"directChildren"`
 }
 
-func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel {
+func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileModel {
 	loc, err := time.LoadLocation("Asia/Seoul")
 	if err != nil {
 		log.Fatalln("Error has been occured during get location data", err)
@@ -32,13 +33,13 @@ func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel 
 
 	info, err := entry.Info()
 	if err != nil {
-		log.Println("Error", err.Error(), "has been occured when fetching data into:", path, "skip.")
+		log.Println("Error", err.Error(), "has been occured when fetching data into:", filePath, "skip.")
 		return nil
 	}
 
 	isDir := entry.IsDir()
 	isSymLink := info.Mode()&os.ModeSymlink != 0
-	logicalPath := strings.Replace(path, staticDir, "", 1)
+	logicalPath := strings.Replace(filePath, staticDir, "", 1)
 
 	name := entry.Name()
 	if len(logicalPath) < 1 {
@@ -61,10 +62,11 @@ func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel 
 	linkedToPhysical := ""
 
 	if isSymLink {
-		linkedToPhysical, err = os.Readlink(path)
+		linkedToPhysical, err = os.Readlink(filePath)
+		linkedToPhysical = path.Join(path.Dir(filePath), linkedToPhysical)
 
 		if err != nil {
-			log.Println("Error", err.Error(), "has been occured when read symlink data for:", path, "skip.")
+			log.Println("Error", err.Error(), "has been occured when read symlink data for:", filePath, "skip.")
 			return nil
 		}
 
@@ -82,7 +84,7 @@ func createModelFromEntry(staticDir, path string, entry fs.DirEntry) *FileModel 
 	if isSymLink {
 		info, err := os.Stat(linkedToPhysical)
 		if err != nil {
-			log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", path, "skip.")
+			log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", filePath, "skip.")
 			return nil
 		}
 
