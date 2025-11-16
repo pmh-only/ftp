@@ -1,0 +1,21 @@
+{
+  "background_color": "#1d232a",
+  "categories": ["productivity", "utilities"],
+  "description": "ftp.io.kr provides a fast, reliable package mirror for Arch Linux.",
+  "display": "standalone",
+  "icons": [
+    {
+      "purpose": "any maskable",
+      "sizes": "512x512",
+      "src": "/assets/favicon.webp",
+      "type": "image/webp"
+    }
+  ],
+  "lang": "en",
+  "name": "ftp.io.kr. - reliable mirror for Arch Linux",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "short_name": "ftp.io.kr.",
+  "start_url": "/",
+  "theme_color": "#00d3bb"
+}

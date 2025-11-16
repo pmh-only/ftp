@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
-import './style.css'
-import type { FileModel } from '../model'
+import { useAtom } from 'jotai'
 import { ArrowLeft, ArrowRight, Folders, Home } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
-import { useAtom } from 'jotai'
+import type { FileModel } from '../model'
 import { pathState } from '../state'
+import './style.css'
 
 interface Props {
   className?: string
@@ -38,7 +38,7 @@ function FileLister({ className }: Props) {
 
   useEffect(() => {
     let cancelled = false
-    document.title = path + ' - ftp.io.kr'
+    document.title = path + ' - ftp.io.kr.'
 
     async function listDirectory() {
       setLoading(true)

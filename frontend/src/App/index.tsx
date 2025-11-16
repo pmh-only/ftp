@@ -1,9 +1,9 @@
 import { useAtomValue } from 'jotai'
+import About from '../About'
 import FileLister from '../FileLister'
 import Hero from '../Hero'
-import './style.css'
 import { tabState } from '../state'
-import About from '../About'
+import './style.css'
 
 function App() {
   const tab = useAtomValue(tabState)

@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai'
-import { tabState } from '../state'
 import { useEffect } from 'react'
+import { tabState } from '../state'
 
 interface Props {
   className?: string
@@ -9,7 +9,7 @@ interface Props {
 function About({ className }: Props) {
   const setTab = useSetAtom(tabState)
   useEffect(() => {
-    document.title = 'about - ftp.io.kr'
+    document.title = 'about - ftp.io.kr.'
   })
 
   return (
@@ -33,8 +33,8 @@ function About({ className }: Props) {
               <div>Mirror for Arch Linux</div>
             </h2>
             <p>
-              This server, <a href="#">ftp.io.kr</a> provides a reliable,
-              unrestricted package mirror for{' '}
+              This server <a href="#">ftp.io.kr</a> provides a fast, reliable
+              package mirror for{' '}
               <a href="https://archlinux.org/" target="_blank">
                 Arch Linux
               </a>

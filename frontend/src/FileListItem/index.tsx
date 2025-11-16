@@ -1,7 +1,7 @@
+import { File, FileSymlink, Folder, FolderSymlink } from 'lucide-react'
 import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
 import './style.css'
-import { File, FileSymlink, Folder, FolderSymlink } from 'lucide-react'
 import { getLastUpdateRelative } from './utils'
 
 function FileListerItem({
