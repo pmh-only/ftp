@@ -12,6 +12,8 @@ func createIndex(models []*FileModel) {
 
 	for _, model := range models {
 		clearedModel := model.CopyWithNoRecursive()
+		clearedModel.DirectChildren = sortFileModels(clearedModel.DirectChildren)
+
 		indexFilePath := path.Join(indexDir, model.FullPath, "index.json")
 
 		modelString, err := json.Marshal(clearedModel)
