@@ -36,9 +36,15 @@ func getWalkModels() []*FileModel {
 		}
 
 		pathSlices := strings.Split(model.FullPath, "/")[1:]
+		if strings.HasSuffix(model.FullPath, "/") {
+			pathSlices = pathSlices[:len(pathSlices)-1]
+		}
 
 		for i := range pathSlices {
-			parentPath := "/" + strings.Join(pathSlices[:i], "/")
+			parentPath := "/"
+			if i > 0 {
+				parentPath += strings.Join(pathSlices[:i], "/") + "/"
+			}
 
 			log.Println(model.FullPath, "->", parentPath, "#", i, len(pathSlices)-1)
 			parentModel, ok := files[parentPath]

@@ -84,7 +84,7 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 	if isSymLink {
 		info, err := os.Stat(linkedToPhysical)
 		if err != nil {
-			log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", filePath, "skip.")
+			// log.Println("Error", err.Error(), "has been occured when read symlink's linked file data for:", filePath, "skip.")
 			return nil
 		}
 
