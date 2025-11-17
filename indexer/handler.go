@@ -15,6 +15,7 @@ func handleGenRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func startIndexJob() {
-	models := getWalkModels()
-	createIndex(models)
+	if err := rebuildIndexes(); err != nil {
+		log.Println("error during index job:", err)
+	}
 }

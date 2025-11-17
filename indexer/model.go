@@ -101,34 +101,3 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 		TotalChildrenCount: 0,
 	}
 }
-
-func (model FileModel) CopyWithNoRecursive() FileModel {
-	directChildren := []*FileModel{}
-	for _, directChild := range model.DirectChildren {
-		directChildren = append(directChildren, &FileModel{
-			Name:               directChild.Name,
-			Type:               directChild.Type,
-			LinkedTo:           directChild.LinkedTo,
-			Bytes:              directChild.Bytes,
-			BytesReadable:      directChild.BytesReadable,
-			FullPath:           directChild.FullPath,
-			LastUpdate:         directChild.LastUpdate,
-			LastUpdateReadable: directChild.LastUpdateReadable,
-			DirectChildren:     nil,
-			TotalChildrenCount: directChild.TotalChildrenCount,
-		})
-	}
-
-	return FileModel{
-		Name:               model.Name,
-		Type:               model.Type,
-		LinkedTo:           model.LinkedTo,
-		Bytes:              model.Bytes,
-		BytesReadable:      model.BytesReadable,
-		FullPath:           model.FullPath,
-		LastUpdate:         model.LastUpdate,
-		LastUpdateReadable: model.LastUpdateReadable,
-		DirectChildren:     directChildren,
-		TotalChildrenCount: model.TotalChildrenCount,
-	}
-}

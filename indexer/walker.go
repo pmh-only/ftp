@@ -3,76 +3,120 @@ package main
 import (
 	"io/fs"
 	"log"
-	"maps"
+	"os"
 	"path"
 	"path/filepath"
-	"slices"
 	"strings"
+	"time"
 
 	_ "time/tzdata"
 )
 
-func getWalkModels() []*FileModel {
-	files := map[string]*FileModel{}
+type walkStats struct {
+	directories int64
+	lastLog     time.Time
+}
+
+const (
+	progressStep     = 250
+	progressInterval = 2 * time.Second
+)
+
+func newWalkStats() *walkStats {
+	return &walkStats{lastLog: time.Now()}
+}
+
+func (s *walkStats) recordDirectory() {
+	s.directories++
+	if s.directories == 1 || s.directories%progressStep == 0 || time.Since(s.lastLog) >= progressInterval {
+		log.Printf("indexed %d directories so far", s.directories)
+		s.lastLog = time.Now()
+	}
+}
+
+func rebuildIndexes() error {
 	staticPath := path.Join(rootDir, "static")
+	log.Println("starting index rebuild for:", staticPath)
 
-	filepath.WalkDir(staticPath, func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			log.Println("Error", err.Error(), "has been occured when walking into:", path, "skip.")
-			return nil
-		}
+	info, err := os.Stat(staticPath)
+	if err != nil {
+		return err
+	}
 
-		model := createModelFromEntry(staticPath, path, entry)
-		if model == nil {
-			return nil
-		}
+	start := time.Now()
+	stats := newWalkStats()
 
-		if model.Type == "DIRECTORY" {
-			files[model.FullPath] = model
-		}
+	// Walk the directory tree depth-first and write indexes as soon as a directory is processed.
+	_, err = walkDirectory(staticPath, staticPath, fs.FileInfoToDirEntry(info), stats)
+	if err != nil {
+		return err
+	}
 
-		if model.FullPath == "/" {
-			return nil
-		}
+	log.Printf("index rebuild finished in %s (%d directories)", time.Since(start).Round(time.Millisecond), stats.directories)
+	return nil
+}
 
-		pathSlices := strings.Split(model.FullPath, "/")[1:]
-		if strings.HasSuffix(model.FullPath, "/") {
-			pathSlices = pathSlices[:len(pathSlices)-1]
-		}
+func walkDirectory(staticRoot, absPath string, entry fs.DirEntry, stats *walkStats) (*FileModel, error) {
+	model := createModelFromEntry(staticRoot, absPath, entry)
+	if model == nil {
+		return nil, nil
+	}
 
-		for i := range pathSlices {
-			parentPath := "/"
-			if i > 0 {
-				parentPath += strings.Join(pathSlices[:i], "/") + "/"
+	if !entry.IsDir() {
+		return model, nil
+	}
+
+	dirEntries, err := os.ReadDir(absPath)
+	if err != nil {
+		log.Println("Error", err.Error(), "has been occured when reading dir:", absPath, "skip.")
+		return model, nil
+	}
+
+	for _, childEntry := range dirEntries {
+		childPath := filepath.Join(absPath, childEntry.Name())
+
+		var childModel *FileModel
+		if childEntry.IsDir() {
+			childModel, err = walkDirectory(staticRoot, childPath, childEntry, stats)
+			if err != nil {
+				return nil, err
 			}
-
-			// log.Println(model.FullPath, "->", parentPath, "#", i, len(pathSlices)-1)
-			parentModel, ok := files[parentPath]
-			if !ok {
-				continue
-			}
-
-			if !strings.HasSuffix(model.Type, "_LINKED") {
-				parentModel.Bytes += model.Bytes
-				parentModel.BytesReadable = formatBytes(parentModel.Bytes)
-			}
-
-			parentModel.TotalChildrenCount += 1
-
-			if parentModel.LastUpdate.Before(model.LastUpdate) {
-				parentModel.LastUpdate = model.LastUpdate
-				parentModel.LastUpdateReadable = model.LastUpdateReadable
-			}
-
-			if i == len(pathSlices)-1 {
-				parentModel.DirectChildren = append(parentModel.DirectChildren, model)
-			}
-
-			files[parentPath] = parentModel
+		} else {
+			childModel = createModelFromEntry(staticRoot, childPath, childEntry)
 		}
 
-		return nil
-	})
+		if childModel == nil {
+			continue
+		}
 
-	return slices.Collect(maps.Values(files))
+		updateDirectoryModel(model, childModel)
+	}
+
+	model.DirectChildren = sortFileModels(model.DirectChildren)
+
+	if err := writeIndex(model); err != nil {
+		return nil, err
+	}
+
+	stats.recordDirectory()
+
+	// Clear children so parents store shallow copies only.
+	model.DirectChildren = nil
+	return model, nil
+}
+
+func updateDirectoryModel(parent, child *FileModel) {
+	if !strings.HasSuffix(child.Type, "_LINKED") {
+		parent.Bytes += child.Bytes
+		parent.BytesReadable = formatBytes(parent.Bytes)
+	}
+
+	parent.TotalChildrenCount += child.TotalChildrenCount + 1
+
+	if parent.LastUpdate.Before(child.LastUpdate) {
+		parent.LastUpdate = child.LastUpdate
+		parent.LastUpdateReadable = child.LastUpdateReadable
+	}
+
+	parent.DirectChildren = append(parent.DirectChildren, child)
 }
