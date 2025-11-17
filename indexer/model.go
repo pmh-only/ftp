@@ -63,7 +63,7 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 
 	lastUpdate := info.ModTime()
 
-	if !isDir && isSymLink {
+	if isSymLink {
 		linkedToPhysical, err := os.Readlink(filePath)
 		linkedToPhysical = path.Join(path.Dir(filePath), linkedToPhysical)
 
@@ -79,13 +79,16 @@ func createModelFromEntry(staticDir, filePath string, entry fs.DirEntry) *FileMo
 		}
 
 		ftype = "FILE_LINKED"
-		if info.IsDir() {
-			ftype = "DIRECTORY_LINKED"
-		}
-
 		linkedTo = strings.Replace(linkedToPhysical, staticDir, "", 1)
 		byteSize = info.Size()
 		lastUpdate = info.ModTime()
+
+		if info.IsDir() {
+			ftype = "DIRECTORY_LINKED"
+			linkedTo += "/"
+			logicalPath += "/"
+			name += "/"
+		}
 	}
 
 	return &FileModel{
