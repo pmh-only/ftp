@@ -65,14 +65,12 @@ function FileLister({ className }: Props) {
         incompleteBody += text
 
         try {
-          let current = incompleteBody
-
-          if (!incompleteBody.endsWith('}]}')) current += '}]}'
-
+          let current = incompleteBody.trim()
+          if (!current.endsWith('}]}')) current += '}]}'
           const currentJson = JSON.parse(current) as FileModel
 
           setItems(currentJson)
-        } catch (e) {
+        } catch {
           // console.error(e)
         }
       }
@@ -178,6 +176,7 @@ function FileLister({ className }: Props) {
         {(style) =>
           items?.directChildren && (
             <List
+              tagName="ul"
               rowComponent={FileListerItem}
               rowCount={items.directChildren.length}
               rowHeight={24}
@@ -208,7 +207,7 @@ function FileLister({ className }: Props) {
               .filter((v) => v.length > 0)
               .concat('')
               .map((v, i, a) => (
-                <li>
+                <li key={i}>
                   <a
                     onClick={(ev) => {
                       ev.preventDefault()

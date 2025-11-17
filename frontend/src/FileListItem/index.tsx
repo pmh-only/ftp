@@ -1,4 +1,10 @@
-import { ArrowRight, File, FileSymlink, Folder, FolderSymlink } from 'lucide-react'
+import {
+  ArrowRight,
+  File,
+  FileSymlink,
+  Folder,
+  FolderSymlink
+} from 'lucide-react'
 import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
 import './style.css'
@@ -65,9 +71,11 @@ function FileListerItem({
         </span>
       </a>
 
-      {item.bytesReadable !== undefined && item.type !== "DIRECTORY_LINKED" ? (
+      {item.bytesReadable !== undefined && item.type !== 'DIRECTORY_LINKED' ? (
         <span className="text-sm flex justify-center gap-1">
-          {item.type === 'FILE_LINKED' && <ArrowRight className="w-[1em] h-6" />}
+          {item.type === 'FILE_LINKED' && (
+            <ArrowRight className="w-[1em] h-6" />
+          )}
           {item.bytesReadable}
         </span>
       ) : (
