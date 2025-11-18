@@ -1,22 +1,24 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "daisyui" {
   themes: dark --default;
-};
-
-html {
-  overflow: hidden;
-  user-select: none;
-  font-family: 'Noto Sans KR Variable', Arial, Helvetica, sans-serif;
 }
 
-h1 {
-  margin: 0px;
-}
+@layer base {
+  html {
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Noto Sans KR Variable', Arial, Helvetica, sans-serif;
+  }
 
-a:not(.tab) {
-  @apply text-accent hover:underline hover:bg-accent-content;
-}
+  h1 {
+    margin: 0px;
+  }
 
-.font-display {
-  font-family: 'Oswald Variable', sans-serif;
+  a {
+    @apply text-accent hover:underline hover:bg-accent-content;
+  }
+
+  .font-display {
+    font-family: 'Oswald Variable', sans-serif;
+  }
 }

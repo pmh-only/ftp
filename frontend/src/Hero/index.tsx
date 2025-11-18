@@ -76,20 +76,20 @@ function Hero({ className }: Props) {
 
       <div className="flex md:w-full justify-center">
         <div role="tablist" className="tabs tabs-box">
-          <a
+          <button
             role="tab"
             onClick={() => setTab('ABOUT')}
             className={'tab ' + (tab === 'ABOUT' && 'tab-active')}
           >
             About
-          </a>
-          <a
+          </button>
+          <button
             role="tab"
             onClick={() => setTab('DIR_EXPLORER')}
             className={'tab ' + (tab === 'DIR_EXPLORER' && 'tab-active')}
           >
             Files
-          </a>
+          </button>
         </div>
       </div>
     </div>

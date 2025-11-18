@@ -44,12 +44,22 @@ function About({ className }: Props) {
             <p></p>
           </div>
 
-          <button
-            onClick={() => setTab('DIR_EXPLORER')}
-            className="btn btn-soft btn-accent"
-          >
-            Browse Files
-          </button>
+          <div className="flex gap-2">
+            <a
+              download
+              href="/iso/latest/archlinux-x86_64.iso"
+              className="btn btn-accent"
+            >
+              Download Latest .iso
+            </a>
+
+            <button
+              onClick={() => setTab('DIR_EXPLORER')}
+              className="btn btn-soft btn-accent"
+            >
+              Browse Files
+            </button>
+          </div>
         </div>
 
         <div
