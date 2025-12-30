@@ -60,7 +60,7 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 </html>`)
 
 func parseTemplateString(str string) *template.Template {
-	str = strings.ReplaceAll(str, "  ", "")
+	str = strings.ReplaceAll(str, "\t", "")
 	str = strings.ReplaceAll(str, "\n", "")
 	str = strings.ReplaceAll(str, "!!", "\n")
 
