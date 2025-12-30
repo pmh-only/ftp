@@ -6,7 +6,6 @@ metadata:
   labels:
     app: ftpserver
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: ftpserver
