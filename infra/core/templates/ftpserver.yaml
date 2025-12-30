@@ -22,6 +22,15 @@ spec:
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
+          args:
+            - /etc/vsftpd/vsftpd.conf
+          command:
+            - /usr/sbin/vsftpd
+            - -obackground=NO
+            - -ovsftpd_log_file=/proc/1/fd/1
+            - -olog_ftp_protocol=YES
+            - -oxferlog_enable=YES
+            - -oxferlog_file=/proc/1/fd/1
           resources:
             requests:
               cpu: 200m
