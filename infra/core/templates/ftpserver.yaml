@@ -20,7 +20,7 @@ spec:
       nodeName: {{ .Values.nodeName }}
       containers:
         - name: vsftpd
-          image: {{ .Values.ftpserver.image | default "fauria/vsftpd:latest" }}
+          image: {{ .Values.ftpserver.image | default "dotkevinwong/vsftpd-arm:latest" }}
           resources:
             requests:
               cpu: 200m

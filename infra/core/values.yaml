@@ -6,4 +6,4 @@ webserver:
 indexer:
   image: ghcr.io/pmh-only/indexer:latest
 ftpserver:
-  image: fauria/vsftpd:latest
+  image: dotkevinwong/vsftpd-arm:latest
