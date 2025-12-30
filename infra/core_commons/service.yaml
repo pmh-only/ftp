@@ -22,3 +22,534 @@ spec:
       protocol: UDP
       port: 443
       targetPort: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ftpserver
+  namespace: core
+spec:
+  type: LoadBalancer
+  selector:
+    app: ftpserver
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  externalTrafficPolicy: Local
+  internalTrafficPolicy: Local
+  ports:
+    - name: ftp-control
+      protocol: TCP
+      port: 21
+      targetPort: 21
+
+    - name: ftp-passive30000
+      protocol: TCP
+      port: 30000
+      targetPort: 30000
+
+    - name: ftp-passive30000
+      protocol: TCP
+      port: 30000
+      targetPort: 30000
+
+    - name: ftp-passive30001
+      protocol: TCP
+      port: 30001
+      targetPort: 30001
+
+    - name: ftp-passive30002
+      protocol: TCP
+      port: 30002
+      targetPort: 30002
+
+    - name: ftp-passive30003
+      protocol: TCP
+      port: 30003
+      targetPort: 30003
+
+    - name: ftp-passive30004
+      protocol: TCP
+      port: 30004
+      targetPort: 30004
+
+    - name: ftp-passive30005
+      protocol: TCP
+      port: 30005
+      targetPort: 30005
+
+    - name: ftp-passive30006
+      protocol: TCP
+      port: 30006
+      targetPort: 30006
+
+    - name: ftp-passive30007
+      protocol: TCP
+      port: 30007
+      targetPort: 30007
+
+    - name: ftp-passive30008
+      protocol: TCP
+      port: 30008
+      targetPort: 30008
+
+    - name: ftp-passive30009
+      protocol: TCP
+      port: 30009
+      targetPort: 30009
+
+    - name: ftp-passive30010
+      protocol: TCP
+      port: 30010
+      targetPort: 30010
+
+    - name: ftp-passive30011
+      protocol: TCP
+      port: 30011
+      targetPort: 30011
+
+    - name: ftp-passive30012
+      protocol: TCP
+      port: 30012
+      targetPort: 30012
+
+    - name: ftp-passive30013
+      protocol: TCP
+      port: 30013
+      targetPort: 30013
+
+    - name: ftp-passive30014
+      protocol: TCP
+      port: 30014
+      targetPort: 30014
+
+    - name: ftp-passive30015
+      protocol: TCP
+      port: 30015
+      targetPort: 30015
+
+    - name: ftp-passive30016
+      protocol: TCP
+      port: 30016
+      targetPort: 30016
+
+    - name: ftp-passive30017
+      protocol: TCP
+      port: 30017
+      targetPort: 30017
+
+    - name: ftp-passive30018
+      protocol: TCP
+      port: 30018
+      targetPort: 30018
+
+    - name: ftp-passive30019
+      protocol: TCP
+      port: 30019
+      targetPort: 30019
+
+    - name: ftp-passive30020
+      protocol: TCP
+      port: 30020
+      targetPort: 30020
+
+    - name: ftp-passive30021
+      protocol: TCP
+      port: 30021
+      targetPort: 30021
+
+    - name: ftp-passive30022
+      protocol: TCP
+      port: 30022
+      targetPort: 30022
+
+    - name: ftp-passive30023
+      protocol: TCP
+      port: 30023
+      targetPort: 30023
+
+    - name: ftp-passive30024
+      protocol: TCP
+      port: 30024
+      targetPort: 30024
+
+    - name: ftp-passive30025
+      protocol: TCP
+      port: 30025
+      targetPort: 30025
+
+    - name: ftp-passive30026
+      protocol: TCP
+      port: 30026
+      targetPort: 30026
+
+    - name: ftp-passive30027
+      protocol: TCP
+      port: 30027
+      targetPort: 30027
+
+    - name: ftp-passive30028
+      protocol: TCP
+      port: 30028
+      targetPort: 30028
+
+    - name: ftp-passive30029
+      protocol: TCP
+      port: 30029
+      targetPort: 30029
+
+    - name: ftp-passive30030
+      protocol: TCP
+      port: 30030
+      targetPort: 30030
+
+    - name: ftp-passive30031
+      protocol: TCP
+      port: 30031
+      targetPort: 30031
+
+    - name: ftp-passive30032
+      protocol: TCP
+      port: 30032
+      targetPort: 30032
+
+    - name: ftp-passive30033
+      protocol: TCP
+      port: 30033
+      targetPort: 30033
+
+    - name: ftp-passive30034
+      protocol: TCP
+      port: 30034
+      targetPort: 30034
+
+    - name: ftp-passive30035
+      protocol: TCP
+      port: 30035
+      targetPort: 30035
+
+    - name: ftp-passive30036
+      protocol: TCP
+      port: 30036
+      targetPort: 30036
+
+    - name: ftp-passive30037
+      protocol: TCP
+      port: 30037
+      targetPort: 30037
+
+    - name: ftp-passive30038
+      protocol: TCP
+      port: 30038
+      targetPort: 30038
+
+    - name: ftp-passive30039
+      protocol: TCP
+      port: 30039
+      targetPort: 30039
+
+    - name: ftp-passive30040
+      protocol: TCP
+      port: 30040
+      targetPort: 30040
+
+    - name: ftp-passive30041
+      protocol: TCP
+      port: 30041
+      targetPort: 30041
+
+    - name: ftp-passive30042
+      protocol: TCP
+      port: 30042
+      targetPort: 30042
+
+    - name: ftp-passive30043
+      protocol: TCP
+      port: 30043
+      targetPort: 30043
+
+    - name: ftp-passive30044
+      protocol: TCP
+      port: 30044
+      targetPort: 30044
+
+    - name: ftp-passive30045
+      protocol: TCP
+      port: 30045
+      targetPort: 30045
+
+    - name: ftp-passive30046
+      protocol: TCP
+      port: 30046
+      targetPort: 30046
+
+    - name: ftp-passive30047
+      protocol: TCP
+      port: 30047
+      targetPort: 30047
+
+    - name: ftp-passive30048
+      protocol: TCP
+      port: 30048
+      targetPort: 30048
+
+    - name: ftp-passive30049
+      protocol: TCP
+      port: 30049
+      targetPort: 30049
+
+    - name: ftp-passive30050
+      protocol: TCP
+      port: 30050
+      targetPort: 30050
+
+    - name: ftp-passive30051
+      protocol: TCP
+      port: 30051
+      targetPort: 30051
+
+    - name: ftp-passive30052
+      protocol: TCP
+      port: 30052
+      targetPort: 30052
+
+    - name: ftp-passive30053
+      protocol: TCP
+      port: 30053
+      targetPort: 30053
+
+    - name: ftp-passive30054
+      protocol: TCP
+      port: 30054
+      targetPort: 30054
+
+    - name: ftp-passive30055
+      protocol: TCP
+      port: 30055
+      targetPort: 30055
+
+    - name: ftp-passive30056
+      protocol: TCP
+      port: 30056
+      targetPort: 30056
+
+    - name: ftp-passive30057
+      protocol: TCP
+      port: 30057
+      targetPort: 30057
+
+    - name: ftp-passive30058
+      protocol: TCP
+      port: 30058
+      targetPort: 30058
+
+    - name: ftp-passive30059
+      protocol: TCP
+      port: 30059
+      targetPort: 30059
+
+    - name: ftp-passive30060
+      protocol: TCP
+      port: 30060
+      targetPort: 30060
+
+    - name: ftp-passive30061
+      protocol: TCP
+      port: 30061
+      targetPort: 30061
+
+    - name: ftp-passive30062
+      protocol: TCP
+      port: 30062
+      targetPort: 30062
+
+    - name: ftp-passive30063
+      protocol: TCP
+      port: 30063
+      targetPort: 30063
+
+    - name: ftp-passive30064
+      protocol: TCP
+      port: 30064
+      targetPort: 30064
+
+    - name: ftp-passive30065
+      protocol: TCP
+      port: 30065
+      targetPort: 30065
+
+    - name: ftp-passive30066
+      protocol: TCP
+      port: 30066
+      targetPort: 30066
+
+    - name: ftp-passive30067
+      protocol: TCP
+      port: 30067
+      targetPort: 30067
+
+    - name: ftp-passive30068
+      protocol: TCP
+      port: 30068
+      targetPort: 30068
+
+    - name: ftp-passive30069
+      protocol: TCP
+      port: 30069
+      targetPort: 30069
+
+    - name: ftp-passive30070
+      protocol: TCP
+      port: 30070
+      targetPort: 30070
+
+    - name: ftp-passive30071
+      protocol: TCP
+      port: 30071
+      targetPort: 30071
+
+    - name: ftp-passive30072
+      protocol: TCP
+      port: 30072
+      targetPort: 30072
+
+    - name: ftp-passive30073
+      protocol: TCP
+      port: 30073
+      targetPort: 30073
+
+    - name: ftp-passive30074
+      protocol: TCP
+      port: 30074
+      targetPort: 30074
+
+    - name: ftp-passive30075
+      protocol: TCP
+      port: 30075
+      targetPort: 30075
+
+    - name: ftp-passive30076
+      protocol: TCP
+      port: 30076
+      targetPort: 30076
+
+    - name: ftp-passive30077
+      protocol: TCP
+      port: 30077
+      targetPort: 30077
+
+    - name: ftp-passive30078
+      protocol: TCP
+      port: 30078
+      targetPort: 30078
+
+    - name: ftp-passive30079
+      protocol: TCP
+      port: 30079
+      targetPort: 30079
+
+    - name: ftp-passive30080
+      protocol: TCP
+      port: 30080
+      targetPort: 30080
+
+    - name: ftp-passive30081
+      protocol: TCP
+      port: 30081
+      targetPort: 30081
+
+    - name: ftp-passive30082
+      protocol: TCP
+      port: 30082
+      targetPort: 30082
+
+    - name: ftp-passive30083
+      protocol: TCP
+      port: 30083
+      targetPort: 30083
+
+    - name: ftp-passive30084
+      protocol: TCP
+      port: 30084
+      targetPort: 30084
+
+    - name: ftp-passive30085
+      protocol: TCP
+      port: 30085
+      targetPort: 30085
+
+    - name: ftp-passive30086
+      protocol: TCP
+      port: 30086
+      targetPort: 30086
+
+    - name: ftp-passive30087
+      protocol: TCP
+      port: 30087
+      targetPort: 30087
+
+    - name: ftp-passive30088
+      protocol: TCP
+      port: 30088
+      targetPort: 30088
+
+    - name: ftp-passive30089
+      protocol: TCP
+      port: 30089
+      targetPort: 30089
+
+    - name: ftp-passive30090
+      protocol: TCP
+      port: 30090
+      targetPort: 30090
+
+    - name: ftp-passive30091
+      protocol: TCP
+      port: 30091
+      targetPort: 30091
+
+    - name: ftp-passive30092
+      protocol: TCP
+      port: 30092
+      targetPort: 30092
+
+    - name: ftp-passive30093
+      protocol: TCP
+      port: 30093
+      targetPort: 30093
+
+    - name: ftp-passive30094
+      protocol: TCP
+      port: 30094
+      targetPort: 30094
+
+    - name: ftp-passive30095
+      protocol: TCP
+      port: 30095
+      targetPort: 30095
+
+    - name: ftp-passive30096
+      protocol: TCP
+      port: 30096
+      targetPort: 30096
+
+    - name: ftp-passive30097
+      protocol: TCP
+      port: 30097
+      targetPort: 30097
+
+    - name: ftp-passive30098
+      protocol: TCP
+      port: 30098
+      targetPort: 30098
+
+    - name: ftp-passive30099
+      protocol: TCP
+      port: 30099
+      targetPort: 30099
+
+    - name: ftp-passive30100
+      protocol: TCP
+      port: 30100
+      targetPort: 30100

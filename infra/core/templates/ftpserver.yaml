@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "ftpserver-{{ .Values.nodeName }}"
+  namespace: core
+  labels:
+    app: ftpserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ftpserver
+      node: {{ .Values.nodeName }}
+  template:
+    metadata:
+      labels:
+        app: ftpserver
+        node: {{ .Values.nodeName }}
+    spec:
+      nodeName: {{ .Values.nodeName }}
+      containers:
+        - name: vsftpd
+          image: {{ .Values.ftpserver.image | default "fauria/vsftpd:latest" }}
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              memory: 200Mi
+          env:
+            - name: PASV_ADDRESS
+              value: "ftp.io.kr"
+            - name: PASV_MIN_PORT
+              value: "30000"
+            - name: PASV_MAX_PORT
+              value: "30100"
+          volumeMounts:
+            - name: data
+              mountPath: /data/static
+              subPath: static
+              readOnly: true
+            - name: config
+              mountPath: /etc/vsftpd/vsftpd.conf
+              subPath: vsftpd.conf
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: "core-{{ .Values.nodeName }}-pvc"
+        - name: config
+          configMap:
+            name: "ftpserver-{{ .Values.nodeName }}-config"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "ftpserver-{{ .Values.nodeName }}-config"
+  namespace: core
+data:
+  vsftpd.conf: |
+    listen=YES
+    listen_ipv6=NO
+
+    anonymous_enable=YES
+    local_enable=NO
+    write_enable=NO
+    anon_upload_enable=NO
+    anon_mkdir_write_enable=NO
+    anon_other_write_enable=NO
+
+    anon_root=/data/static
+
+    pasv_enable=YES
+    pasv_min_port=30000
+    pasv_max_port=30100
+    pasv_address=ftp.io.kr
+
+    xferlog_enable=YES
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler 
+metadata:
+  name: "ftpserver-{{ .Values.nodeName }}-hpa"
+  namespace: core
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: "ftpserver-{{ .Values.nodeName }}"
+  minReplicas: 2
+  maxReplicas: 64
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
