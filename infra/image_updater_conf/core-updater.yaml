@@ -21,6 +21,13 @@ spec:
               tag: "syncrepo.tag"
               name: "syncrepo.name"
               spec: "syncrepo.image"
+        - alias: "ftpserver"
+          imageName: "ghcr.io/pmh-only/ftpserver:latest"
+          manifestTargets:
+            helm:
+              tag: "ftpserver.tag"
+              name: "ftpserver.name"
+              spec: "ftpserver.image"
         - alias: "webserver"
           imageName: "ghcr.io/pmh-only/webserver:latest"
           manifestTargets:

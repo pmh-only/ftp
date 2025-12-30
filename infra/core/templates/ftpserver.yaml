@@ -20,20 +20,13 @@ spec:
       nodeName: {{ .Values.nodeName }}
       containers:
         - name: vsftpd
-          image: {{ .Values.ftpserver.image | default "dotkevinwong/vsftpd-arm:latest" }}
+          image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
           resources:
             requests:
               cpu: 200m
               memory: 100Mi
             limits:
               memory: 200Mi
-          env:
-            - name: PASV_ADDRESS
-              value: "ftp.io.kr"
-            - name: PASV_MIN_PORT
-              value: "30000"
-            - name: PASV_MAX_PORT
-              value: "30100"
           volumeMounts:
             - name: data
               mountPath: /data/static
