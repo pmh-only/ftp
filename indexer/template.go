@@ -40,7 +40,7 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 					<td>{{.LastUpdate}}</td>
 					<td>{{.LastUpdateReadable}}</td>
 					<td>{{.TotalChildrenCount}}</td>
-				</tr>
+				</tr>!!
 				{{range .DirectChildren}}
 				<tr>
 					<td><a href="{{.FullPath}}">{{.Name}}</a></td>
@@ -52,7 +52,7 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 					<td>{{.LastUpdate}}</td>
 					<td>{{.LastUpdateReadable}}</td>
 					<td>{{.TotalChildrenCount}}</td>
-				</tr>
+				</tr>!!
 				{{end}}
 			</tbody>!!
 		</table>!!
