@@ -49,11 +49,6 @@ spec:
       port: 30000
       targetPort: 30000
 
-    - name: ftp-passive30000
-      protocol: TCP
-      port: 30000
-      targetPort: 30000
-
     - name: ftp-passive30001
       protocol: TCP
       port: 30001
