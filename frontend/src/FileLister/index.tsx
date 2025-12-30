@@ -47,7 +47,8 @@ function FileLister({ className }: Props) {
         headers: {
           'X-Override-To': 'machine',
           Accept: 'application/json'
-        }
+        },
+        cache: 'no-cache'
       })
 
       if (cancelled) return
