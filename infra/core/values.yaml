@@ -5,3 +5,5 @@ webserver:
   image: ghcr.io/pmh-only/webserver:latest
 indexer:
   image: ghcr.io/pmh-only/indexer:latest
+ftpserver:
+  image: fauria/vsftpd:latest
