@@ -18,6 +18,8 @@ spec:
         node: {{ .Values.nodeName }}
     spec:
       nodeName: {{ .Values.nodeName }}
+      imagePullSecrets:
+        - name: registry-secret
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
