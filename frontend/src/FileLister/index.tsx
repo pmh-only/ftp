@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
-import type { FileModel } from '../model'
+import { tryParse, type FileModel } from '../model'
 import { pathState } from '../state'
 import './style.css'
 
@@ -61,21 +61,18 @@ function FileLister({ className }: Props) {
 
       for (;;) {
         const { done, value } = await reader.read()
-        if (done) break
         if (cancelled) return
+
+        if (done) {
+          setItems(JSON.parse(incompleteBody) as FileModel)
+          break
+        }
 
         const text = new TextDecoder().decode(value)
         incompleteBody += text
 
-        try {
-          let current = incompleteBody.trim()
-          if (!current.endsWith('}]}')) current += '}]}'
-          const currentJson = JSON.parse(current) as FileModel
-
-          setItems(currentJson)
-        } catch {
-          // console.error(e)
-        }
+        const parsed = tryParse(incompleteBody)
+        if (parsed !== undefined) setItems(parsed)
       }
 
       setLoading(false)
