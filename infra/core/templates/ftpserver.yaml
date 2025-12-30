@@ -69,7 +69,11 @@ data:
     pasv_address=ftp.io.kr
     pasv_addr_resolve=YES
 
+    vsftpd_log_file=/dev/stdout
+
+    log_ftp_protocol=YES
     xferlog_enable=YES
+    xferlog_std_format=YES
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler 
