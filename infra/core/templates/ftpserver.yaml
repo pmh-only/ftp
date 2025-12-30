@@ -67,6 +67,7 @@ data:
     pasv_min_port=30000
     pasv_max_port=30100
     pasv_address=ftp.io.kr
+    pasv_addr_resolve=YES
 
     xferlog_enable=YES
 ---
