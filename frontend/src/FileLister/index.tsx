@@ -44,7 +44,10 @@ function FileLister({ className }: Props) {
       setLoading(true)
       const url = (import.meta.env.DEV ? '/api' : '') + path
       const res = await fetch(url, {
-        headers: { 'X-Override-To': 'machine' }
+        headers: {
+          'X-Override-To': 'machine',
+          Accept: 'application/json'
+        }
       })
 
       if (cancelled) return
