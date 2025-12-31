@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai'
 import {
   ArrowRight,
   File,
@@ -7,6 +8,7 @@ import {
 } from 'lucide-react'
 import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
+import { tabState } from '../state'
 import './style.css'
 import { getLastUpdateRelative } from './utils'
 
@@ -21,6 +23,8 @@ function FileListerItem({
   path: string
   navigate: (path: string, linkedFrom?: string, base?: string) => void
 }>) {
+  const tab = useAtomValue(tabState)
+
   const item = items.directChildren?.[index]
   if (!item) return <></>
 
@@ -83,12 +87,17 @@ function FileListerItem({
       )}
 
       {lastUpdateRelative !== '' && (
-        <span className={'text-sm ' + lastUpdateRelativeLevel}>
+        <span className={'text-sm  ' + lastUpdateRelativeLevel}>
           {lastUpdateRelative}
         </span>
       )}
 
-      <span className="text-xs opacity-70 hidden sm:block">
+      <span
+        className={
+          'text-xs opacity-70 hidden ' +
+          (tab === 'ABOUT' ? 'xl:block' : 'sm:block')
+        }
+      >
         {item.lastUpdateReadable}
       </span>
     </li>
