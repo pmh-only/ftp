@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: "ftpserver-{{ .Values.nodeName }}"
   namespace: core
@@ -19,6 +19,26 @@ spec:
       nodeName: {{ .Values.nodeName }}
       imagePullSecrets:
         - name: registry-secret
+      initContainers:
+        - name: render-vsftpd-conf
+          image: busybox
+          env:
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          command:
+          - sh
+          - -c
+          - |
+            sed "s/__PASV_ADDRESS__/${NODE_IP}/" \
+              /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf
+          volumeMounts:
+          - name: work
+            mountPath: /work
+          - name: config
+            mountPath: /etc/vsftpd/vsftpd.conf.template
+            subPath: vsftpd.conf.template
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
@@ -31,6 +51,213 @@ spec:
             - -olog_ftp_protocol=YES
             - -oxferlog_enable=YES
             - -oxferlog_file=/proc/1/fd/1
+          ports:
+            - containerPort: 20
+              hostPort: 20
+            - containerPort: 21
+              hostPort: 21
+            - containerPort: 30000
+              hostPort: 30000
+            - containerPort: 30001
+              hostPort: 30001
+            - containerPort: 30002
+              hostPort: 30002
+            - containerPort: 30003
+              hostPort: 30003
+            - containerPort: 30004
+              hostPort: 30004
+            - containerPort: 30005
+              hostPort: 30005
+            - containerPort: 30006
+              hostPort: 30006
+            - containerPort: 30007
+              hostPort: 30007
+            - containerPort: 30008
+              hostPort: 30008
+            - containerPort: 30009
+              hostPort: 30009
+            - containerPort: 30010
+              hostPort: 30010
+            - containerPort: 30011
+              hostPort: 30011
+            - containerPort: 30012
+              hostPort: 30012
+            - containerPort: 30013
+              hostPort: 30013
+            - containerPort: 30014
+              hostPort: 30014
+            - containerPort: 30015
+              hostPort: 30015
+            - containerPort: 30016
+              hostPort: 30016
+            - containerPort: 30017
+              hostPort: 30017
+            - containerPort: 30018
+              hostPort: 30018
+            - containerPort: 30019
+              hostPort: 30019
+            - containerPort: 30020
+              hostPort: 30020
+            - containerPort: 30021
+              hostPort: 30021
+            - containerPort: 30022
+              hostPort: 30022
+            - containerPort: 30023
+              hostPort: 30023
+            - containerPort: 30024
+              hostPort: 30024
+            - containerPort: 30025
+              hostPort: 30025
+            - containerPort: 30026
+              hostPort: 30026
+            - containerPort: 30027
+              hostPort: 30027
+            - containerPort: 30028
+              hostPort: 30028
+            - containerPort: 30029
+              hostPort: 30029
+            - containerPort: 30030
+              hostPort: 30030
+            - containerPort: 30031
+              hostPort: 30031
+            - containerPort: 30032
+              hostPort: 30032
+            - containerPort: 30033
+              hostPort: 30033
+            - containerPort: 30034
+              hostPort: 30034
+            - containerPort: 30035
+              hostPort: 30035
+            - containerPort: 30036
+              hostPort: 30036
+            - containerPort: 30037
+              hostPort: 30037
+            - containerPort: 30038
+              hostPort: 30038
+            - containerPort: 30039
+              hostPort: 30039
+            - containerPort: 30040
+              hostPort: 30040
+            - containerPort: 30041
+              hostPort: 30041
+            - containerPort: 30042
+              hostPort: 30042
+            - containerPort: 30043
+              hostPort: 30043
+            - containerPort: 30044
+              hostPort: 30044
+            - containerPort: 30045
+              hostPort: 30045
+            - containerPort: 30046
+              hostPort: 30046
+            - containerPort: 30047
+              hostPort: 30047
+            - containerPort: 30048
+              hostPort: 30048
+            - containerPort: 30049
+              hostPort: 30049
+            - containerPort: 30050
+              hostPort: 30050
+            - containerPort: 30051
+              hostPort: 30051
+            - containerPort: 30052
+              hostPort: 30052
+            - containerPort: 30053
+              hostPort: 30053
+            - containerPort: 30054
+              hostPort: 30054
+            - containerPort: 30055
+              hostPort: 30055
+            - containerPort: 30056
+              hostPort: 30056
+            - containerPort: 30057
+              hostPort: 30057
+            - containerPort: 30058
+              hostPort: 30058
+            - containerPort: 30059
+              hostPort: 30059
+            - containerPort: 30060
+              hostPort: 30060
+            - containerPort: 30061
+              hostPort: 30061
+            - containerPort: 30062
+              hostPort: 30062
+            - containerPort: 30063
+              hostPort: 30063
+            - containerPort: 30064
+              hostPort: 30064
+            - containerPort: 30065
+              hostPort: 30065
+            - containerPort: 30066
+              hostPort: 30066
+            - containerPort: 30067
+              hostPort: 30067
+            - containerPort: 30068
+              hostPort: 30068
+            - containerPort: 30069
+              hostPort: 30069
+            - containerPort: 30070
+              hostPort: 30070
+            - containerPort: 30071
+              hostPort: 30071
+            - containerPort: 30072
+              hostPort: 30072
+            - containerPort: 30073
+              hostPort: 30073
+            - containerPort: 30074
+              hostPort: 30074
+            - containerPort: 30075
+              hostPort: 30075
+            - containerPort: 30076
+              hostPort: 30076
+            - containerPort: 30077
+              hostPort: 30077
+            - containerPort: 30078
+              hostPort: 30078
+            - containerPort: 30079
+              hostPort: 30079
+            - containerPort: 30080
+              hostPort: 30080
+            - containerPort: 30081
+              hostPort: 30081
+            - containerPort: 30082
+              hostPort: 30082
+            - containerPort: 30083
+              hostPort: 30083
+            - containerPort: 30084
+              hostPort: 30084
+            - containerPort: 30085
+              hostPort: 30085
+            - containerPort: 30086
+              hostPort: 30086
+            - containerPort: 30087
+              hostPort: 30087
+            - containerPort: 30088
+              hostPort: 30088
+            - containerPort: 30089
+              hostPort: 30089
+            - containerPort: 30090
+              hostPort: 30090
+            - containerPort: 30091
+              hostPort: 30091
+            - containerPort: 30092
+              hostPort: 30092
+            - containerPort: 30093
+              hostPort: 30093
+            - containerPort: 30094
+              hostPort: 30094
+            - containerPort: 30095
+              hostPort: 30095
+            - containerPort: 30096
+              hostPort: 30096
+            - containerPort: 30097
+              hostPort: 30097
+            - containerPort: 30098
+              hostPort: 30098
+            - containerPort: 30099
+              hostPort: 30099
+            - containerPort: 30100
+              hostPort: 30100
           resources:
             requests:
               cpu: 200m
@@ -42,9 +269,8 @@ spec:
               mountPath: /data/static
               subPath: static
               readOnly: true
-            - name: config
-              mountPath: /etc/vsftpd/vsftpd.conf
-              subPath: vsftpd.conf
+            - name: work
+              mountPath: /etc/vsftpd/
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -52,6 +278,8 @@ spec:
         - name: config
           configMap:
             name: "ftpserver-{{ .Values.nodeName }}-config"
+        - name: work
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -59,7 +287,7 @@ metadata:
   name: "ftpserver-{{ .Values.nodeName }}-config"
   namespace: core
 data:
-  vsftpd.conf: |
+  vsftpd.conf.template: |
     listen=YES
     listen_ipv6=NO
 
@@ -75,7 +303,7 @@ data:
     pasv_enable=YES
     pasv_min_port=30000
     pasv_max_port=30100
-    pasv_address=ftp.io.kr
+    pasv_address=${NODE_IP}
     pasv_addr_resolve=YES
 
     background=NO
@@ -86,29 +314,3 @@ data:
     xferlog_enable=YES
     xferlog_std_format=YES
     xferlog_file=/proc/1/fd/1
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler 
-metadata:
-  name: "ftpserver-{{ .Values.nodeName }}-hpa"
-  namespace: core
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: "ftpserver-{{ .Values.nodeName }}"
-  minReplicas: 2
-  maxReplicas: 64
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 75
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 75
