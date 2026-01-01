@@ -23,6 +23,8 @@ spec:
       initContainers:
         - name: render-vsftpd-conf
           image: bitnami/kubectl:latest
+          securityContext:
+            runAsUser: 0
           env:
           - name: NODE_NAME
             valueFrom:
