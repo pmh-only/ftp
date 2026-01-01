@@ -30,7 +30,7 @@ spec:
           command:
           - sh
           - -c
-          - "sed "s|__PASV_ADDRESS__|${NODE_IP}|g" /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf"
+          - 'sed "s|__PASV_ADDRESS__|${NODE_IP}|g" /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf'
           volumeMounts:
           - name: work
             mountPath: /work
