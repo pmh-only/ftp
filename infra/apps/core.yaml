@@ -6,6 +6,7 @@ spec:
   ignoreApplicationDifferences:
     - jsonPointers:
         - /spec/source/helm/parameters
+        - /spec/syncPolicy
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
