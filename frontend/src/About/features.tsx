@@ -23,10 +23,10 @@ function AboutFeatures() {
                 </h2>
                 <p>
                   ftp.io.kr utilizes <b className="text-accent">4 Gbps</b>{' '}
-                  stable egress bandwidth without any connection limits. Also
-                  webserver fully supports{' '}
+                  stable egress bandwidth without any connection limits. The
+                  webserver also fully supports{' '}
                   <b className="text-accent">HTTP/3 QUIC</b> with TLS/QUIC early
-                  data packet!
+                  data packets!
                 </p>
               </div>
             </div>
@@ -53,8 +53,8 @@ function AboutFeatures() {
                 </h2>
                 <p>
                   ftp.io.kr targets <b className="text-accent">99.9%</b> monthly
-                  availablity! with Kuberenetes' deployment strategy, I
-                  implemented <b className="text-accent">zero-downtime</b>{' '}
+                  availability! With Kubernetes' deployment strategy, it
+                  implements <b className="text-accent">zero-downtime</b>{' '}
                   rolling updates.
                 </p>
               </div>
@@ -75,16 +75,17 @@ function AboutFeatures() {
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Anonymously.</span>
+                  <span>Anonymous.</span>
                   <span className="text-5xl opacity-25">
                     <HatGlasses className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
                   ftp.io.kr <b className="text-accent">does not</b> collect any
-                  tracking data, cookie and even{' '}
-                  <b className="text-accent">ip address</b>! for who really
-                  cares about privacy just check out my nginx configuration.
+                  tracking data, cookies, or even your{' '}
+                  <b className="text-accent">IP address</b>! For those who
+                  really care about privacy, just check out the nginx
+                  configuration.
                 </p>
               </div>
             </div>
@@ -110,9 +111,9 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr <b className="text-accent">open sourced</b>{' '}
-                  <b>entire infra</b> including K8s manifest files, nginx web
-                  server configuration, indexer source code and shell scripts!
+                  ftp.io.kr is <b className="text-accent">fully open source</b>{' '}
+                  including K8s manifest files, nginx web server configuration,
+                  indexer source code, and shell scripts!
                 </p>
               </div>
             </div>
@@ -138,11 +139,11 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr implemented GitOps/
+                  ftp.io.kr implements GitOps and{' '}
                   <b className="text-accent">Single-Source-Of-Truth</b> with
-                  ArgoCD and Github Actions! and also supports{' '}
-                  <b className="text-accent">Post Quantum Cryptography</b> with
-                  proper TLS configs
+                  ArgoCD and GitHub Actions! It also supports{' '}
+                  <b className="text-accent">Post-Quantum Cryptography</b> with
+                  proper TLS configs.
                 </p>
               </div>
             </div>

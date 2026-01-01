@@ -113,7 +113,7 @@ function About({ className }: Props) {
           >
             <ChevronsDown />
             <p className="grow">
-              scroll me down to <b>learn more</b>
+              Scroll down to <b>learn more</b>
             </p>
             <ChevronsDown />
           </a>
