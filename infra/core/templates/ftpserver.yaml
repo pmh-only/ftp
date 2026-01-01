@@ -303,8 +303,8 @@ data:
     pasv_enable=YES
     pasv_min_port=30000
     pasv_max_port=30100
-    pasv_address=${NODE_IP}
-    pasv_addr_resolve=YES
+    pasv_address=__PASV_ADDRESS__
+    pasv_addr_resolve=NO
 
     background=NO
 
