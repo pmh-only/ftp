@@ -16,27 +16,33 @@ spec:
         app: ftpserver
         node: {{ .Values.nodeName }}
     spec:
+      serviceAccountName: ftpserver
       nodeName: {{ .Values.nodeName }}
       imagePullSecrets:
         - name: registry-secret
       initContainers:
         - name: render-vsftpd-conf
-          image: busybox
+          image: bitnami/kubectl:latest
           env:
-          - name: NODE_IP
+          - name: NODE_NAME
             valueFrom:
               fieldRef:
-                fieldPath: status.hostIP
+                fieldPath: spec.nodeName
           command:
           - sh
           - -c
-          - 'sed "s|__PASV_ADDRESS__|${NODE_IP}|g" /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf'
+          - |
+            EXT_IP="$(kubectl get node "${NODE_NAME}" -o jsonpath='{.status.addresses[?(@.type=="ExternalIP")].address}')"
+            if [ -z "$EXT_IP" ]; then
+              echo "No ExternalIP on node ${NODE_NAME}" >&2
+              exit 1
+            fi
+            sed "s|__PASV_ADDRESS__|${EXT_IP}|g" /template/vsftpd.conf.template > /config/vsftpd.conf
           volumeMounts:
-          - name: work
-            mountPath: /work
           - name: config
-            mountPath: /etc/vsftpd/vsftpd.conf.template
-            subPath: vsftpd.conf.template
+            mountPath: /config
+          - name: template
+            mountPath: /template/
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
@@ -258,22 +264,22 @@ spec:
               mountPath: /data/static
               subPath: static
               readOnly: true
-            - name: work
+            - name: config
               mountPath: /etc/vsftpd/
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: "core-{{ .Values.nodeName }}-pvc"
-        - name: config
+        - name: template
           configMap:
             name: "ftpserver-{{ .Values.nodeName }}-config"
-        - name: work
+        - name: config
           emptyDir: {}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "ftpserver-{{ .Values.nodeName }}-config"
+  name: "ftpserver-{{ .Values.nodeName }}-config-template"
   namespace: core
 data:
   vsftpd.conf.template: |
