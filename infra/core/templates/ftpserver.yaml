@@ -30,9 +30,7 @@ spec:
           command:
           - sh
           - -c
-          - |
-            sed "s/__PASV_ADDRESS__/${NODE_IP}/" \
-              /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf
+          - "sed "s|__PASV_ADDRESS__|${NODE_IP}|g" /etc/vsftpd/vsftpd.conf.template > /work/vsftpd.conf"
           volumeMounts:
           - name: work
             mountPath: /work
@@ -42,15 +40,6 @@ spec:
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
-          args:
-            - /etc/vsftpd/vsftpd.conf
-          command:
-            - /usr/sbin/vsftpd
-            - -obackground=NO
-            - -ovsftpd_log_file=/proc/1/fd/1
-            - -olog_ftp_protocol=YES
-            - -oxferlog_enable=YES
-            - -oxferlog_file=/proc/1/fd/1
           ports:
             - containerPort: 20
               hostPort: 20
@@ -300,6 +289,9 @@ data:
 
     anon_root=/data/static
 
+    port_enable=YES
+    connect_from_port_20=YES
+
     pasv_enable=YES
     pasv_min_port=30000
     pasv_max_port=30100
@@ -308,6 +300,7 @@ data:
 
     background=NO
 
+    debug_ssl=NO
     log_ftp_protocol=YES
     vsftpd_log_file=/proc/1/fd/1
 
