@@ -72,6 +72,20 @@ function Hero({ className }: Props) {
           </p>
           <p>Discord (@pmh_only)</p>
         </div>
+
+        <div>
+          <p>More?</p>
+          <p>
+            <a href="https://github.com/pmh-only/ftp" target="_blank">
+              Source Code for Infra.
+            </a>
+          </p>
+        </div>
+
+        <div>
+          <p>&copy; 2025-2026.</p>
+          <p>Minhyeok Park.</p>
+        </div>
       </div>
 
       <div className="flex md:w-full justify-center">
