@@ -272,7 +272,7 @@ spec:
             claimName: "core-{{ .Values.nodeName }}-pvc"
         - name: template
           configMap:
-            name: "ftpserver-{{ .Values.nodeName }}-config"
+            name: "ftpserver-{{ .Values.nodeName }}-config-template"
         - name: config
           emptyDir: {}
 ---
