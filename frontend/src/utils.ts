@@ -1,14 +1,14 @@
-import type { FileModel } from '../model'
-
-const rtf = new Intl.RelativeTimeFormat('en')
 const now = Date.now()
+const rtf = new Intl.RelativeTimeFormat('en')
 
-export function getLastUpdateRelative(item: FileModel): [string, string] {
-  if (!item.lastUpdate) {
+export function getRelative(
+  date: string | number | undefined
+): [string, string] {
+  if (!date) {
     return ['', '']
   }
 
-  const lastUpdate = +new Date(item.lastUpdate)
+  const lastUpdate = +new Date(date)
   const lastUpdateRelativeNumber = now - lastUpdate
 
   if (lastUpdateRelativeNumber < 1000) return ['now', 'text-red-500']

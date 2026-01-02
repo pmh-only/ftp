@@ -9,8 +9,8 @@ import {
 import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
 import { tabState } from '../state'
+import { getRelative } from '../utils'
 import './style.css'
-import { getLastUpdateRelative } from './utils'
 
 function FileListerItem({
   index,
@@ -28,8 +28,9 @@ function FileListerItem({
   const item = items.directChildren?.[index]
   if (!item) return <></>
 
-  const [lastUpdateRelative, lastUpdateRelativeLevel] =
-    getLastUpdateRelative(item)
+  const [lastUpdateRelative, lastUpdateRelativeLevel] = getRelative(
+    item.lastUpdate
+  )
 
   return (
     <li
