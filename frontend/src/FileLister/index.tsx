@@ -1,5 +1,11 @@
 import { useAtom } from 'jotai'
-import { ArrowLeft, ArrowRight, Folders, Home } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Folders,
+  Home,
+  LucideFolderSearch2
+} from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
@@ -172,7 +178,21 @@ function FileLister({ className }: Props) {
         </div>
       </div>
 
-      <AutoSizer className="grow">
+      {!loading && (items?.directChildren?.length ?? 0) < 1 && (
+        <div className="text-center text-sm text-light py-5 flex flex-col items-center justify-center grow">
+          <p className="text-2xl">
+            <LucideFolderSearch2 className="w-[1em] h-[1em]" />
+          </p>
+          <p>hmm... seems empty</p>
+        </div>
+      )}
+
+      <AutoSizer
+        className={
+          'grow ' +
+          (!loading && (items?.directChildren?.length ?? 0) < 1 ? 'hidden' : '')
+        }
+      >
         {(style) =>
           items?.directChildren && (
             <List
