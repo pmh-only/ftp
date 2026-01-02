@@ -13,7 +13,7 @@ function App() {
       <div className="flex w-full max-w-400 flex-col p-6 md:flex-row gap-6">
         <Hero className="" />
 
-        {tab === 'ABOUT' && <About className="flex-1" />}
+        {tab === 'ABOUT' && <About className="flex-1 overflow-x-hidden" />}
         {tab === 'DIR_EXPLORER' && (
           <FileLister className="grow flex flex-col" />
         )}

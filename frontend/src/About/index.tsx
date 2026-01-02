@@ -14,7 +14,7 @@ function About({ className }: Props) {
   return (
     <div
       className={
-        className + ' px-2 overflow-y-auto scroll-smooth snap-y snap-mandatory'
+        className + ' pr-2 overflow-y-auto scroll-smooth snap-y snap-mandatory'
       }
     >
       <div className="w-full h-full flex gap-2 snap-start">
@@ -61,13 +61,16 @@ function About({ className }: Props) {
                 Download Latest .iso
               </a>
 
-              <button onClick={() => setTab('DIR_EXPLORER')} className="btn">
+              <button
+                onClick={() => setTab('DIR_EXPLORER')}
+                className="btn hidden sm:block"
+              >
                 Browse Files
               </button>
             </div>
           </div>
 
-          <div className="mockup-code w-full bg-base-300 select-text selection:bg-accent-content overflow-x-auto mt-2">
+          <div className="mockup-code w-full bg-base-300 select-text selection:bg-accent-content mt-2 hidden sm:block">
             <pre data-prefix="" className="text-accent font-bold">
               <code>How to apply:</code>
             </pre>

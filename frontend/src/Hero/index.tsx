@@ -13,7 +13,7 @@ function Hero({ className }: Props) {
     <div
       className={
         className +
-        ' flex items-end md:items-start md:flex-col pr-6 w-full md:w-auto md:min-h-full'
+        ' flex items-end md:items-start md:flex-col pr-6 w-full md:w-auto md:min-h-full gap-4'
       }
     >
       <div className="grow md:grow-0">
@@ -34,7 +34,7 @@ function Hero({ className }: Props) {
         </div>
       </div>
 
-      <div className="hidden md:flex text-xs flex-col gap-6 py-4 flex-1 grow">
+      <div className="hidden md:flex text-xs flex-col gap-6 flex-1 grow overflow-y-auto">
         <div>
           <p>The</p>
           <p>Archlinux</p>

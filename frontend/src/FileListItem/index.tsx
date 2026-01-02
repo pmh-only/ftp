@@ -34,7 +34,7 @@ function FileListerItem({
   return (
     <li
       style={style}
-      className="flex gap-2 items-center text-nowrap hover:bg-accent-content"
+      className="flex gap-2 items-center text-nowrap hover:bg-accent-content px-2"
     >
       <a
         className="h-full flex gap-1 grow shrink overflow-hidden items-end"

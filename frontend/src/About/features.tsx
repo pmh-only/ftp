@@ -4,7 +4,7 @@ function AboutFeatures() {
   return (
     <div
       id="features"
-      className="w-full min-h-full flex justify-center flex-col snap-start"
+      className="w-full min-h-full flex justify-center flex-col snap-start py-6"
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
@@ -12,7 +12,7 @@ function AboutFeatures() {
         </h2>
 
         <div className="flex justify-center gap-6 flex-wrap">
-          <div className="hover-3d">
+          <div className="sm:hover-3d">
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
@@ -42,7 +42,7 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="hover-3d">
+          <div className="sm:hover-3d">
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
@@ -71,7 +71,7 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="hover-3d">
+          <div className="sm:hover-3d">
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
@@ -101,7 +101,7 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="hover-3d">
+          <div className="sm:hover-3d">
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
@@ -129,7 +129,7 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="hover-3d">
+          <div className="sm:hover-3d">
             <div className="card bg-base-300 w-82 shadow-sm">
               <div className="card-body bg-base-200">
                 <h2 className="card-title flex justify-between items-end">
