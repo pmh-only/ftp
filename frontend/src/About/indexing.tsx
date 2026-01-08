@@ -62,7 +62,7 @@ function AboutIndexing() {
         </div>
       </div>
 
-      <div className="flex flex-wrap px-6 max-w-6xl gap-4">
+      <div className="flex flex-wrap flex-col-reverse lg:flex-row px-6 max-w-6xl gap-4">
         <div className="sm:hover-3d grow flex-1 min-w-1/2">
           <img
             className="w-full rounded-2xl object-cover"

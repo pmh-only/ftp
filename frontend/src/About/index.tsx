@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import FileLister from '../FileLister'
 import { tabState } from '../state'
 import { getRelative } from '../utils'
+import AboutArchitecture from './architecture'
 import AboutFeatures from './features'
 import AboutIndexing from './indexing'
 
@@ -161,6 +162,7 @@ function About({ className }: Props) {
 
       <AboutFeatures />
       <AboutIndexing />
+      <AboutArchitecture />
     </div>
   )
 }
