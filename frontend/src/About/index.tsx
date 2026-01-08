@@ -5,6 +5,7 @@ import FileLister from '../FileLister'
 import { tabState } from '../state'
 import { getRelative } from '../utils'
 import AboutFeatures from './features'
+import AboutIndexing from './indexing'
 
 interface Props {
   className?: string
@@ -38,12 +39,8 @@ function About({ className }: Props) {
   }, [])
 
   return (
-    <div
-      className={
-        className + ' pr-2 overflow-y-auto scroll-smooth snap-y snap-mandatory'
-      }
-    >
-      <div className="w-full h-full flex gap-2 snap-start">
+    <div className={className + ' pr-2 overflow-y-auto scroll-smooth'}>
+      <div className="w-full h-full flex gap-2">
         <div className="flex-1 flex flex-col">
           <div
             className="text-sm grow flex flex-col justify-end p-6 bg-center bg-cover rounded-2xl"
@@ -163,7 +160,7 @@ function About({ className }: Props) {
       </div>
 
       <AboutFeatures />
-      {/* <AboutIndexing /> */}
+      <AboutIndexing />
     </div>
   )
 }

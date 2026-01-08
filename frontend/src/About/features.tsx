@@ -1,10 +1,17 @@
-import { Award, Gauge, HatGlasses, Laugh, SearchCheck } from 'lucide-react'
+import {
+  Award,
+  Gauge,
+  HatGlasses,
+  Laugh,
+  Pizza,
+  SearchCheck
+} from 'lucide-react'
 
 function AboutFeatures() {
   return (
     <div
       id="features"
-      className="w-full min-h-full flex justify-center flex-col snap-start py-6"
+      className="w-full min-h-full flex justify-center flex-col py-6"
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
@@ -144,6 +151,33 @@ function AboutFeatures() {
                   ArgoCD and GitHub Actions! It also supports{' '}
                   <b className="text-accent">Post-Quantum Cryptography</b> with
                   proper TLS configs.
+                </p>
+              </div>
+            </div>
+
+            {/* 8 empty divs needed for the 3D effect */}
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+
+          <div className="sm:hover-3d">
+            <div className="card bg-base-300 w-82 shadow-sm">
+              <div className="card-body bg-base-200">
+                <h2 className="card-title flex justify-between items-end">
+                  <span>And... Short URL.</span>
+                  <span className="text-5xl opacity-25">
+                    <Pizza className="w-[1em] h-[1em]" />
+                  </span>
+                </h2>
+                <p>
+                  yeah, <b className="text-accent">ftp.io.kr</b>. how simple? It
+                  only hosts Arch Linux packages so there's no path prefix. wow.
                 </p>
               </div>
             </div>
