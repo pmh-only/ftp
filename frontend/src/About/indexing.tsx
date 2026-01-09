@@ -8,14 +8,14 @@ function AboutIndexing() {
   return (
     <div
       id="indexing"
-      className="w-full py-16 flex flex-col gap-8 items-center"
+      className="w-full mt-16 py-16 flex flex-col gap-8 items-center"
     >
       <h2 className="font-display italic text-4xl font-bold text-center">
         <span className="underline decoration-accent">Indexing,</span>{' '}
         modernized.
       </h2>
 
-      <div className="flex flex-wrap flex-col lg:flex-row px-6 max-w-6xl gap-4 items-stretch">
+      <div className="flex flex-col lg:flex-row px-6 max-w-6xl gap-4 items-stretch">
         <div className="flex-1 flex flex-col items-start p-8">
           <h3 className="text-xl font-bold">Need more Speed?</h3>
           <p>
@@ -62,7 +62,7 @@ function AboutIndexing() {
         </div>
       </div>
 
-      <div className="flex flex-wrap flex-col-reverse lg:flex-row px-6 max-w-6xl gap-4">
+      <div className="flex flex-col-reverse lg:flex-row px-6 max-w-6xl gap-4">
         <div className="sm:hover-3d grow flex-1 min-w-1/2">
           <img
             className="w-full rounded-2xl object-cover"
@@ -88,8 +88,8 @@ function AboutIndexing() {
         </div>
       </div>
 
-      <div className="flex flex-wrap px-6 max-w-6xl gap-4">
-        <div className="flex-1 flex flex-col text-right p-8">
+      <div className="flex flex-col lg:flex-row px-6 max-w-6xl gap-4">
+        <div className="flex-1 flex flex-col p-8">
           <h3 className="text-xl font-bold">Machine Readable.</h3>
           <p>
             ftp.io.kr supports even JSON output for indexing! Just pass the

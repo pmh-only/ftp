@@ -11,7 +11,7 @@ function AboutFeatures() {
   return (
     <div
       id="features"
-      className="w-full min-h-full flex justify-center flex-col py-6"
+      className="w-full min-h-full mt-16 flex justify-center flex-col py-6"
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
