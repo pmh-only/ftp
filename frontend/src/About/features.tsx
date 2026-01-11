@@ -1,11 +1,4 @@
-import {
-  Award,
-  Gauge,
-  HatGlasses,
-  Laugh,
-  Pizza,
-  SearchCheck
-} from 'lucide-react'
+import { Gauge, HatGlasses, Laugh, Pizza, SearchCheck } from 'lucide-react'
 
 function AboutFeatures() {
   return (
@@ -30,10 +23,8 @@ function AboutFeatures() {
                 </h2>
                 <p>
                   ftp.io.kr utilizes <b className="text-accent">4 Gbps</b>{' '}
-                  stable egress bandwidth without any connection limits. The
-                  webserver also fully supports{' '}
-                  <b className="text-accent">HTTP/3 QUIC</b> with TLS/QUIC early
-                  data packets!
+                  stable egress bandwidth without any connection limits. Its
+                  webserver supports Pure-HTTP request (not HTTPS redirection)!
                 </p>
               </div>
             </div>
@@ -121,36 +112,6 @@ function AboutFeatures() {
                   ftp.io.kr is <b className="text-accent">fully open source</b>{' '}
                   including K8s manifest files, nginx web server configuration,
                   indexer source code, and shell scripts!
-                </p>
-              </div>
-            </div>
-
-            {/* 8 empty divs needed for the 3D effect */}
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
-                <h2 className="card-title flex justify-between items-end">
-                  <span>Trust & Secure.</span>
-                  <span className="text-5xl opacity-25">
-                    <Award className="w-[1em] h-[1em]" />
-                  </span>
-                </h2>
-                <p>
-                  ftp.io.kr implements GitOps and{' '}
-                  <b className="text-accent">Single-Source-Of-Truth</b> with
-                  ArgoCD and GitHub Actions! It also supports{' '}
-                  <b className="text-accent">Post-Quantum Cryptography</b> with
-                  proper TLS configs.
                 </p>
               </div>
             </div>
