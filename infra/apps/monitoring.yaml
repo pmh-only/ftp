@@ -59,8 +59,8 @@ spec:
             grafana_net:
               url: https://grafana.net
             server:
-              domain: grafana.pmh.codes
-              root_url: https://grafana.pmh.codes
+              domain: dash.ftp.io.kr
+              root_url: https://dash.ftp.io.kr
             unified_storage:
               index_path: /var/lib/grafana-search/bleve
             auth:
