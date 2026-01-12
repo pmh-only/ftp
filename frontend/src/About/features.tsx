@@ -22,9 +22,9 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr utilizes <b className="text-accent">4 Gbps</b>{' '}
-                  stable egress bandwidth without any connection limits. Its
-                  webserver supports Pure-HTTP request (not HTTPS redirection)!
+                  ftp.io.kr delivers <b className="text-accent">4 Gbps</b> of
+                  stable egress bandwidth, powered by Oracle Cloud
+                  Infrastructure, with no limits on parallel connections.
                 </p>
               </div>
             </div>
@@ -50,10 +50,10 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr targets <b className="text-accent">99.9%</b> monthly
-                  availability! With Kubernetes' deployment strategy, it
-                  implements <b className="text-accent">zero-downtime</b>{' '}
-                  rolling updates.
+                  ftp.io.kr is designed for <b className="text-accent">99.9%</b>{' '}
+                  monthly availability and delivers{' '}
+                  <b className="text-accent">zero-downtime</b> rolling updates
+                  through Kubernetes deployment strategies.
                 </p>
               </div>
             </div>
@@ -80,10 +80,9 @@ function AboutFeatures() {
                 </h2>
                 <p>
                   ftp.io.kr <b className="text-accent">does not</b> collect any
-                  tracking data, cookies, or even your{' '}
-                  <b className="text-accent">IP address</b>! For those who
-                  really care about privacy, just check out the nginx
-                  configuration.
+                  tracking data, cookies, or{' '}
+                  <b className="text-accent">IP addresses</b>. Privacy-conscious
+                  users can verify this directly in the nginx configuration.
                 </p>
               </div>
             </div>
@@ -109,9 +108,9 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr is <b className="text-accent">fully open source</b>{' '}
-                  including K8s manifest files, nginx web server configuration,
-                  indexer source code, and shell scripts!
+                  ftp.io.kr is <b className="text-accent">fully open source</b>,
+                  with all Kubernetes manifests, nginx configurations, indexer
+                  source code, and supporting shell scripts publicly available.
                 </p>
               </div>
             </div>
@@ -137,8 +136,9 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  yeah, <b className="text-accent">ftp.io.kr</b>. how simple? It
-                  only hosts Arch Linux packages so there's no path prefix. wow.
+                  <b className="text-accent">ftp.io.kr</b> is short by design.
+                  With only Arch Linux packages hosted, access requires no path
+                  prefix.
                 </p>
               </div>
             </div>
