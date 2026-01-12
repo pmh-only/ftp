@@ -106,8 +106,7 @@ data:
     transfer logging = yes
     log file = /dev/stdout
 
-    [archlinux]
+    [/]
       path = /data/static
-      comment = Arch Linux mirror
       read only = yes
       list = yes
