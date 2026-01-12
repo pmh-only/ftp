@@ -21,6 +21,16 @@ spec:
       imagePullSecrets:
         - name: registry-secret
       initContainers:
+        - name: waitforinitsync
+          image: alpine:latest
+          command:
+            - sh
+            - -c
+            - while [[ ! -f /data/initsync.lck ]]; do sleep 1; done
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: true
         - name: render-vsftpd-conf
           image: bitnami/kubectl:latest
           securityContext:
@@ -48,6 +58,10 @@ spec:
       containers:
         - name: vsftpd
           image: {{ .Values.ftpserver.image | default "ghcr.io/pmh-only/ftpserver:latest" }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
           ports:
             - containerPort: 20
               hostPort: 20
