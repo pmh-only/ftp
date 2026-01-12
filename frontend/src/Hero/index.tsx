@@ -74,13 +74,21 @@ function Hero({ className }: Props) {
               Monitoring Dashboard.
             </a>
           </p>
+          <p>
+            <a
+              href="https://argo.ftp.io.kr/applications/argocd/core-pmhmirror"
+              target="_blank"
+            >
+              Cont. Deployments.
+            </a>
+          </p>
         </div>
 
         <div>
           <p>&copy; 2025-2026.</p>
           <p>
             <a href="https://github.com/pmh-only" target="_blank">
-              Minhyeok Park
+              Minhyeok Park.
             </a>
           </p>
         </div>
