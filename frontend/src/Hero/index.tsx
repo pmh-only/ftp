@@ -48,16 +48,6 @@ function Hero({ className }: Props) {
         </div>
 
         <div>
-          <p>By</p>
-          <p>
-            <a href="https://github.com/pmh-only" target="_blank">
-              Minhyeok Park
-            </a>
-            .
-          </p>
-        </div>
-
-        <div>
           <p>Contact</p>
           <p>
             <a href="https://github.com/pmh-only/ftp/issues" target="_blank">
@@ -79,11 +69,20 @@ function Hero({ className }: Props) {
               Source Code for Infra.
             </a>
           </p>
+          <p>
+            <a href="https://dash.ftp.io.kr" target="_blank">
+              Monitoring Dashboard.
+            </a>
+          </p>
         </div>
 
         <div>
           <p>&copy; 2025-2026.</p>
-          <p>Minhyeok Park.</p>
+          <p>
+            <a href="https://github.com/pmh-only" target="_blank">
+              Minhyeok Park
+            </a>
+          </p>
         </div>
       </div>
 

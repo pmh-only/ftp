@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: "syncrepo-{{ .Values.nodeName }}"
 spec:
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: syncrepo
