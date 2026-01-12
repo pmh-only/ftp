@@ -70,6 +70,8 @@ spec:
               org_name: Main Org.
               org_role: Viewer
               hide_version: true
+            dashboards:
+              default_home_dashboard_path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes/k8s-views-global.json
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: x
   syncPolicy:
