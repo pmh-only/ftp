@@ -23,8 +23,8 @@ function AboutFeatures() {
                 </h2>
                 <p>
                   ftp.io.kr delivers <b className="text-accent">4 Gbps</b> of
-                  stable egress bandwidth, powered by Oracle Cloud
-                  Infrastructure, with no limits on parallel connections.
+                  stable egress bandwidth with no limits on parallel
+                  connections.
                 </p>
               </div>
             </div>
@@ -50,10 +50,10 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr is designed for <b className="text-accent">99.9%</b>{' '}
-                  monthly availability and delivers{' '}
-                  <b className="text-accent">zero-downtime</b> rolling updates
-                  through Kubernetes deployment strategies.
+                  ftp.io.kr is designed for{' '}
+                  <b className="text-accent">99.99%</b> monthly availability and
+                  delivers <b className="text-accent">zero-downtime</b> rolling
+                  updates through Kubernetes deployment strategies.
                 </p>
               </div>
             </div>

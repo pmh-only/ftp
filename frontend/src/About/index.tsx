@@ -7,6 +7,7 @@ import { getRelative } from '../utils'
 import AboutArchitecture from './architecture'
 import AboutFeatures from './features'
 import AboutIndexing from './indexing'
+import AboutQnA from './qna'
 
 interface Props {
   className?: string
@@ -163,6 +164,7 @@ function About({ className }: Props) {
       <AboutFeatures />
       <AboutIndexing />
       <AboutArchitecture />
+      <AboutQnA />
     </div>
   )
 }

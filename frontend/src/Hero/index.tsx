@@ -55,7 +55,6 @@ function Hero({ className }: Props) {
             </a>
             .
           </p>
-          <p>Thanks to Oracle Cloud.</p>
         </div>
 
         <div>
