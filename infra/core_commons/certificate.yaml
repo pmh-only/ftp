@@ -6,6 +6,7 @@ metadata:
 spec:
   dnsNames:
     - ftp.io.kr
+    - "*.ftp.io.kr"
   issuerRef:
     group: cert-manager.io
     kind: Issuer
