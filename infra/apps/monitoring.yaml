@@ -31,3 +31,4 @@ spec:
       - RespectIgnoreDifferences=true
       - ApplyOutOfSyncOnly=true
       - CreateNamespace=true
+      - ServerSideApply=true
