@@ -20,6 +20,31 @@ spec:
           accessModes:
             - ReadWriteOnce
           size: 20Gi
+        grafana:
+          grafana.ini:
+            paths:
+              data: /var/lib/grafana/
+              logs: /var/log/grafana
+              plugins: /var/lib/grafana/plugins
+              provisioning: /etc/grafana/provisioning
+            analytics:
+              check_for_updates: true
+            log:
+              mode: console
+            grafana_net:
+              url: https://grafana.net
+            server:
+              domain: grafana.pmh.codes
+              root_url: https://grafana.pmh.codes
+            unified_storage:
+              index_path: /var/lib/grafana-search/bleve
+            auth:
+              oauth_allow_insecure_email_lookup: true
+            auth.anonymous:
+              enabled: true
+              org_name: Main Org.
+              org_role: Viewer
+              hide_version: true
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: x
   syncPolicy:
