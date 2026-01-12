@@ -28,6 +28,13 @@ spec:
               tag: "ftpserver.tag"
               name: "ftpserver.name"
               spec: "ftpserver.image"
+        - alias: "rsyncserver"
+          imageName: "ghcr.io/pmh-only/rsyncserver:latest"
+          manifestTargets:
+            helm:
+              tag: "rsyncserver.tag"
+              name: "rsyncserver.name"
+              spec: "rsyncserver.image"
         - alias: "webserver"
           imageName: "ghcr.io/pmh-only/webserver:latest"
           manifestTargets:
