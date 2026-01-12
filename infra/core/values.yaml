@@ -7,3 +7,5 @@ indexer:
   image: ghcr.io/pmh-only/indexer:latest
 ftpserver:
   image: ghcr.io/pmh-only/ftpserver:latest
+rsyncserver:
+  image: ghcr.io/pmh-only/rsyncserver:latest

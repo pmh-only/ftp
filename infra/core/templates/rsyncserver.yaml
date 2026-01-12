@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "rsyncserver-{{ .Values.nodeName }}"
+  namespace: core
+  labels:
+    app: rsyncserver
+spec:
+  selector:
+    matchLabels:
+      app: rsyncserver
+      node: {{ .Values.nodeName }}
+  template:
+    metadata:
+      labels:
+        app: rsyncserver
+        node: {{ .Values.nodeName }}
+    spec:
+      serviceAccountName: rsyncserver
+      nodeName: {{ .Values.nodeName }}
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: rsyncd
+          image: {{ .Values.rsyncserver.image | default "ghcr.io/pmh-only/rsyncserver:latest" }}
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              memory: 200Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data/static
+              subPath: static
+              readOnly: true
+            - name: config
+              subPath: rsyncd.conf
+              mountPath: /etc/rsyncd.conf
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: "core-{{ .Values.nodeName }}-pvc"
+        - name: config
+          configMap:
+            name: "rsyncserver-{{ .Values.nodeName }}-config"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "rsyncserver-{{ .Values.nodeName }}-config"
+  namespace: core
+data:
+  rsyncd.conf: |
+    uid = nobody
+    gid = nogroup
+    use chroot = no
+    max connections = 50
+    timeout = 600
+    transfer logging = yes
+    log file = /dev/stdout
+
+    [archlinux]
+      path = /data/static
+      comment = Arch Linux mirror
+      read only = yes
+      list = yes
