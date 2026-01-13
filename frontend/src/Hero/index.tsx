@@ -85,7 +85,7 @@ function Hero({ className }: Props) {
         </div>
 
         <div>
-          <p>&copy; 2025-2026.</p>
+          <p>&copy; 2025-{new Date().getFullYear()}.</p>
           <p>
             <a href="https://github.com/pmh-only" target="_blank">
               Minhyeok Park.

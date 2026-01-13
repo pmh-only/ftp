@@ -7,6 +7,7 @@ import { getRelative } from '../utils'
 import AboutArchitecture from './architecture'
 import AboutFeatures from './features'
 import AboutIndexing from './indexing'
+import AboutMetrics from './metrics'
 import AboutQnA from './qna'
 
 interface Props {
@@ -149,6 +150,8 @@ function About({ className }: Props) {
 
         <div className="flex-1 lg:flex hidden flex-col">
           <FileLister className="flex-1 flex-col lg:flex hidden bg-base-200 p-6 rounded-2xl" />
+
+          <AboutMetrics />
 
           <div className="mt-2 flex text-sm gap-2">
             <p className="flex-1 font-light text-center bg-base-300 p-2 rounded-lg">

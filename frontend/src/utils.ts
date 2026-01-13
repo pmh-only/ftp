@@ -63,3 +63,13 @@ export function getRelative(
     'text-neutral-500'
   ]
 }
+export function humanFileSize(size: number) {
+  size *= 8
+  const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024))
+  return (
+    +(size / Math.pow(1024, i)).toFixed(2) * 1 +
+    ' ' +
+    ['b', 'kb', 'Mb', 'Gb'][i] +
+    'ps'
+  )
+}
