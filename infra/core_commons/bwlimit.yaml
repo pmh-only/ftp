@@ -31,8 +31,8 @@ data:
         nft add rule $TABLE postrouting ip daddr @$SET drop
 
       # Count ALL egress TCP+UDP bytes by destination IP
-      nft list chain $TABLE postrouting | grep -q "ip protocol { tcp, udp }.*ip daddr map @$MAP" 2>/dev/null || \
-        nft add rule $TABLE postrouting ip protocol '{ tcp, udp }' counter ip daddr map @$MAP
+      nft list chain $TABLE postrouting | grep -q "ip protocol { tcp, udp } ip daddr map @$MAP" 2>/dev/null || \
+        nft add rule $TABLE postrouting ip protocol '{ tcp, udp }' ip daddr map @$MAP
     }
 
     ban_over_limit() {
