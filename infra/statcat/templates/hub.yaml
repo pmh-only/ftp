@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statcat-hub
+  namespace: stats
+  labels:
+    app: statcat-hub
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: statcat-hub
+  template:
+    metadata:
+      labels:
+        app: statcat-hub
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: hub
+          image: {{ .Values.statcat.image | default "ghcr.io/pmh-only/statcat:latest" }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              memory: 200Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: statcat-hub
+  namespace: stats
+spec:
+  selector:
+    app: statcat-hub
+  ports:
+    - name: ws
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: sse
+      protocol: TCP
+      port: 8081
+      targetPort: 8081

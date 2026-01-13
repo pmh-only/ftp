@@ -1,0 +1,23 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: statcat-updater
+spec:
+  namespace: argocd
+  commonUpdateSettings:
+    updateStrategy: "digest"
+  writeBackConfig:
+    method: argocd
+    # method: git:secret:argocd/repository-secret
+    gitConfig:
+      writeBackTarget: helmvalues
+  applicationRefs:
+    - namePattern: "statcat"
+      images:
+        - alias: "statcat"
+          imageName: "ghcr.io/pmh-only/statcat:latest"
+          manifestTargets:
+            helm:
+              tag: "statcat.tag"
+              name: "statcat.name"
+              spec: "statcat.image"

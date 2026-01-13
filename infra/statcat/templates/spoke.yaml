@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: statcat-spoke
+  namespace: stats
+  labels:
+    app: statcat-spoke
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: statcat-spoke
+  template:
+    metadata:
+      labels:
+        app: statcat-spoke
+    spec:
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: spoke
+          image: {{ .Values.statcat.image | default "ghcr.io/pmh-only/statcat:latest" }}
+          args:
+            - --mode=spoke
+            - --hub=ws://statcat-hub.stats.svc.cluster.local:8080/ws
+            - --sysfs=/host/sys
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
+          resources:
+            requests:
+              cpu: 200m
+              memory: 100Mi
+            limits:
+              memory: 200Mi
+          env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          volumeMounts:
+          - name: host-sys
+            mountPath: /host/sys
+            readOnly: true
+        volumes:
+        - name: host-sys
+          hostPath:
+            path: /sys

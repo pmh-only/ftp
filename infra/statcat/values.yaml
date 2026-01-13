@@ -1,0 +1,2 @@
+statcat:
+  image: ghcr.io/pmh-only/statcat:latest

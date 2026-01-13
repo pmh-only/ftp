@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: statcat
+  namespace: argocd
+spec:
+  destination:
+    namespace: stats
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: infra/statcat
+    repoURL: git@github.com:pmh-only/ftp.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - RespectIgnoreDifferences=true
+      - PruneLast=true
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+      - ServerSideApply=true
