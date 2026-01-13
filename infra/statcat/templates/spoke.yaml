@@ -22,6 +22,7 @@ spec:
           image: {{ .Values.statcat.image | default "ghcr.io/pmh-only/statcat:latest" }}
           args:
             - --mode=spoke
+            - --iface=enp0s6
             - --hub=ws://statcat-hub.stats.svc.cluster.local:8080/ws
             - --sysfs=/host/sys
           lifecycle:
