@@ -102,7 +102,7 @@ spec:
             privileged: true
           command: ["/bin/sh", "-c"]
           args:
-            - apk add --no-cache nftables coreutils awk >/dev/null && chmod +x /scripts/bwlimit-egress.sh && /scripts/bwlimit-egress.sh
+            - apk add --no-cache nftables coreutils >/dev/null && chmod +x /scripts/bwlimit-egress.sh && /scripts/bwlimit-egress.sh
           volumeMounts:
             - name: scripts
               mountPath: /scripts
