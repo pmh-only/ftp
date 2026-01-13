@@ -17,6 +17,7 @@ func main() {
 	hubWS := flag.String("hub", "ws://127.0.0.1:8080/ws", "hub websocket url (spoke mode)")
 	iface := flag.String("iface", "eth0", "interface to collect (spoke mode)")
 	spokeID := flag.String("id", getSpokeId(), "spoke id (spoke mode)")
+	sysfs := flag.String("sysfs", "/sys", "sysfs mount point")
 	flag.Parse()
 
 	ctx, cancel := signalContext()
@@ -28,7 +29,7 @@ func main() {
 			log.Fatal(err)
 		}
 	case "spoke":
-		if err := runSpoke(ctx, *hubWS, *iface, *spokeID); err != nil && !errors.Is(err, context.Canceled) {
+		if err := runSpoke(ctx, *hubWS, *iface, *spokeID, *sysfs); err != nil && !errors.Is(err, context.Canceled) {
 			log.Fatal(err)
 		}
 	default:

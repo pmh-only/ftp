@@ -16,8 +16,8 @@ import (
 	"github.com/coder/websocket"
 )
 
-func runSpoke(ctx context.Context, hubWS, iface, spokeID string) error {
-	prevStats, err := readIfaceStats(iface)
+func runSpoke(ctx context.Context, hubWS, iface, spokeID, sysfs string) error {
+	prevStats, err := readIfaceStats(iface, sysfs)
 	if err != nil {
 		return fmt.Errorf("read interface counters: %w", err)
 	}
@@ -33,7 +33,7 @@ func runSpoke(ctx context.Context, hubWS, iface, spokeID string) error {
 				close(metricCh)
 				return
 			case <-t.C:
-				stats, err := readIfaceStats(iface)
+				stats, err := readIfaceStats(iface, sysfs)
 				if err != nil {
 					// Interface missing/down; skip until it recovers.
 					continue
@@ -164,20 +164,20 @@ type ifaceStats struct {
 	rxPackets, txPackets int64
 }
 
-func readIfaceStats(iface string) (ifaceStats, error) {
-	rx, err := readInt64File(fmt.Sprintf("/sys/class/net/%s/statistics/rx_bytes", iface))
+func readIfaceStats(iface, sysfs string) (ifaceStats, error) {
+	rx, err := readInt64File(fmt.Sprintf("%s/class/net/%s/statistics/rx_bytes", sysfs, iface))
 	if err != nil {
 		return ifaceStats{}, err
 	}
-	tx, err := readInt64File(fmt.Sprintf("/sys/class/net/%s/statistics/tx_bytes", iface))
+	tx, err := readInt64File(fmt.Sprintf("%s/class/net/%s/statistics/tx_bytes", sysfs, iface))
 	if err != nil {
 		return ifaceStats{}, err
 	}
-	rxPkts, err := readInt64File(fmt.Sprintf("/sys/class/net/%s/statistics/rx_packets", iface))
+	rxPkts, err := readInt64File(fmt.Sprintf("%s/class/net/%s/statistics/rx_packets", sysfs, iface))
 	if err != nil {
 		return ifaceStats{}, err
 	}
-	txPkts, err := readInt64File(fmt.Sprintf("/sys/class/net/%s/statistics/tx_packets", iface))
+	txPkts, err := readInt64File(fmt.Sprintf("%s/class/net/%s/statistics/tx_packets", sysfs, iface))
 	if err != nil {
 		return ifaceStats{}, err
 	}
