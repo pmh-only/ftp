@@ -1,0 +1,119 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bwlimit-egress
+  namespace: kube-system
+data:
+  bwlimit-egress.sh: |
+    #!/usr/bin/env sh
+    set -eu
+
+    LIMIT_BYTES=$((10 * 1024 * 1024 * 1024))  # 10GB/day
+    TABLE="inet bwlimit_egress"
+    MAP="dst_bytes"
+    SET="banned_dst"
+
+    ensure_rules() {
+      nft list table $TABLE >/dev/null 2>&1 || nft add table $TABLE
+
+      nft list map $TABLE $MAP >/dev/null 2>&1 || \
+        nft add map $TABLE $MAP '{ type ipv4_addr : counter; }'
+
+      nft list set $TABLE $SET >/dev/null 2>&1 || \
+        nft add set $TABLE $SET '{ type ipv4_addr; flags interval; }'
+
+      # postrouting sees both forwarded pod traffic and local host traffic right before egress
+      nft list chain $TABLE postrouting >/dev/null 2>&1 || \
+        nft add chain $TABLE postrouting '{ type filter hook postrouting priority 300; policy accept; }'
+
+      # Drop egress to banned destination IPs
+      nft list chain $TABLE postrouting | grep -q "ip daddr @$SET drop" 2>/dev/null || \
+        nft add rule $TABLE postrouting ip daddr @$SET drop
+
+      # Count ALL egress TCP+UDP bytes by destination IP
+      nft list chain $TABLE postrouting | grep -q "ip protocol { tcp, udp }.*ip daddr map @$MAP" 2>/dev/null || \
+        nft add rule $TABLE postrouting ip protocol '{ tcp, udp }' counter ip daddr map @$MAP
+    }
+
+    ban_over_limit() {
+      # Parse the map and ban destination IPs whose counter bytes >= LIMIT_BYTES
+      nft list map $TABLE $MAP | awk '
+        /counter packets/ {
+          ip=$1
+          bytes=0
+          for (i=1;i<=NF;i++) if ($i=="bytes") { bytes=$(i+1); break }
+          if (bytes+0 >= limit) print ip
+        }
+      ' limit="$LIMIT_BYTES" | while read -r ip; do
+        [ -n "$ip" ] && nft add element $TABLE $SET "{ $ip }" 2>/dev/null || true
+      done
+    }
+
+    reset_daily_if_needed() {
+      # Reset once per UTC day; store last reset day in a file.
+      # (Kubernetes nodes typically run UTC; this makes the "day" consistent.)
+      state_dir="/var/lib/bwlimit-egress"
+      state_file="$state_dir/last_reset_utc_day"
+      mkdir -p "$state_dir"
+
+      today="$(date -u +%F)"
+      last=""
+      [ -f "$state_file" ] && last="$(cat "$state_file" || true)"
+
+      if [ "$today" != "$last" ]; then
+        # New day: clear bans and reset counters
+        nft flush set $TABLE $SET 2>/dev/null || true
+        nft reset map $TABLE $MAP 2>/dev/null || true
+        echo "$today" > "$state_file"
+      fi
+    }
+
+    ensure_rules
+
+    # Main loop: enforce continuously; reset once per UTC day.
+    while true; do
+      reset_daily_if_needed
+      ban_over_limit
+      sleep 60
+    done
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bwlimit-egress
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: bwlimit-egress
+  template:
+    metadata:
+      labels:
+        app: bwlimit-egress
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      terminationGracePeriodSeconds: 0
+      containers:
+        - name: bwlimit-egress
+          image: alpine:3.20
+          securityContext:
+            privileged: true
+          command: ["/bin/sh", "-c"]
+          args:
+            - apk add --no-cache nftables coreutils awk >/dev/null && chmod +x /scripts/bwlimit-egress.sh && /scripts/bwlimit-egress.sh
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+            - name: state
+              mountPath: /var/lib/bwlimit-egress
+      volumes:
+        - name: scripts
+          configMap:
+            name: bwlimit-egress
+            defaultMode: 0755
+        - name: state
+          hostPath:
+            path: /var/lib/bwlimit-egress
+            type: DirectoryOrCreate
