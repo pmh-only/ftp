@@ -42,6 +42,15 @@ function Hero({ className }: Props) {
         </div>
 
         <div>
+          <p>By</p>
+          <p>
+            <a href="https://github.com/pmh-only" target="_blank">
+              Minhyeok Park.
+            </a>
+          </p>
+        </div>
+
+        <div>
           <p>In</p>
           <p>Chuncheon-si,</p>
           <p>Republic of Korea.</p>
@@ -82,13 +91,9 @@ function Hero({ className }: Props) {
               Cont. Deployments.
             </a>
           </p>
-        </div>
-
-        <div>
-          <p>&copy; 2025-{new Date().getFullYear()}.</p>
           <p>
-            <a href="https://github.com/pmh-only" target="_blank">
-              Minhyeok Park.
+            <a href="#credit" onClick={() => setTab('ABOUT')}>
+              Legal infos & policy.
             </a>
           </p>
         </div>

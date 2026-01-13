@@ -81,8 +81,9 @@ function AboutFeatures() {
                 <p>
                   ftp.io.kr <b className="text-accent">does not</b> collect any
                   tracking data, cookies, or{' '}
-                  <b className="text-accent">IP addresses</b>. Privacy-conscious
-                  users can verify this directly in the nginx configuration.
+                  <b className="text-accent">IP addresses</b>
+                  <sup>[1]</sup>. Privacy-conscious users can verify this
+                  directly in the nginx configuration.
                 </p>
               </div>
             </div>

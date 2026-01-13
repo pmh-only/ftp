@@ -5,6 +5,7 @@ import FileLister from '../FileLister'
 import { tabState } from '../state'
 import { getRelative } from '../utils'
 import AboutArchitecture from './architecture'
+import AboutCredit from './credit'
 import AboutFeatures from './features'
 import AboutIndexing from './indexing'
 import AboutMetrics from './metrics'
@@ -168,6 +169,7 @@ function About({ className }: Props) {
       <AboutIndexing />
       <AboutArchitecture />
       <AboutQnA />
+      <AboutCredit />
     </div>
   )
 }
