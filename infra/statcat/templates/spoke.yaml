@@ -43,7 +43,7 @@ spec:
           - name: host-sys
             mountPath: /host/sys
             readOnly: true
-        volumes:
+      volumes:
         - name: host-sys
           hostPath:
             path: /sys
