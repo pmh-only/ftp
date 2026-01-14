@@ -99,7 +99,7 @@ function About({ className }: Props) {
 
           <div className="mockup-code w-full bg-base-300 select-text selection:bg-accent-content mt-2 hidden sm:block">
             <pre data-prefix="" className="text-accent font-bold">
-              <code>How to apply:</code>
+              <code>How to apply a package mirror:</code>
             </pre>
             <pre data-prefix="$">
               <code>sudo vi /etc/pacman.d/mirrorlist</code>
@@ -120,7 +120,7 @@ function About({ className }: Props) {
               <code></code>
             </pre>
             <pre data-prefix="6" className="text-info">
-              <code># prepend one or both</code>
+              <code># Use either HTTP or HTTPS</code>
             </pre>
             <pre data-prefix="7">
               <code>
