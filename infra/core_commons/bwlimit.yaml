@@ -97,32 +97,45 @@ data:
       # -i: interface
       # -n: don't resolve names
       # -l: line buffered
-      # -q: quiet (less output)
-      # -tt: timestamp
+      # -tt: timestamp (not using -q to get full output with length)
       # Filter: outgoing TCP/UDP, not to private IPs
-      tcpdump -i "$INTERFACE" -n -l -q -tt \
+      tcpdump -i "$INTERFACE" -n -l -tt \
         '(tcp or udp) and dst net not (10.0.0.0/8 or 172.16.0.0/12 or 192.168.0.0/16)' \
         2>/dev/null | while read -r line; do
 
         packet_count=$((packet_count + 1))
 
         # Parse tcpdump output to get destination IP and packet length
-        # Format: timestamp IP src > dst: ... length NNN
-        # Use awk/sed instead of grep -P
-        local dst_ip=$(echo "$line" | sed -n 's/.* \([0-9.]*\) > \([0-9.]*\)[.:].*/\2/p')
-        local length=$(echo "$line" | sed -n 's/.*length \([0-9]*\).*/\1/p')
+        # Format: timestamp IP src.port > dst.port: ... length NNNN
+        # Extract destination IP (between > and : or .)
+        local dst_ip=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i==">") print $(i+1)}' | cut -d. -f1-4 | cut -d: -f1)
+
+        # Extract length field
+        local length=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i=="length") print $(i+1)}' | sed 's/[^0-9]//g')
+
+        # Debug first 10 packets to see parsing
+        if [ $packet_count -le 10 ]; then
+          echo "DEBUG: Packet $packet_count - IP: '$dst_ip' Length: '$length'"
+          echo "       Line: $line"
+        fi
 
         # Debug every 1000 packets
         if [ $((packet_count % 1000)) -eq 0 ]; then
           echo "Processed $packet_count packets..."
         fi
 
-        if [ -n "$dst_ip" ] && [ -n "$length" ]; then
+        if [ -n "$dst_ip" ] && [ -n "$length" ] && [ "$length" -gt 0 ]; then
           # Skip if already banned
           is_banned "$dst_ip" && continue
 
           # Add bytes to IP total
           local new_total=$(add_ip_bytes "$dst_ip" "$length")
+
+          # Log significant additions
+          if [ $((packet_count % 100)) -eq 0 ]; then
+            local gb=$(echo "scale=3; $new_total / 1024 / 1024 / 1024" | bc)
+            echo "IP $dst_ip: ${gb}GB total"
+          fi
 
           # Check if exceeded limit
           if [ "$new_total" -gt "$LIMIT_BYTES" ]; then
@@ -197,7 +210,7 @@ data:
       # Start status reporter in background
       (
         while true; do
-          sleep 600  # Every 10 minutes
+          sleep 60  # Every 1 minutes
           show_status
         done
       ) &
