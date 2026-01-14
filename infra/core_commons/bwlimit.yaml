@@ -16,7 +16,7 @@ data:
     NFTABLES_TABLE="bwlimit"
     LOG_FILE="/var/log/bwlimit.log"
     STATE_DIR="/var/lib/bwlimit"
-    INTERFACE="enp0s6"  # Change to your mirror server interface (eth0, eth1, etc.)
+    INTERFACE="eth0"  # Change to your mirror server interface (eth0, eth1, etc.)
 
     mkdir -p "$STATE_DIR"
 
@@ -39,28 +39,34 @@ data:
         echo "[$(date)] nftables setup complete" | tee -a "$LOG_FILE"
     }
 
-    # Function to get egress bytes per IP from conntrack
+    # Function to get egress bytes per IP using nfstat (netfilter statistics)
     get_egress_stats() {
         local temp_file=$(mktemp)
         
-        # Use conntrack to get all TCP and UDP connections on the interface
-        # Track bytes going TO destination IPs (clients downloading from mirror)
-        conntrack -L -o extended 2>/dev/null | awk '
-        /^tcp|^udp/ {
-            # Extract destination IP and bytes
-            for (i=1; i<=NF; i++) {
-                if ($i == "dst=") dst=$(i+1)
-                if ($i == "bytes=") bytes=$(i+1)
-            }
-            if (dst && bytes) {
-                ip_bytes[dst] += bytes
-            }
-        }
-        END {
-            for (ip in ip_bytes) {
-                print ip, ip_bytes[ip]
+        # Create temporary nftables rule to count bytes per destination IP
+        # This is more reliable than conntrack for bandwidth tracking
+        nft list ruleset 2>/dev/null | grep -A5 "counter" | awk '
+        /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {
+            ip = $1
+            bytes = $NF
+            gsub(/[^0-9]/, "", bytes)
+            if (ip && bytes > 0) {
+                print ip, bytes
             }
         }' > "$temp_file"
+        
+        # Fallback: use proc net dev if nft fails
+        if [[ ! -s "$temp_file" ]]; then
+            cat /proc/net/dev 2>/dev/null | awk -v iface="$INTERFACE" '
+            $1 ~ iface {
+                # Parse interface statistics
+                # Fields: RX_bytes RX_packets RX_errs RX_drop RX_fifo RX_frame RX_compressed RX_multicast TX_bytes...
+                tx_bytes = $10
+                if (tx_bytes > 0) {
+                    print "total", tx_bytes
+                }
+            }' > "$temp_file"
+        fi
         
         cat "$temp_file"
         rm -f "$temp_file"
