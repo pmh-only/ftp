@@ -109,9 +109,10 @@ function AboutFeatures() {
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr is <b className="text-accent">fully open source</b>,
-                  with all Kubernetes manifests, nginx configurations, indexer
-                  source code, and supporting shell scripts publicly available.
+                  ftp.io.kr's source code is{' '}
+                  <b className="text-accent">publicly available</b>, including
+                  all Kubernetes manifests, nginx configurations, indexer source
+                  code, and supporting shell scripts.
                 </p>
               </div>
             </div>

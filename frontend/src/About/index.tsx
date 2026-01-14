@@ -55,7 +55,7 @@ function About({ className }: Props) {
                 The{' '}
                 <span className="text-rotate">
                   <span>
-                    <span>Shining bright</span>
+                    <span>Brightly shining</span>
                     <span>Performance-ready</span>
                     <span>Highly available</span>
                     <span>Privacy-first</span>

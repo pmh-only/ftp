@@ -17,7 +17,7 @@ function AboutQnA() {
               Okay, this thing is really over-engineered
             </div>
             <div className="collapse-content text-sm">
-              I know — but most of this doesn’t affect the basic mirror
+              I know — but most of this doesn't affect the basic mirror
               functionality. I was bored, so I built it this way.
             </div>
           </div>
@@ -52,8 +52,8 @@ function AboutQnA() {
             </div>
             <div className="collapse-content text-sm">
               Because the domain starts with <code>ftp</code>, curl attempts the
-              FTP protocol first. If you want HTML output, explicitly prefix the
-              URL with
+              FTP protocol first. Although the FTP protocol still works, if you
+              want HTML output, explicitly prefix the URL with
               <code> http://</code> or <code>https://</code>.
             </div>
           </div>

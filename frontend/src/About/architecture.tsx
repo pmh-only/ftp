@@ -8,7 +8,8 @@ function AboutArchitecture() {
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
-          The <span className="underline decoration-accent">Architecture.</span>
+          Reliable{' '}
+          <span className="underline decoration-accent">Architectures</span>.
         </h2>
 
         <div className="flex flex-col items-center gap-6">
