@@ -28,9 +28,9 @@ spec:
             - name: SYNC_MODE
               value: initsync
             - name: SOURCE_URL
-              value: rsync://mirror.rackspace.com/archlinux/
+              value: rsync://taipei.mirror.pkgbuild.com/packages/
             - name: LASTUPDATE_URL
-              value: https://mirror.rackspace.com/archlinux/lastupdate
+              value: https://taipei.mirror.pkgbuild.com/lastupdate
             - name: INDEXER_URL
               value: "http://indexer-{{ .Values.nodeName }}:8080"
           volumeMounts:
