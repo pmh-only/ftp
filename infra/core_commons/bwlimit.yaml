@@ -13,9 +13,9 @@ data:
     CHECK_INTERVAL=60
     RESET_HOUR=0  # Reset at midnight UTC
     NFTABLES_SET="banned_ips"
-    NFTABLES_TABLE="egress_monitor"
-    LOG_FILE="/var/log/egress-monitor.log"
-    STATE_DIR="/var/lib/egress-monitor"
+    NFTABLES_TABLE="bwlimit"
+    LOG_FILE="/var/log/bwlimit.log"
+    STATE_DIR="/var/lib/bwlimit"
 
     mkdir -p "$STATE_DIR"
 
@@ -142,7 +142,7 @@ data:
     # Usage: ./unban.sh <IP>
 
     IP=$1
-    NFTABLES_TABLE="egress_monitor"
+    NFTABLES_TABLE="bwlimit"
     NFTABLES_SET="banned_ips"
 
     if [[ -z "$IP" ]]; then
