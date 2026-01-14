@@ -108,6 +108,7 @@ data:
         # Process each IP
         while read -r ip bytes; do
             [[ -z "$ip" ]] && continue
+            [[ "$ip" == "total" ]] && continue
             
             # Skip localhost and internal addresses
             [[ "$ip" == "127.0.0.1" ]] && continue
