@@ -68,16 +68,21 @@ data:
       fi
     }
 
-    # Add bytes to IP total
+    # Add bytes to IP total (with file locking for safety)
     add_ip_bytes() {
       local ip=$1
       local bytes=$2
       local file="$IP_BYTES_DIR/${ip}.bytes"
+      local lockfile="$IP_BYTES_DIR/${ip}.lock"
 
-      local current=$(get_ip_bytes "$ip")
-      local new_total=$((current + bytes))
-      echo "$new_total" > "$file"
-      echo "$new_total"
+      # Use flock for atomic updates (create lock file first)
+      (
+        flock -x 200
+        local current=$(get_ip_bytes "$ip")
+        local new_total=$((current + bytes))
+        echo "$new_total" > "$file"
+        echo "$new_total"
+      ) 200>"$lockfile"
     }
 
     # Check if IP is banned
@@ -93,48 +98,56 @@ data:
 
       local packet_count=0
 
-      # Use tcpdump to capture packet sizes (not content, just headers)
+      # Use tcpdump with -e to get full packet length including headers
       # -i: interface
       # -n: don't resolve names
       # -l: line buffered
-      # -tt: timestamp (not using -q to get full output with length)
-      # Filter: outgoing TCP/UDP, not to private IPs
-      tcpdump -i "$INTERFACE" -n -l -tt \
+      # -e: print link-level header (gives us actual packet size)
+      # -tt: timestamp
+      # Format will be: timestamp ether_src > ether_dst, ethertype, length XXXX: IP src > dst
+      tcpdump -i "$INTERFACE" -n -l -e -tt \
         '(tcp or udp) and dst net not (10.0.0.0/8 or 172.16.0.0/12 or 192.168.0.0/16)' \
         2>/dev/null | while read -r line; do
 
         packet_count=$((packet_count + 1))
 
-        # Parse tcpdump output to get destination IP and packet length
-        # Format: timestamp IP src.port > dst.port: ... length NNNN
-        # Extract destination IP (between > and : or .)
-        local dst_ip=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i==">") print $(i+1)}' | cut -d. -f1-4 | cut -d: -f1)
+        # Parse tcpdump -e output
+        # Format: timestamp MAC > MAC, ethertype, length NNNN: IP src.port > dst.port: ...
+        # Extract destination IP (find IP after >)
+        local dst_ip=$(echo "$line" | awk '{
+          for(i=1;i<=NF;i++) {
+            if($i ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $(i-1) == ">") {
+              split($i, a, ".");
+              print a[1]"."a[2]"."a[3]"."a[4];
+              break;
+            }
+          }
+        }')
 
-        # Extract length field
-        local length=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i=="length") print $(i+1)}' | sed 's/[^0-9]//g')
+        # Extract length field (packet size on wire)
+        local length=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i=="length") {print $(i+1); break}}' | sed 's/[^0-9]//g')
 
         # Debug first 10 packets to see parsing
         if [ $packet_count -le 10 ]; then
           echo "DEBUG: Packet $packet_count - IP: '$dst_ip' Length: '$length'"
-          echo "       Line: $line"
         fi
 
-        # Debug every 1000 packets
-        if [ $((packet_count % 1000)) -eq 0 ]; then
+        # Debug every 5000 packets
+        if [ $((packet_count % 5000)) -eq 0 ]; then
           echo "Processed $packet_count packets..."
         fi
 
         if [ -n "$dst_ip" ] && [ -n "$length" ] && [ "$length" -gt 0 ]; then
           # Skip if already banned
-          is_banned "$dst_ip" && continue
+          is_banned "$dst_ip" 2>/dev/null && continue
 
           # Add bytes to IP total
           local new_total=$(add_ip_bytes "$dst_ip" "$length")
 
-          # Log significant additions
-          if [ $((packet_count % 100)) -eq 0 ]; then
-            local gb=$(echo "scale=3; $new_total / 1024 / 1024 / 1024" | bc)
-            echo "IP $dst_ip: ${gb}GB total"
+          # Log progress every 10000 packets
+          if [ $((packet_count % 10000)) -eq 0 ]; then
+            local mb=$(echo "scale=2; $new_total / 1024 / 1024" | bc)
+            echo "IP $dst_ip: ${mb}MB total"
           fi
 
           # Check if exceeded limit
@@ -270,7 +283,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              apk add --no-cache nftables bash bc tcpdump
+              apk add --no-cache nftables bash bc tcpdump util-linux
               chmod +x /scripts/bwlimit.sh
               exec /scripts/bwlimit.sh
           securityContext:
