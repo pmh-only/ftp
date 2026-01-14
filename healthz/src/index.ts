@@ -55,7 +55,11 @@ export default {
           name: httpsRecordData.name,
           ttl: httpsRecordData.ttl,
           type: 'HTTPS',
-          content: `1 . alpn="h3,h2" ipv4hint="${acceptedIps.join(',')}"`
+          data: {
+            priority: 1,
+            target: '.',
+            value: `alpn="h3,h2" ipv4hint="${acceptedIps.join(',')}"`
+          }
         })
       })
 
