@@ -16,9 +16,25 @@ data:
 
     mkdir -p /var/lib/bwlimit
 
+    # Check if IP is private
+    is_private_ip() {
+      local ip=$1
+      case $ip in
+        10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*)
+          return 0
+          ;;
+        *)
+          return 1
+          ;;
+      esac
+    }
+
     # Initialize nftables
     init_nftables() {
       echo "Initializing nftables rules..."
+
+      # Enable conntrack accounting
+      sysctl -w net.netfilter.nf_conntrack_acct=1 >/dev/null 2>&1 || true
 
       # Create table and chains
       nft add table inet bwlimit 2>/dev/null || true
@@ -26,26 +42,22 @@ data:
 
       # Create chains
       nft add chain inet bwlimit track_egress { type filter hook postrouting priority 0 \; }
-      nft add chain inet bwlimit banned_ips
-
-      # Create map for tracking bytes per IP
-      nft add map inet bwlimit ip_bytes { type ipv4_addr : counter \; }
 
       # Create set for banned IPs
       nft add set inet bwlimit banned { type ipv4_addr \; }
 
-      # Create set for private IP ranges (to exclude from tracking)
+      # Create set for private IP ranges (to exclude from banning)
       nft add set inet bwlimit private_ips { type ipv4_addr \; flags interval \; }
       nft add element inet bwlimit private_ips { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
 
-      # Drop traffic to banned IPs (only on enp0s6 interface)
+      # Drop traffic to banned IPs (only on interface)
       nft add rule inet bwlimit track_egress oifname "$INTERFACE" ip daddr @banned counter drop
 
-      # Skip private IP addresses (do not count)
-      nft add rule inet bwlimit track_egress oifname "$INTERFACE" ip daddr @private_ips counter return
+      # Accept private IPs (skip tracking)
+      nft add rule inet bwlimit track_egress oifname "$INTERFACE" ip daddr @private_ips counter accept
 
-      # Track egress traffic (TCP and UDP) - only on enp0s6 interface, excluding private IPs
-      nft add rule inet bwlimit track_egress oifname "$INTERFACE" meta l4proto { tcp, udp } counter update @ip_bytes { ip daddr counter }
+      # Track all other egress traffic with conntrack
+      nft add rule inet bwlimit track_egress oifname "$INTERFACE" meta l4proto { tcp, udp } counter accept
 
       echo "nftables initialized for interface $INTERFACE (excluding private IPs)"
     }
@@ -71,9 +83,12 @@ data:
       # Flush banned IPs
       nft flush set inet bwlimit banned 2>/dev/null || true
 
-      # Recreate the map to reset counters
-      nft delete map inet bwlimit ip_bytes 2>/dev/null || true
-      nft add map inet bwlimit ip_bytes { type ipv4_addr : counter \; }
+      # Clear conntrack table to reset byte counters
+      conntrack -F 2>/dev/null || true
+
+      # Clear all tracking files
+      rm -f /tmp/bwlimit_ip_*.bytes
+      rm -rf /tmp/bwlimit_conn_state
 
       # Clear state file
       > "$STATE_FILE"
@@ -83,28 +98,68 @@ data:
 
     # Check bandwidth usage and ban if needed
     check_and_ban() {
-      # Get all IPs and their byte counts
-      local nft_output=$(nft list map inet bwlimit ip_bytes 2>/dev/null)
+      # Store connection states
+      local conn_state_dir="/tmp/bwlimit_conn_state"
+      mkdir -p "$conn_state_dir"
 
-      # Parse the output to extract IP and bytes
-      echo "$nft_output" | grep -oP '\d+\.\d+\.\d+\.\d+ : counter packets \d+ bytes \d+' | while read -r line; do
-        local ip=$(echo "$line" | grep -oP '^\d+\.\d+\.\d+\.\d+')
-        local bytes=$(echo "$line" | grep -oP 'bytes \K\d+')
+      # Parse conntrack output for egress connections
+      conntrack -L -o extended 2>/dev/null | grep -E "tcp|udp" | while read -r line; do
+        # Extract connection details
+        local src_ip=$(echo "$line" | grep -oP 'src=\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        local dst_ip=$(echo "$line" | grep -oP 'dst=\K[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        local sport=$(echo "$line" | grep -oP 'sport=\K[0-9]+' | head -1)
+        local dport=$(echo "$line" | grep -oP 'dport=\K[0-9]+' | head -1)
+        local proto=$(echo "$line" | grep -oP '^\w+')
+        local reply_bytes=$(echo "$line" | grep -oP 'bytes=\K[0-9]+' | tail -1)
 
-        if [ -n "$ip" ] && [ -n "$bytes" ]; then
+        [ -z "$dst_ip" ] && continue
+        [ -z "$reply_bytes" ] && continue
+
+        # Skip private IPs
+        is_private_ip "$dst_ip" && continue
+
+        # Connection ID
+        local conn_id="${proto}_${src_ip}_${sport}_${dst_ip}_${dport}"
+        local conn_file="$conn_state_dir/${conn_id}"
+
+        # Get previous bytes
+        local prev_bytes=0
+        [ -f "$conn_file" ] && prev_bytes=$(cat "$conn_file")
+
+        # Calculate delta
+        local delta=$((reply_bytes - prev_bytes))
+        if [ $delta -lt 0 ]; then
+          delta=$reply_bytes  # New connection or counter wrapped
+        fi
+
+        # Save current state
+        echo "$reply_bytes" > "$conn_file"
+
+        # Skip if no new bytes
+        [ $delta -eq 0 ] && continue
+
+        # Accumulate to IP total
+        local ip_total_file="/tmp/bwlimit_ip_${dst_ip}.bytes"
+        local ip_total=0
+        [ -f "$ip_total_file" ] && ip_total=$(cat "$ip_total_file")
+
+        ip_total=$((ip_total + delta))
+        echo "$ip_total" > "$ip_total_file"
+
+        # Check if exceeded limit
+        if [ "$ip_total" -gt "$LIMIT_BYTES" ]; then
           # Check if already banned
-          if nft list set inet bwlimit banned 2>/dev/null | grep -q "$ip"; then
-            continue
-          fi
-
-          # Check if exceeded limit
-          if [ "$bytes" -gt "$LIMIT_BYTES" ]; then
-            echo "$(date): IP $ip exceeded limit with $bytes bytes ($(($bytes / 1024 / 1024 / 1024))GB). Banning..."
-            nft add element inet bwlimit banned { "$ip" }
-            echo "$(date): Banned $ip" >> "$STATE_FILE"
+          if ! nft list set inet bwlimit banned 2>/dev/null | grep -q "$dst_ip"; then
+            local gb=$(echo "scale=2; $ip_total / 1024 / 1024 / 1024" | bc)
+            echo "$(date): IP $dst_ip exceeded limit with ${gb}GB. Banning..."
+            nft add element inet bwlimit banned { "$dst_ip" } 2>/dev/null || true
+            echo "$(date): Banned $dst_ip (${gb}GB)" >> "$STATE_FILE"
           fi
         fi
       done
+
+      # Cleanup old connection state files (connections older than 5 minutes)
+      find "$conn_state_dir" -type f -mmin +5 -delete 2>/dev/null || true
     }
 
     # Show current status
@@ -119,14 +174,20 @@ data:
       nft list set inet bwlimit banned 2>/dev/null | grep "elements" || echo "None"
       echo ""
       echo "Top bandwidth users:"
-      nft list map inet bwlimit ip_bytes 2>/dev/null | grep -oP '\d+\.\d+\.\d+\.\d+ : counter packets \d+ bytes \d+' | while read -r line; do
-        local ip=$(echo "$line" | grep -oP '^\d+\.\d+\.\d+\.\d+')
-        local bytes=$(echo "$line" | grep -oP 'bytes \K\d+')
-        if [ -n "$ip" ] && [ -n "$bytes" ] && [ "$bytes" -gt 0 ]; then
-          local gb=$(echo "scale=2; $bytes / 1024 / 1024 / 1024" | bc)
-          echo "  $ip: ${gb}GB"
+
+      # Read all byte tracking files
+      for file in /tmp/bwlimit_ip_*.bytes; do
+        if [ -f "$file" ]; then
+          local ip=$(basename "$file" .bytes | sed 's/bwlimit_ip_//')
+          local bytes=$(cat "$file")
+          if [ "$bytes" -gt 0 ]; then
+            local gb=$(echo "scale=2; $bytes / 1024 / 1024 / 1024" | bc)
+            echo "$ip:$gb"
+          fi
         fi
-      done | sort -t: -k2 -rn | head -20
+      done | sort -t: -k2 -rn | head -20 | while IFS=: read -r ip gb; do
+        echo "  $ip: ${gb}GB"
+      done
     }
 
     # Main loop
@@ -206,7 +267,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              apk add --no-cache nftables bash bc
+              apk add --no-cache nftables bash bc conntrack-tools findutils grep
               chmod +x /scripts/bwlimit.sh
               exec /scripts/bwlimit.sh
           securityContext:
