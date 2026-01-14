@@ -4,163 +4,181 @@ metadata:
   name: bwlimit-script
   namespace: kube-system
 data:
-  monitor.sh: |
+  bwlimit.sh: |
     #!/bin/bash
     set -e
 
     # Configuration
-    THRESHOLD_BYTES=$((30 * 1024 * 1024 * 1024))  # 30GB in bytes
-    CHECK_INTERVAL=60
-    RESET_HOUR=0  # Reset at midnight UTC
-    NFTABLES_SET="banned_ips"
-    NFTABLES_TABLE="bwlimit"
-    LOG_FILE="/var/log/bwlimit.log"
-    STATE_DIR="/var/lib/bwlimit"
-    INTERFACE="enp0s6"  # Change to your mirror server interface (eth0, eth1, etc.)
+    LIMIT_BYTES=$((5 * 1024 * 1024 * 1024))  # 5GB in bytes
+    CHECK_INTERVAL=60  # Check every 60 seconds
+    STATE_FILE="/var/lib/bwlimit/state.txt"
+    INTERFACE="enp0s6"  # Monitor only this interface
 
-    mkdir -p "$STATE_DIR"
+    mkdir -p /var/lib/bwlimit
 
-    # Function to setup nftables rules
-    setup_nftables() {
-        echo "[$(date)] Setting up nftables..." | tee -a "$LOG_FILE"
-        
-        # Flush existing rules if table exists
-        nft flush table inet "$NFTABLES_TABLE" 2>/dev/null || true
-        nft delete table inet "$NFTABLES_TABLE" 2>/dev/null || true
-        
-        # Create table and chain
-        nft create table inet "$NFTABLES_TABLE"
-        nft create chain inet "$NFTABLES_TABLE" egress_out { type filter hook output priority 0\; }
-        nft create set inet "$NFTABLES_TABLE" "$NFTABLES_SET" { type ipv4_addr\; }
-        
-        # Block traffic TO banned IPs on egress (TCP and UDP) - mirror server downloads
-        nft add rule inet "$NFTABLES_TABLE" egress_out oifname "$INTERFACE" ip daddr @"$NFTABLES_SET" drop
-        
-        echo "[$(date)] nftables setup complete" | tee -a "$LOG_FILE"
+    # Initialize nftables
+    init_nftables() {
+      echo "Initializing nftables rules..."
+
+      # Create table and chains
+      nft add table inet bwlimit 2>/dev/null || true
+      nft flush table inet bwlimit 2>/dev/null || true
+
+      # Create chains
+      nft add chain inet bwlimit track_egress { type filter hook postrouting priority 0 \; }
+      nft add chain inet bwlimit banned_ips
+
+      # Create map for tracking bytes per IP
+      nft add map inet bwlimit ip_bytes { type ipv4_addr : counter \; }
+
+      # Create set for banned IPs
+      nft add set inet bwlimit banned { type ipv4_addr \; }
+
+      # Create set for private IP ranges (to exclude from tracking)
+      nft add set inet bwlimit private_ips { type ipv4_addr \; flags interval \; }
+      nft add element inet bwlimit private_ips { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
+
+      # Drop traffic to banned IPs (only on enp0s6 interface)
+      nft add rule inet bwlimit track_egress oifname "$INTERFACE" ip daddr @banned counter drop
+
+      # Skip private IP addresses (do not count)
+      nft add rule inet bwlimit track_egress oifname "$INTERFACE" ip daddr @private_ips counter return
+
+      # Track egress traffic (TCP and UDP) - only on enp0s6 interface, excluding private IPs
+      nft add rule inet bwlimit track_egress oifname "$INTERFACE" meta l4proto { tcp, udp } counter update @ip_bytes { ip daddr counter }
+
+      echo "nftables initialized for interface $INTERFACE (excluding private IPs)"
     }
 
-    # Function to get egress bytes per IP using nfstat (netfilter statistics)
-    get_egress_stats() {
-        local temp_file=$(mktemp)
-        
-        # Create temporary nftables rule to count bytes per destination IP
-        # This is more reliable than conntrack for bandwidth tracking
-        nft list ruleset 2>/dev/null | grep -A5 "counter" | awk '
-        /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ {
-            ip = $1
-            bytes = $NF
-            gsub(/[^0-9]/, "", bytes)
-            if (ip && bytes > 0) {
-                print ip, bytes
-            }
-        }' > "$temp_file"
-        
-        # Fallback: use proc net dev if nft fails
-        if [[ ! -s "$temp_file" ]]; then
-            cat /proc/net/dev 2>/dev/null | awk -v iface="$INTERFACE" '
-            $1 ~ iface {
-                # Parse interface statistics
-                # Fields: RX_bytes RX_packets RX_errs RX_drop RX_fifo RX_frame RX_compressed RX_multicast TX_bytes...
-                tx_bytes = $10
-                if (tx_bytes > 0) {
-                    print "total", tx_bytes
-                }
-            }' > "$temp_file"
-        fi
-        
-        cat "$temp_file"
-        rm -f "$temp_file"
+    # Get current hour and minute
+    get_current_time() {
+      date +"%H:%M"
     }
 
-    # Function to check and ban IPs
+    # Check if it's midnight (00:00)
+    is_midnight() {
+      local current_time=$(get_current_time)
+      if [ "$current_time" = "00:00" ]; then
+        return 0
+      fi
+      return 1
+    }
+
+    # Reset all counters and bans
+    reset_daily() {
+      echo "Resetting daily limits at $(date)"
+
+      # Flush banned IPs
+      nft flush set inet bwlimit banned 2>/dev/null || true
+
+      # Recreate the map to reset counters
+      nft delete map inet bwlimit ip_bytes 2>/dev/null || true
+      nft add map inet bwlimit ip_bytes { type ipv4_addr : counter \; }
+
+      # Clear state file
+      > "$STATE_FILE"
+
+      echo "Reset complete"
+    }
+
+    # Check bandwidth usage and ban if needed
     check_and_ban() {
-        local current_hour=$(date +%H)
-        local today=$(date +%Y-%m-%d)
-        local state_file="$STATE_DIR/daily_bytes_${today}.db"
-        local last_reset_file="$STATE_DIR/last_reset.txt"
-        
-        # Reset on new day
-        local last_reset=$(cat "$last_reset_file" 2>/dev/null || echo "")
-        if [[ "$today" != "$last_reset" ]]; then
-            echo "[$(date)] New day detected. Resetting counters and unbanning all IPs" | tee -a "$LOG_FILE"
-            
-            # Remove all banned IPs from nftables
-            if nft list set inet "$NFTABLES_TABLE" "$NFTABLES_SET" &>/dev/null; then
-                while read -r ip; do
-                    [[ -z "$ip" ]] && continue
-                    echo "[$(date)] UNBANNING IP: $ip (daily reset)" | tee -a "$LOG_FILE"
-                    nft delete element inet "$NFTABLES_TABLE" "$NFTABLES_SET" "{ $ip }" 2>/dev/null || true
-                done < <(nft list set inet "$NFTABLES_TABLE" "$NFTABLES_SET" | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}')
-            fi
-            
-            # Reset state files
-            rm -f "$STATE_DIR"/daily_bytes_*.db
-            echo "$today" > "$last_reset_file"
+      # Get all IPs and their byte counts
+      local nft_output=$(nft list map inet bwlimit ip_bytes 2>/dev/null)
+
+      # Parse the output to extract IP and bytes
+      echo "$nft_output" | grep -oP '\d+\.\d+\.\d+\.\d+ : counter packets \d+ bytes \d+' | while read -r line; do
+        local ip=$(echo "$line" | grep -oP '^\d+\.\d+\.\d+\.\d+')
+        local bytes=$(echo "$line" | grep -oP 'bytes \K\d+')
+
+        if [ -n "$ip" ] && [ -n "$bytes" ]; then
+          # Check if already banned
+          if nft list set inet bwlimit banned 2>/dev/null | grep -q "$ip"; then
+            continue
+          fi
+
+          # Check if exceeded limit
+          if [ "$bytes" -gt "$LIMIT_BYTES" ]; then
+            echo "$(date): IP $ip exceeded limit with $bytes bytes ($(($bytes / 1024 / 1024 / 1024))GB). Banning..."
+            nft add element inet bwlimit banned { "$ip" }
+            echo "$(date): Banned $ip" >> "$STATE_FILE"
+          fi
         fi
-        
-        # Initialize state file if needed
-        touch "$state_file"
-        
-        # Get current stats
-        local temp_current=$(mktemp)
-        get_egress_stats > "$temp_current"
-        
-        # Process each IP
-        while read -r ip bytes; do
-            [[ -z "$ip" ]] && continue
-            [[ "$ip" == "total" ]] && continue
-            
-            # Skip localhost and internal addresses
-            [[ "$ip" == "127.0.0.1" ]] && continue
-            [[ "$ip" == "::1" ]] && continue
-            [[ "$ip" =~ ^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[01]\.|^192\.168\. ]] && continue
-            
-            # Read previous count from state file
-            local prev_bytes=$(grep "^$ip:" "$state_file" 2>/dev/null | cut -d: -f2 || echo "0")
-            local total_bytes=$((prev_bytes + bytes))
-            
-            # Update state file
-            sed -i "/^$ip:/d" "$state_file" 2>/dev/null || true
-            echo "$ip:$total_bytes" >> "$state_file"
-            
-            # Check threshold
-            if [[ $total_bytes -gt $THRESHOLD_BYTES ]]; then
-                # Check if already banned
-                if ! nft get element inet "$NFTABLES_TABLE" "$NFTABLES_SET" "{ $ip }" &>/dev/null; then
-                    echo "[$(date)] BANNING IP: $ip (${total_bytes} bytes)" | tee -a "$LOG_FILE"
-                    nft add element inet "$NFTABLES_TABLE" "$NFTABLES_SET" "{ $ip }"
-                fi
-            fi
-        done < "$temp_current"
-        
-        rm -f "$temp_current"
+      done
+    }
+
+    # Show current status
+    show_status() {
+      echo "=== Bandwidth Limit Status ==="
+      echo "Current time: $(date)"
+      echo "Interface: $INTERFACE"
+      echo "Limit: $(($LIMIT_BYTES / 1024 / 1024 / 1024))GB per day"
+      echo "Excluding: Private IP ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)"
+      echo ""
+      echo "Banned IPs:"
+      nft list set inet bwlimit banned 2>/dev/null | grep "elements" || echo "None"
+      echo ""
+      echo "Top bandwidth users:"
+      nft list map inet bwlimit ip_bytes 2>/dev/null | grep -oP '\d+\.\d+\.\d+\.\d+ : counter packets \d+ bytes \d+' | while read -r line; do
+        local ip=$(echo "$line" | grep -oP '^\d+\.\d+\.\d+\.\d+')
+        local bytes=$(echo "$line" | grep -oP 'bytes \K\d+')
+        if [ -n "$ip" ] && [ -n "$bytes" ] && [ "$bytes" -gt 0 ]; then
+          local gb=$(echo "scale=2; $bytes / 1024 / 1024 / 1024" | bc)
+          echo "  $ip: ${gb}GB"
+        fi
+      done | sort -t: -k2 -rn | head -20
     }
 
     # Main loop
-    echo "[$(date)] Starting egress monitor..." | tee -a "$LOG_FILE"
-    setup_nftables
+    main() {
+      echo "Starting bandwidth limiter for package mirror server..."
+      echo "Monitoring interface: $INTERFACE"
+      echo "Limit: $(($LIMIT_BYTES / 1024 / 1024 / 1024))GB per day"
+      echo "Excluding private IP ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16"
 
-    while true; do
+      # Initialize
+      init_nftables
+
+      # Track if we already reset today
+      local last_reset=""
+
+      while true; do
+        local current_date=$(date +"%Y-%m-%d")
+
+        # Check if it's a new day and we haven't reset yet
+        if [ "$last_reset" != "$current_date" ] && is_midnight; then
+          reset_daily
+          last_reset="$current_date"
+          sleep 60  # Sleep for a minute to avoid multiple resets
+          continue
+        fi
+
+        # If it's a new day but not midnight yet, update last_reset
+        if [ "$last_reset" != "$current_date" ] && [ "$(date +%H)" = "00" ]; then
+          # We're in the first hour of a new day
+          if [ -z "$last_reset" ]; then
+            # First run, consider it reset
+            last_reset="$current_date"
+          fi
+        fi
+
+        # Check bandwidth and ban if needed
         check_and_ban
-        sleep "$CHECK_INTERVAL"
-    done
 
-  unban.sh: |
-    #!/bin/bash
-    # Script to manually unban an IP
-    # Usage: ./unban.sh <IP>
+        # Show status every 10 minutes
+        if [ $(($(date +%s) % 600)) -lt $CHECK_INTERVAL ]; then
+          show_status
+        fi
 
-    IP=$1
-    NFTABLES_TABLE="bwlimit"
-    NFTABLES_SET="banned_ips"
+        sleep $CHECK_INTERVAL
+      done
+    }
 
-    if [[ -z "$IP" ]]; then
-        echo "Usage: $0 <IP>"
-        exit 1
-    fi
+    # Handle signals
+    trap 'echo "Shutting down..."; exit 0' SIGTERM SIGINT
 
-    echo "Unbanning IP: $IP"
-    nft delete element inet "$NFTABLES_TABLE" "$NFTABLES_SET" "{ $IP }" 2>/dev/null && echo "Success" || echo "Failed or IP not found"
+    # Run
+    main
 
 ---
 apiVersion: apps/v1
@@ -168,6 +186,8 @@ kind: DaemonSet
 metadata:
   name: bwlimit
   namespace: kube-system
+  labels:
+    app: bwlimit
 spec:
   selector:
     matchLabels:
@@ -179,71 +199,44 @@ spec:
     spec:
       hostNetwork: true
       hostPID: true
-      dnsPolicy: ClusterFirstWithHostNet
-      priorityClassName: system-node-critical
-      tolerations:
-        - operator: Exists
-          effect: NoSchedule
-        - operator: Exists
-          effect: NoExecute
       containers:
-        - name: monitor
+        - name: bwlimit
           image: alpine:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              apk add --no-cache nftables bash bc
+              chmod +x /scripts/bwlimit.sh
+              exec /scripts/bwlimit.sh
           securityContext:
             privileged: true
             capabilities:
               add:
                 - NET_ADMIN
+                - NET_RAW
                 - SYS_ADMIN
           volumeMounts:
-            - name: script
+            - name: scripts
               mountPath: /scripts
-            - name: logs
-              mountPath: /var/log
             - name: state
               mountPath: /var/lib/bwlimit
-            - name: sys
-              mountPath: /sys
-            - name: proc
-              mountPath: /proc
-          command:
-            - /bin/sh
-            - -c
-            - |
-              apk add --no-cache nftables conntrack-tools curl bash
-              chmod +x /scripts/*.sh
-              exec /scripts/monitor.sh
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "200m"
+              memory: "64Mi"
+              cpu: "100m"
             limits:
-              memory: "512Mi"
+              memory: "256Mi"
               cpu: "500m"
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - ps aux | grep -q '[m]onitor.sh'
-            initialDelaySeconds: 30
-            periodSeconds: 30
       volumes:
-        - name: script
+        - name: scripts
           configMap:
             name: bwlimit-script
             defaultMode: 0755
-        - name: logs
-          hostPath:
-            path: /var/log/bwlimit
-            type: DirectoryOrCreate
         - name: state
           hostPath:
             path: /var/lib/bwlimit
             type: DirectoryOrCreate
-        - name: sys
-          hostPath:
-            path: /sys
-        - name: proc
-          hostPath:
-            path: /proc
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
