@@ -8,7 +8,7 @@ function AboutCredit() {
           </h1>
         </div>
 
-        <div className="text-xs text-center max-w-lg">
+        <div className="text-xs text-center max-w-lg flex flex-col gap-2">
           <p>
             &copy; 2025-{new Date().getFullYear()}.{' '}
             <a href="https://github.com/pmh-only" target="_blank">
@@ -20,6 +20,21 @@ function AboutCredit() {
             </a>
             &gt;
           </p>
+          <details>
+            <summary className="cursor-pointer hover:underline">
+              [1] About personal data collections.
+            </summary>
+            In the event of abuse, misuse, or other activities that adversely
+            affect the operation or integrity of the service, automated systems
+            may process limited technical information, including but not limited
+            to Internet Protocol (IP) addresses and Autonomous System Numbers
+            (ASN), solely for the purpose of detecting, preventing, and
+            mitigating such activities. Such information is processed
+            transiently and is not retained beyond what is necessary for
+            immediate analysis. We reserve the right to impose access
+            restrictions or to block access, in whole or in part, based on the
+            outcome of such processing.
+          </details>
           <details>
             <summary className="cursor-pointer hover:underline">
               Legal infos & policy
@@ -49,16 +64,6 @@ function AboutCredit() {
             you acknowledge that you have read, understood, and agree to this
             notice and its terms.
           </details>
-          <p>
-            [1] In case of abuse, misuse, or activities that negatively affect
-            the service, we may inspect relevant technical information such as
-            IP addresses and autonomous system numbers (ASN). We reserve the
-            right to restrict or block access based on such information.
-          </p>
-          <p>
-            This mirror is an independent service and is not affiliated with or
-            endorsed by Arch Linux or its contributors.
-          </p>
         </div>
       </div>
     </div>

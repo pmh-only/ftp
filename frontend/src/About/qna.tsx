@@ -65,8 +65,8 @@ function AboutQnA() {
             </div>
             <div className="collapse-content text-sm">
               The mirror exposes an rsync module named <code>arch</code>. You
-              can verify it with:
-              <code> rsync-ssl --list-only ftp.io.kr::arch</code>
+              can test it with:{' '}
+              <code>rsync-ssl --list-only ftp.io.kr::arch</code>
             </div>
           </div>
         </div>
