@@ -13,7 +13,7 @@ spec:
     - list:
         elements:
           - nodeName: pmhmirror
-          # - nodeName: pmhmirror2
+          - nodeName: pmhmirror2
           # - nodeName: pmhmirror3
   template:
     metadata:

@@ -8,6 +8,7 @@ spec:
   subnetRouter:
     advertiseRoutes:
       - 10.10.0.0/16
+      - 10.11.0.0/16
       - 172.18.0.0/16
       - 172.19.0.0/16
   tags:

@@ -11,7 +11,7 @@
   },
   "vars": {
     "TARGET_DOMAIN_NAME": "ftp.io.kr",
-    "TARGET_IPS": "134.185.97.161",
+    "TARGET_IPS": "134.185.97.161,158.179.193.193",
     "TARGET_ZONE_ID": "f9aefd4bdf0eaecc8a79a8dffccf3420"
   }
 }
