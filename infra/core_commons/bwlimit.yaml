@@ -16,7 +16,7 @@ data:
     NFTABLES_TABLE="bwlimit"
     LOG_FILE="/var/log/bwlimit.log"
     STATE_DIR="/var/lib/bwlimit"
-    INTERFACE="eth0"  # Change to your mirror server interface (eth0, eth1, etc.)
+    INTERFACE="enp0s6"  # Change to your mirror server interface (eth0, eth1, etc.)
 
     mkdir -p "$STATE_DIR"
 
