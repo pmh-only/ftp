@@ -1,8 +1,8 @@
 #!/bin/bash
-set -euo pipefail
+set -eu
 
 NETFLOW_DIR="${NETFLOW_DIR:-/data}"
-THRESHOLD_BYTES="${THRESHOLD_BYTES:-5368709120}"
+THRESHOLD_BYTES="${THRESHOLD_BYTES:-5368709120}" # 5 GiB
 INTERVAL_SEC="${INTERVAL_SEC:-10}"
 IPSET_NAME="${IPSET_NAME:-ban_egress_dst}"
 
@@ -18,9 +18,14 @@ parse_bytes() {
     local value="$1"
     local unit x
     
-    value="${value%\(*}"
+    # Remove parenthetical content
+    value="${value%(*}"
+    
+    # Extract last character (unit)
     unit="${value##*[0-9.]}"
-    x="${value%"$unit"}"
+    
+    # Remove unit to get number
+    x="${value%$unit}"
     
     case "$unit" in
         G) echo "$x" | awk '{printf "%.0f", $1 * 1024 * 1024 * 1024}' ;;
@@ -37,6 +42,7 @@ echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${
 while true; do
   day="$(date +%Y%m%d)"
   if [ "$day" != "$last_day" ]; then
+    # Midnight rollover (Asia/Seoul). Flush all bans.
     ipset flush "$IPSET_NAME" || true
     echo "[ban] $(date -Is) midnight rollover: flushed ipset=${IPSET_NAME}"
     last_day="$day"
@@ -50,13 +56,19 @@ while true; do
   printf '%s\n' "$out" | while read -r line; do
     [ -z "$line" ] && continue
     
+    # Extract IP: the word that comes after "any"
     ip=$(echo "$line" | grep -oP 'any\s+\K[0-9.]+' | head -1)
+    
+    # Extract bytes: find the field with format like "16.2 G" or "51.3 M"
     bytes_raw=$(echo "$line" | grep -oP '[0-9]+\.[0-9]+\s+[GMK](?=[\(\s])')
     
     [ -z "$ip" ] && continue
     [ -z "$bytes_raw" ] && continue
     
+    # Remove space between number and unit
     bytes_field="${bytes_raw// /}"
+    
+    # Parse to numeric
     bytes=$(parse_bytes "$bytes_field")
 
     if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
