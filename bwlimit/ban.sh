@@ -38,7 +38,7 @@ NF>=8 {
 
 last_day="$(date +%Y%m%d)"
 
-echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${NETFLOW_DIR} tz=${TZ} ipset=${IPSET_NAME} (auto-unban at midnight)"
+echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${NETFLOW_DIR} ipset=${IPSET_NAME} (auto-unban at midnight)"
 
 while true; do
   day="$(date +%Y%m%d)"
