@@ -14,40 +14,6 @@ iptables -C FORWARD -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || 
 iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
   iptables -I OUTPUT 1 -m set --match-set "$IPSET_NAME" dst -j DROP
 
-parse_bytes() {
-    local value="$1"
-    
-    # Remove parenthetical content
-    value="${value%(*}"
-    
-    # Use awk to handle parsing and unit conversion
-    awk -v v="$value" '
-    BEGIN {
-        gsub(/\(.*/, "", v)
-        gsub(/ /, "", v)
-        
-        u = substr(v, length(v), 1)
-        if (u ~ /[KMGTP]/) {
-            x = substr(v, 1, length(v)-1)
-        } else {
-            x = v
-            u = ""
-        }
-        
-        m = 1
-        if (u == "K") m = 1024
-        else if (u == "M") m = 1024 * 1024
-        else if (u == "G") m = 1024 * 1024 * 1024
-        else if (u == "T") m = 1024 * 1024 * 1024 * 1024
-        else if (u == "P") m = 1024 * 1024 * 1024 * 1024 * 1024
-        
-        result = x * m
-        printf "%.0f", result
-    }'
-}
-
-last_day="$(date +%Y%m%d)"
-
 echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${NETFLOW_DIR} ipset=${IPSET_NAME} (auto-unban at midnight)"
 
 while true; do
@@ -64,31 +30,49 @@ while true; do
 
   out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip/bytes -n 0 -q 2>/dev/null || true)"
 
-  printf '%s\n' "$out" | while read -r line; do
-    [ -z "$line" ] && continue
-    
-    # Extract IP: the word that comes after "any"
-    ip=$(echo "$line" | grep -oP 'any\s+\K[0-9.]+' | head -1)
-    
-    # Extract bytes: find the field with format like "16.2 G" or "51.3 M"
-    bytes_raw=$(echo "$line" | grep -oP '[0-9]+\.[0-9]+\s+[GMK](?=[\(\s])')
-    
-    [ -z "$ip" ] && continue
-    [ -z "$bytes_raw" ] && continue
-    
-    # Remove space between number and unit
-    bytes_field="${bytes_raw// /}"
-    
-    # Parse to numeric
-    bytes=$(parse_bytes "$bytes_field")
+  printf '%s\n' "$out" | grep -oP 'any\s+\K[0-9.]+' | {
+    while read -r ip; do
+      [ -z "$ip" ] && continue
+      
+      bytes=$(printf '%s\n' "$out" | grep "any[[:space:]]*$ip" | awk '
+      {
+        for (i=1; i<=NF; i++) {
+          if ($i ~ /^[0-9]+\.[0-9]+[KMGTP]/) {
+            v = $i
+            gsub(/\(.*/, "", v)
+            gsub(/ /, "", v)
+            
+            u = substr(v, length(v), 1)
+            if (u ~ /[KMGTP]/) {
+              x = substr(v, 1, length(v)-1)
+            } else {
+              x = v
+              u = ""
+            }
+            
+            m = 1
+            if (u == "K") m = 1024
+            else if (u == "M") m = 1024 * 1024
+            else if (u == "G") m = 1024 * 1024 * 1024
+            else if (u == "T") m = 1024 * 1024 * 1024 * 1024
+            else if (u == "P") m = 1024 * 1024 * 1024 * 1024 * 1024
+            
+            printf "%.0f", x * m
+            break
+          }
+        }
+      }')
+      
+      [ -z "$bytes" ] && continue
 
-    if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
-      if ! ipset test "$IPSET_NAME" "$ip" 2>/dev/null; then
-        ipset add "$IPSET_NAME" "$ip" -exist
-        echo "[ban] $(date -Is) added dst=${ip} bytes_today=${bytes}"
+      if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
+        if ! ipset test "$IPSET_NAME" "$ip" 2>/dev/null; then
+          ipset add "$IPSET_NAME" "$ip" -exist
+          echo "[ban] $(date -Is) added dst=${ip} bytes_today=${bytes}"
+        fi
       fi
-    fi
-  done
+    done
+  }
 
   sleep "$INTERVAL_SEC"
 done
