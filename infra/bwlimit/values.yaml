@@ -1,4 +1,6 @@
 nfdump:
   image: ghcr.io/pmh-only/nfdump:latest
+nfdumpban:
+  image: ghcr.io/pmh-only/nfdumpban:latest
 pmacct:
   image: ghcr.io/pmh-only/pmacct:latest

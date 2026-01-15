@@ -21,6 +21,13 @@ spec:
               tag: "nfdump.tag"
               name: "nfdump.name"
               spec: "nfdump.image"
+        - alias: "nfdumpban"
+          imageName: "ghcr.io/pmh-only/nfdumpban:latest"
+          manifestTargets:
+            helm:
+              tag: "nfdumpban.tag"
+              name: "nfdumpban.name"
+              spec: "nfdumpban.image"
         - alias: "pmacct"
           imageName: "ghcr.io/pmh-only/pmacct:latest"
           manifestTargets:

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: netflow-egress-baner
+  namespace: bwlimit
+spec:
+  selector:
+    matchLabels:
+      app: netflow-egress-baner
+  template:
+    metadata:
+      labels:
+        app: netflow-egress-baner
+    spec:
+      hostNetwork: true
+      hostPID: true
+      dnsPolicy: ClusterFirstWithHostNet
+      tolerations:
+        - operator: "Exists"
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: baner
+          image: {{ .Values.nfdumpban.image | default "ghcr.io/pmh-only/nfdumpban:latest" }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NETFLOW_DIR
+              value: /data
+            - name: THRESHOLD_BYTES
+              value: "5368709120"
+            - name: INTERVAL_SEC
+              value: "10"
+            - name: IPSET_NAME
+              value: "ban_egress_dst"
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: netflow
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: netflow
+          hostPath:
+            path: /var/netflow
+            type: DirectoryOrCreate
