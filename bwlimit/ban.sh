@@ -16,23 +16,34 @@ iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
 
 parse_bytes() {
     local value="$1"
-    local unit x
     
     # Remove parenthetical content
     value="${value%(*}"
     
-    # Extract last character (unit)
-    unit="${value##*[0-9.]}"
-    
-    # Remove unit to get number
-    x="${value%$unit}"
-    
-    case "$unit" in
-        G) echo "$x" | awk '{printf "%.0f", $1 * 1024 * 1024 * 1024}' ;;
-        M) echo "$x" | awk '{printf "%.0f", $1 * 1024 * 1024}' ;;
-        K) echo "$x" | awk '{printf "%.0f", $1 * 1024}' ;;
-        *) echo "$value" ;;
-    esac
+    # Use awk to handle parsing and unit conversion
+    awk -v v="$value" '
+    BEGIN {
+        gsub(/\(.*/, "", v)
+        gsub(/ /, "", v)
+        
+        u = substr(v, length(v), 1)
+        if (u ~ /[KMGTP]/) {
+            x = substr(v, 1, length(v)-1)
+        } else {
+            x = v
+            u = ""
+        }
+        
+        m = 1
+        if (u == "K") m = 1024
+        else if (u == "M") m = 1024 * 1024
+        else if (u == "G") m = 1024 * 1024 * 1024
+        else if (u == "T") m = 1024 * 1024 * 1024 * 1024
+        else if (u == "P") m = 1024 * 1024 * 1024 * 1024 * 1024
+        
+        result = x * m
+        printf "%.0f", result
+    }'
 }
 
 last_day="$(date +%Y%m%d)"
