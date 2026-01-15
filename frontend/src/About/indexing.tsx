@@ -33,7 +33,7 @@ function AboutIndexing() {
           <button
             onClick={() => {
               setTab('DIR_EXPLORER')
-              setPath('pool/packages/')
+              setPath('/pool/packages/')
             }}
             className="btn btn-accent mt-6 sm:block"
           >
