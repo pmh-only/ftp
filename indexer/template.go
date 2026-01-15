@@ -16,7 +16,6 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 	<body>!!
 		<h1>Index of {{.FullPath}}</h1>
 
-		<p><a href="..">Go Parent Directory</a></p>!!
 		<table>!!
 			<thead>!!
 				<tr>
@@ -24,7 +23,6 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 					<th>Type</th>
 					<th>LinkedTo</th>
 					<th>Bytes</th>
-					<th>FullPath</th>
 					<th>LastUpdate</th>
 					<th>TotalChildrenCount</th>
 				</tr>!!
@@ -33,19 +31,25 @@ var htmlTemplate = parseTemplateString(`<!DOCTYPE html>
 				<tr>
 					<td>.</td>
 					<td>{{.Type}}</td>
-					<td><a href="{{.LinkedTo}}">{{.LinkedTo}}</a></td>
+					<td>{{.LinkedTo}}</td>
 					<td>{{.Bytes}} ({{.BytesReadable}})</td>
-					<td>{{.FullPath}}</td>
 					<td>{{.LastUpdate}}</td>
 					<td>{{.TotalChildrenCount}}</td>
 				</tr>!!
+				<tr>
+					<td><a href="..">..</a></td>
+					<td>DIRECTORY</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>!!
 				{{range .DirectChildren}}
 				<tr>
-					<td><a href="{{.FullPath}}">{{.Name}}</a></td>
+					<td><a href="{{or .LinkedTo .FullPath}}">{{.Name}}</a></td>
 					<td>{{.Type}}</td>
-					<td><a href="{{.LinkedTo}}">{{.LinkedTo}}</a></td>
+					<td>{{.LinkedTo}}</td>
 					<td>{{.Bytes}} ({{.BytesReadable}})</td>
-					<td>{{.FullPath}}</td>
 					<td>{{.LastUpdate}}</td>
 					<td>{{.TotalChildrenCount}}</td>
 				</tr>!!
