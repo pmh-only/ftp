@@ -16,20 +16,23 @@ iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
 
 parse_bytes() {
     local value="$1"
+    local unit x
     
     # Remove parenthetical content
     value="${value%(*}"
     
-    # Extract number and unit
-    if [[ $value =~ ^([0-9.]+)G ]]; then
-        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024 * 1024 * 1024}'
-    elif [[ $value =~ ^([0-9.]+)M ]]; then
-        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024 * 1024}'
-    elif [[ $value =~ ^([0-9.]+)K ]]; then
-        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024}'
-    else
-        echo "$value"
-    fi
+    # Extract last character (unit)
+    unit="${value##*[0-9.]}"
+    
+    # Remove unit to get number
+    x="${value%$unit}"
+    
+    case "$unit" in
+        G) echo "$x" | awk '{printf "%.0f", $1 * 1024 * 1024 * 1024}' ;;
+        M) echo "$x" | awk '{printf "%.0f", $1 * 1024 * 1024}' ;;
+        K) echo "$x" | awk '{printf "%.0f", $1 * 1024}' ;;
+        *) echo "$value" ;;
+    esac
 }
 
 last_day="$(date +%Y%m%d)"
