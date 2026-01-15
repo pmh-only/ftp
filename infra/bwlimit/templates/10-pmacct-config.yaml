@@ -6,7 +6,8 @@ metadata:
 data:
   pmacctd.conf: |
     daemonize: false
-    pcap_interface: any
+    pcap_interface: enp0s6
+    pcap_filter: dst net 10.0.0.0/8 or dst net 172.16.0.0/12 or dst net 192.168.0.0/16
 
     plugins: nfprobe
     nfprobe_receiver: 127.0.0.1:2055
