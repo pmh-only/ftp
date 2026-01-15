@@ -42,6 +42,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Build and push Docker image (nfdump-ban)
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          context: bwlimit
+          file: bwlimit/Dockerfile.nfdump-ban
+          platforms: linux/arm64,linux/amd64
+          tags: ghcr.io/pmh-only/nfdumpban:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       - name: Build and push Docker image (pmacct)
         uses: docker/build-push-action@v5
         with:

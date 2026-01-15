@@ -1,0 +1,17 @@
+# Dockerfile.nfdump-ban
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      nfdump iptables ipset ca-certificates coreutils \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY ban.sh /usr/local/bin/ban.sh
+RUN chmod +x /usr/local/bin/ban.sh
+
+ENV NETFLOW_DIR=/data \
+    THRESHOLD_BYTES=5368709120 \
+    INTERVAL_SEC=10 \
+    IPSET_NAME=ban_egress_dst
+
+ENTRYPOINT ["/usr/local/bin/ban.sh"]
