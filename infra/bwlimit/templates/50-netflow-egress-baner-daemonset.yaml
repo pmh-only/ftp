@@ -28,7 +28,7 @@ spec:
             - name: NETFLOW_DIR
               value: /data
             - name: THRESHOLD_BYTES
-              value: "5368709120"
+              value: "21474836480"
             - name: INTERVAL_SEC
               value: "2"
             - name: IPSET_NAME
