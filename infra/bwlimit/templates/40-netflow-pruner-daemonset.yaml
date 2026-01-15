@@ -30,14 +30,14 @@ spec:
               set -eu
               apk add --no-cache coreutils findutils >/dev/null
               NETFLOW_DIR="/var/netflow"
-              echo "netflow-pruner started; dir=$NETFLOW_DIR"
+              echo "netflow-pruner started; dir=$NETFLOW_DIR (keeping only current hour + current files)"
               while true; do
-                TODAY="$(date +%Y%m%d)"
-                echo "[$(date -Is)] keep only: nfcapd.${TODAY}* and nfcapd.current*"
+                CUR_HOUR="$(date +%Y%m%d%H)"   # YYYYMMDDHH
+                echo "[$(date -Is)] keep only: nfcapd.${CUR_HOUR}* and nfcapd.current*"
                 find "$NETFLOW_DIR" -maxdepth 1 -type f \
                   -name 'nfcapd.*' \
                   ! -name 'nfcapd.current*' \
-                  ! -name "nfcapd.${TODAY}*" \
+                  ! -name "nfcapd.${CUR_HOUR}*" \
                   -print -delete || true
                 sleep 600
               done
