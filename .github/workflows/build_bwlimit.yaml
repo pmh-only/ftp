@@ -36,7 +36,7 @@ jobs:
         with:
           push: true
           context: bwlimit
-          file: Dockerfile.nfdump
+          file: bwlimit/Dockerfile.nfdump
           platforms: linux/arm64,linux/amd64
           tags: ghcr.io/pmh-only/nfdump:latest
           cache-from: type=gha
@@ -47,7 +47,7 @@ jobs:
         with:
           push: true
           context: bwlimit
-          file: Dockerfile.pmacct
+          file: bwlimit/Dockerfile.pmacct
           platforms: linux/arm64,linux/amd64
           tags: ghcr.io/pmh-only/pmacct:latest
           cache-from: type=gha
