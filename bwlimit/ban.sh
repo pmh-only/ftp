@@ -1,5 +1,5 @@
-#!/bin/sh
-set -eu
+#!/bin/bash
+set -euo pipefail
 
 NETFLOW_DIR="${NETFLOW_DIR:-/data}"
 THRESHOLD_BYTES="${THRESHOLD_BYTES:-5368709120}"
