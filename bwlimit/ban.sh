@@ -30,7 +30,7 @@ while true; do
   start="$(date +%Y/%m/%d.00:00)"
   end="$(date +%Y/%m/%d.%H:%M)"
 
-  out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip/bytes -n 0 -o csv 2>/dev/null | awk -F, '{if (NR>1 && NF>=10) print $5, $10}' || true)"
+  out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip -n 0 -o csv 2>/dev/null | awk -F, '{if (NR>1 && NF>=10) print $5, $10}' || true)"
   
   printf '%s\n' "$out" | {
     while read -r itemstr; do
