@@ -322,11 +322,3 @@ data:
     pasv_addr_resolve=NO
 
     background=NO
-
-    debug_ssl=NO
-    log_ftp_protocol=YES
-    vsftpd_log_file=/proc/1/fd/1
-
-    xferlog_enable=YES
-    xferlog_std_format=YES
-    xferlog_file=/proc/1/fd/1
