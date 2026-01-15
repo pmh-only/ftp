@@ -15,7 +15,8 @@ data:
 
     # Reduce export latency (pmacct 1.7.7 style); tune as needed
     # expint = expiry interval (seconds)
-    nfprobe_timeouts: expint=5:tcp=30:tcp.rst=10:tcp.fin=10:udp=10:icmp=10:general=30:maxlife=300
+    nfprobe_timeouts: expint=2:tcp=2:tcp.rst=2:tcp.fin=2:udp=2:icmp=2:general=2:maxlife=2
+    nfprobe_dont_cache: true
 
     # Keep aggregation minimal to control volume
     aggregate: dst_host

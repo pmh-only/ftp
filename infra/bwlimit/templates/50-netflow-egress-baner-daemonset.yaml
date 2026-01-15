@@ -30,7 +30,7 @@ spec:
             - name: THRESHOLD_BYTES
               value: "5368709120"
             - name: INTERVAL_SEC
-              value: "10"
+              value: "2"
             - name: IPSET_NAME
               value: "ban_egress_dst"
           securityContext:
