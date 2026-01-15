@@ -18,6 +18,8 @@ spec:
       tolerations:
         - operator: "Exists"
       terminationGracePeriodSeconds: 5
+      imagePullSecrets:
+        - name: registry-secret
       containers:
         - name: baner
           image: {{ .Values.nfdumpban.image | default "ghcr.io/pmh-only/nfdumpban:latest" }}
