@@ -104,8 +104,8 @@ data:
     use chroot = no
     max connections = 50
     timeout = 600
-    transfer logging = yes
-    log file = /dev/stdout
+    transfer logging = false
+    log file = /dev/null
 
     [arch]
       path = /data/static
