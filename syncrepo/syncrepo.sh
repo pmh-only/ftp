@@ -100,7 +100,7 @@ rsync_cmd \
 	--exclude='/pool/*-debug' \
 	--exclude='/*-debug' \
 	"${source_url}" \
-	"${target}" | tee "${REPORT_PATH:-"/dev/null"}"
+	"${target}"
 
 rc=$?
 
