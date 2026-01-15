@@ -14,6 +14,8 @@ iptables -C FORWARD -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || 
 iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
   iptables -I OUTPUT 1 -m set --match-set "$IPSET_NAME" dst -j DROP
 
+last_day="$(date +%Y%m%d)"
+
 echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${NETFLOW_DIR} ipset=${IPSET_NAME} (auto-unban at midnight)"
 
 while true; do
