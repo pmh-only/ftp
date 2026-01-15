@@ -44,6 +44,7 @@ while true; do
       if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
         if ! ipset test "$IPSET_NAME" "$ip" 2>/dev/null; then
           ipset add "$IPSET_NAME" "$ip" -exist
+          conntrack -D -d "$ip" 2>/dev/null || true
           echo "[ban] $(date -Is) added dst=${ip} bytes_today=${bytes}"
         fi
       fi
