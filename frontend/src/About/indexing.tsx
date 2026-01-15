@@ -8,15 +8,15 @@ function AboutIndexing() {
   return (
     <div
       id="indexing"
-      className="w-full mt-16 py-16 flex flex-col gap-8 items-center"
+      className="w-full mt-16 py-16 flex flex-col gap-16 items-center"
     >
-      <h2 className="font-display italic text-4xl font-bold text-center">
+      <h2 className="font-display italic text-4xl px-2 font-bold text-center">
         <span className="underline decoration-accent">Directory Listing,</span>{' '}
         modernized.
       </h2>
 
-      <div className="flex flex-col lg:flex-row px-6 max-w-6xl gap-4 items-stretch">
-        <div className="flex-1 flex flex-col items-start p-8">
+      <div className="flex flex-col-reverse lg:flex-row sm:px-6 max-w-6xl gap-4 items-stretch">
+        <div className="flex-1 flex flex-col items-start p-4 sm:p-8">
           <h3 className="text-xl font-bold">Need more speed?</h3>
           <p>
             Directory listings on ftp.io.kr are pre-generated during repository
@@ -61,7 +61,7 @@ function AboutIndexing() {
         </div>
       </div>
 
-      <div className="flex flex-col-reverse lg:flex-row px-6 max-w-6xl gap-4">
+      <div className="flex flex-col lg:flex-row sm:px-6 max-w-6xl gap-4">
         <div className="sm:hover-3d grow flex-1 min-w-1/2">
           <img
             className="w-full rounded-2xl object-cover"
@@ -77,7 +77,7 @@ function AboutIndexing() {
           <div></div>
           <div></div>
         </div>
-        <div className="flex-1 flex flex-col p-8">
+        <div className="flex-1 flex flex-col  p-4 sm:p-8">
           <h3 className="text-xl font-bold">Terminal browsers? No problem.</h3>
           <p>
             ftp.io.kr automatically detects your browsing environment and

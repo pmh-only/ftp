@@ -12,9 +12,9 @@ function AboutFeatures() {
         </h2>
 
         <div className="flex justify-center gap-6 flex-wrap">
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+          <div className="lg:hover-3d w-full lg:w-auto">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Performance.</span>
                   <span className="text-5xl opacity-25">
@@ -40,9 +40,9 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+          <div className="lg:hover-3d w-full lg:w-auto">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Reliable.</span>
                   <span className="text-5xl opacity-25">
@@ -69,9 +69,9 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+          <div className="lg:hover-3d w-full lg:w-auto">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Anonymous.</span>
                   <span className="text-5xl opacity-25">
@@ -99,9 +99,9 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+          <div className="lg:hover-3d w-full lg:w-auto">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Transparent.</span>
                   <span className="text-5xl opacity-25">
@@ -128,9 +128,9 @@ function AboutFeatures() {
             <div></div>
           </div>
 
-          <div className="sm:hover-3d">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+          <div className="lg:hover-3d w-full lg:w-auto">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>And... Short URL.</span>
                   <span className="text-5xl opacity-25">

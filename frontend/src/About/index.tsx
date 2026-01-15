@@ -43,7 +43,7 @@ function About({ className }: Props) {
   }, [])
 
   return (
-    <div className={className + ' pr-2 overflow-y-auto scroll-smooth'}>
+    <div className={className + ' pr-4 sm:pr-2 overflow-y-auto scroll-smooth'}>
       <div className="w-full h-full flex gap-2">
         <div className="flex-1 flex flex-col">
           <div

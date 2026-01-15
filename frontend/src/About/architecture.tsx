@@ -15,16 +15,16 @@ function AboutArchitecture() {
         <div className="flex flex-col items-center gap-6">
           <img
             src="/_assets/architecture.webp"
-            className="hidden lg:block w-full max-w-3xl object-contain"
+            className="hidden lg:block w-full max-w-3xl px-2 object-contain"
           />
           <img
             src="/_assets/architecture_single.webp"
-            className="block lg:hidden w-full object-contain"
+            className="block lg:hidden w-full px-2 object-contain"
           />
 
           <section className="flex gap-6 flex-wrap justify-center">
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Indexer.</span>
                   <span className="text-5xl opacity-25">
@@ -51,8 +51,8 @@ function AboutArchitecture() {
                 </div>
               </div>
             </div>
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>Web Server.</span>
                   <span className="text-5xl opacity-25">
@@ -79,8 +79,8 @@ function AboutArchitecture() {
                 </div>
               </div>
             </div>
-            <div className="card bg-base-300 w-82 shadow-sm">
-              <div className="card-body bg-base-200">
+            <div className="card w-full lg:w-82 shadow-sm">
+              <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
                   <span>SyncRepo.</span>
                   <span className="text-5xl opacity-25">
