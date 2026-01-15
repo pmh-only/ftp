@@ -8,11 +8,12 @@ IPSET_NAME="${IPSET_NAME:-ban_egress_dst}"
 
 ipset create "$IPSET_NAME" hash:ip -exist
 
-iptables -C FORWARD -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
-  iptables -I FORWARD 1 -m set --match-set "$IPSET_NAME" dst -j DROP
+iptables -C KUBE-ROUTER-FORWARD -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
+  iptables -I KUBE-ROUTER-FORWARD 1 -m set --match-set "$IPSET_NAME" dst -j DROP
 
-iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
-  iptables -I OUTPUT 1 -m set --match-set "$IPSET_NAME" dst -j DROP
+iptables -C KUBE-ROUTER-OUTPUT  -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
+  iptables -I KUBE-ROUTER-OUTPUT 1 -m set --match-set "$IPSET_NAME" dst -j DROP
+
 
 last_day="$(date +%Y%m%d)"
 
