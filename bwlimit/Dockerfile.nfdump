@@ -1,0 +1,9 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends nfdump ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+EXPOSE 2055/udp
+
+CMD ["nfcapd","-w","/data","-p","2055","-t","5","-z"]
