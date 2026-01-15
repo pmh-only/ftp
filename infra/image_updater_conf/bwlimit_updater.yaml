@@ -1,0 +1,30 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: bwlimit-updater
+spec:
+  namespace: argocd
+  commonUpdateSettings:
+    updateStrategy: "digest"
+  writeBackConfig:
+    method: argocd
+    # method: git:secret:argocd/repository-secret
+    gitConfig:
+      writeBackTarget: helmvalues
+  applicationRefs:
+    - namePattern: "bwlimit"
+      images:
+        - alias: "nfdump"
+          imageName: "ghcr.io/pmh-only/nfdump:latest"
+          manifestTargets:
+            helm:
+              tag: "nfdump.tag"
+              name: "nfdump.name"
+              spec: "nfdump.image"
+        - alias: "pmacct"
+          imageName: "ghcr.io/pmh-only/pmacct:latest"
+          manifestTargets:
+            helm:
+              tag: "pmacct.tag"
+              name: "pmacct.name"
+              spec: "pmacct.image"

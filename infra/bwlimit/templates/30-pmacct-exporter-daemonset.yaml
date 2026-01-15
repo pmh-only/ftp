@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: pmacct-exporter
+  namespace: bwlimit
+spec:
+  selector:
+    matchLabels:
+      app: pmacct-exporter
+  template:
+    metadata:
+      labels:
+        app: pmacct-exporter
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      terminationGracePeriodSeconds: 5
+      tolerations:
+        - operator: "Exists"
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: pmacctd
+          image: {{ .Values.nfdump.pmacct | default "ghcr.io/pmh-only/pmacct:latest" }}
+          imagePullPolicy: IfNotPresent
+          args: ["pmacctd", "-f", "/etc/pmacct/pmacctd.conf"]
+          volumeMounts:
+            - name: pmacct-config
+              mountPath: /etc/pmacct
+              readOnly: true
+          securityContext:
+            capabilities:
+              add: ["NET_RAW", "NET_ADMIN"]
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: pmacct-config
+          configMap:
+            name: pmacct-config
+            items:
+              - key: pmacctd.conf
+                path: pmacctd.conf

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: netflow-pruner
+  namespace: bwlimit
+spec:
+  selector:
+    matchLabels:
+      app: netflow-pruner
+  template:
+    metadata:
+      labels:
+        app: netflow-pruner
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 5
+      tolerations:
+        - operator: "Exists"
+      containers:
+        - name: pruner
+          image: alpine:3.19
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: false
+          command: ["/bin/sh", "-lc"]
+          args:
+            - |
+              set -eu
+              apk add --no-cache coreutils findutils >/dev/null
+              NETFLOW_DIR="/var/netflow"
+              echo "netflow-pruner started; dir=$NETFLOW_DIR"
+              while true; do
+                TODAY="$(date +%Y%m%d)"
+                echo "[$(date -Is)] keep only: nfcapd.${TODAY}* and nfcapd.current*"
+                find "$NETFLOW_DIR" -maxdepth 1 -type f \
+                  -name 'nfcapd.*' \
+                  ! -name 'nfcapd.current*' \
+                  ! -name "nfcapd.${TODAY}*" \
+                  -print -delete || true
+                sleep 600
+              done
+          volumeMounts:
+            - name: netflow
+              mountPath: /var/netflow
+      volumes:
+        - name: netflow
+          hostPath:
+            path: /var/netflow
+            type: DirectoryOrCreate

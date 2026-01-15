@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pmacct-config
+  namespace: bwlimit
+data:
+  pmacctd.conf: |
+    daemonize: false
+    pcap_interface: any
+
+    plugins: nfprobe
+    nfprobe_receiver: 127.0.0.1:2055
+    nfprobe_version: 10
+
+    # Reduce export latency (pmacct 1.7.7 style); tune as needed
+    # expint = expiry interval (seconds)
+    nfprobe_timeouts: expint=5:tcp=30:tcp.rst=10:tcp.fin=10:udp=10:icmp=10:general=30:maxlife=300
+
+    # Keep aggregation minimal to control volume
+    aggregate: dst_host

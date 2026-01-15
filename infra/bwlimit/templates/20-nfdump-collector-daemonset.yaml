@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nfdump-collector
+  namespace: bwlimit
+spec:
+  selector:
+    matchLabels:
+      app: nfdump-collector
+  template:
+    metadata:
+      labels:
+        app: nfdump-collector
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      terminationGracePeriodSeconds: 5
+      tolerations:
+        - operator: "Exists"
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+        - name: nfcapd
+          image: {{ .Values.nfdump.image | default "ghcr.io/pmh-only/nfdump:latest" }}
+          imagePullPolicy: IfNotPresent
+          args:
+            - nfcapd
+            - -w
+            - /data
+            - -p
+            - "2055"
+            - -t
+            - "5"
+            - -z
+          ports:
+            - name: ipfix
+              containerPort: 2055
+              hostPort: 2055
+              protocol: UDP
+          volumeMounts:
+            - name: netflow
+              mountPath: /data
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+      volumes:
+        - name: netflow
+          hostPath:
+            path: /var/netflow
+            type: DirectoryOrCreate
