@@ -14,27 +14,23 @@ iptables -C FORWARD -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || 
 iptables -C OUTPUT -m set --match-set "$IPSET_NAME" dst -j DROP 2>/dev/null || \
   iptables -I OUTPUT 1 -m set --match-set "$IPSET_NAME" dst -j DROP
 
-awk_prog='
-function to_bytes(v,   x,u,m) {
-  gsub(/\(.*/, "", v)
-  gsub(/ /, "", v)
-  u = substr(v, length(v), 1)
-  if (u ~ /[KMGTP]/) { x = substr(v, 1, length(v)-1) } else { x = v; u="" }
-  m = 1
-  if (u=="K") m=1024
-  else if (u=="M") m=1024*1024
-  else if (u=="G") m=1024*1024*1024
-  else if (u=="T") m=1024*1024*1024*1024
-  else if (u=="P") m=1024*1024*1024*1024*1024
-  return x*m
+parse_bytes() {
+    local value="$1"
+    
+    # Remove parenthetical content
+    value="${value%(*}"
+    
+    # Extract number and unit
+    if [[ $value =~ ^([0-9.]+)G ]]; then
+        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024 * 1024 * 1024}'
+    elif [[ $value =~ ^([0-9.]+)M ]]; then
+        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024 * 1024}'
+    elif [[ $value =~ ^([0-9.]+)K ]]; then
+        echo "${BASH_REMATCH[1]}" | awk '{printf "%.0f", $1 * 1024}'
+    else
+        echo "$value"
+    fi
 }
-NF>=8 {
-  dst=$5
-  b=$8
-  if ($9 ~ /^[KMGTP]\(/) b = b substr($9,1,1)
-  bytes = to_bytes(b)
-  print dst " " sprintf("%.0f", bytes)
-}'
 
 last_day="$(date +%Y%m%d)"
 
@@ -54,9 +50,23 @@ while true; do
 
   out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip/bytes -n 0 -q 2>/dev/null || true)"
 
-  printf '%s\n' "$out" | awk "$awk_prog" | while read -r ip bytes; do
-    [ -n "${ip:-}" ] || continue
-    [ -n "${bytes:-}" ] || continue
+  printf '%s\n' "$out" | while read -r line; do
+    [ -z "$line" ] && continue
+    
+    # Extract IP: the word that comes after "any"
+    ip=$(echo "$line" | grep -oP 'any\s+\K[0-9.]+' | head -1)
+    
+    # Extract bytes: find the field with format like "16.2 G" or "51.3 M"
+    bytes_raw=$(echo "$line" | grep -oP '[0-9]+\.[0-9]+\s+[GMK](?=[\(\s])')
+    
+    [ -z "$ip" ] && continue
+    [ -z "$bytes_raw" ] && continue
+    
+    # Remove space between number and unit
+    bytes_field="${bytes_raw// /}"
+    
+    # Parse to numeric
+    bytes=$(parse_bytes "$bytes_field")
 
     if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
       if ! ipset test "$IPSET_NAME" "$ip" 2>/dev/null; then
