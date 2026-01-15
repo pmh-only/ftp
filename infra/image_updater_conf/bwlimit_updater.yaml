@@ -7,8 +7,8 @@ spec:
   commonUpdateSettings:
     updateStrategy: "digest"
   writeBackConfig:
-    method: argocd
-    # method: git:secret:argocd/repository-secret
+    # method: argocd
+    method: git:secret:argocd/repository-secret
     gitConfig:
       writeBackTarget: helmvalues
   applicationRefs:
