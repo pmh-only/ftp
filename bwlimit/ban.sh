@@ -21,7 +21,6 @@ echo "[ban] start threshold=${THRESHOLD_BYTES}B interval=${INTERVAL_SEC}s dir=${
 while true; do
   day="$(date +%Y%m%d)"
   if [ "$day" != "$last_day" ]; then
-    # Midnight rollover (Asia/Seoul). Flush all bans.
     ipset flush "$IPSET_NAME" || true
     echo "[ban] $(date -Is) midnight rollover: flushed ipset=${IPSET_NAME}"
     last_day="$day"
@@ -30,41 +29,15 @@ while true; do
   start="$(date +%Y/%m/%d.00:00)"
   end="$(date +%Y/%m/%d.%H:%M)"
 
-  out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip/bytes -n 0 -q 2>/dev/null || true)"
-
-  printf '%s\n' "$out" | grep -oP 'any\s+\K[0-9.]+' | {
-    while read -r ip; do
+  out="$(nfdump -R "$NETFLOW_DIR" -t "${start}-${end}" -s dstip/bytes -n 0 -o csv 2>/dev/null | awk -F, '{if (NR>1 && NF>=10) print $5, $10}' || true)"
+  
+  printf '%s\n' "$out" | {
+    while read -r itemstr; do
+      items=($itemstr)
+      ip=${items[0]}
+      bytes=${items[1]}
+      
       [ -z "$ip" ] && continue
-      
-      bytes=$(printf '%s\n' "$out" | grep "any[[:space:]]*$ip" | awk '
-      {
-        for (i=1; i<=NF; i++) {
-          if ($i ~ /^[0-9]+\.[0-9]+[KMGTP]/) {
-            v = $i
-            gsub(/\(.*/, "", v)
-            gsub(/ /, "", v)
-            
-            u = substr(v, length(v), 1)
-            if (u ~ /[KMGTP]/) {
-              x = substr(v, 1, length(v)-1)
-            } else {
-              x = v
-              u = ""
-            }
-            
-            m = 1
-            if (u == "K") m = 1024
-            else if (u == "M") m = 1024 * 1024
-            else if (u == "G") m = 1024 * 1024 * 1024
-            else if (u == "T") m = 1024 * 1024 * 1024 * 1024
-            else if (u == "P") m = 1024 * 1024 * 1024 * 1024 * 1024
-            
-            printf "%.0f", x * m
-            break
-          }
-        }
-      }')
-      
       [ -z "$bytes" ] && continue
 
       if [ "$bytes" -ge "$THRESHOLD_BYTES" ]; then
