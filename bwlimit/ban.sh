@@ -87,7 +87,11 @@ update_minute_stats() {
     current_bytes["$ip"]=$bytes
   done < <(printf '%s\n' "$out")
 
+  # Temporarily disable unbound variable checking for array operations
+  set +u
   local num_ips=${#current_bytes[@]}
+  set -u
+  
   [ "$DEBUG" = "1" ] && echo "[debug] found $num_ips unique IPs in current interval"
 
   # Create/clear temp file
@@ -97,6 +101,7 @@ update_minute_stats() {
   if [ -f "$state_file" ]; then
     [ "$DEBUG" = "1" ] && echo "[debug] merging with existing state ($(wc -l < "$state_file") entries)"
     
+    set +u  # Disable for array checks
     while IFS=',' read -r ip cumulative_bytes; do
       [ -z "$ip" ] && continue
       [[ ! "$cumulative_bytes" =~ ^[0-9]+$ ]] && continue
@@ -109,14 +114,17 @@ update_minute_stats() {
       
       echo "${ip},${cumulative_bytes}"
     done < "$state_file" >> "${state_file}.tmp"
+    set -u  # Re-enable
   fi
 
   # Add any new IPs from current interval
   if [ $num_ips -gt 0 ]; then
+    set +u
     for ip in "${!current_bytes[@]}"; do
       [ "$DEBUG" = "1" ] && echo "[debug] new IP $ip: ${current_bytes[$ip]} bytes"
       echo "${ip},${current_bytes[$ip]}"
     done >> "${state_file}.tmp"
+    set -u
   fi
 
   mv "${state_file}.tmp" "$state_file"
