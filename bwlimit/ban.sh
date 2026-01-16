@@ -75,6 +75,7 @@ update_minute_stats() {
 
       [ -z "$ip" ] && continue
       [ -z "$bytes" ] && continue
+      [[ ! "$bytes" =~ ^[0-9]+$ ]] && continue
 
       current_bytes["$ip"]=$bytes
     done
