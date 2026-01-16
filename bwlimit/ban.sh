@@ -54,6 +54,10 @@ get_state_file() {
 update_minute_stats() {
   local state_file=$(get_state_file)
   
+  if ! find "$NETFLOW_DIR" -type f -name "*.nfcapd.*" ! -name "*current*" -print -quit | grep -q .; then
+    return 0
+  fi
+  
   local end="$(date +%Y/%m/%d.%H:%M)"
   local start="$(date -d "${INTERVAL_SEC} seconds ago" +%Y/%m/%d.%H:%M)"
 
