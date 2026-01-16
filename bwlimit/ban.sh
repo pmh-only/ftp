@@ -111,10 +111,12 @@ update_minute_stats() {
   fi
 
   # Add any new IPs from current interval
-  for ip in "${!current_bytes[@]}"; do
-    [ "$DEBUG" = "1" ] && echo "[debug] new IP $ip: ${current_bytes[$ip]} bytes"
-    echo "${ip},${current_bytes[$ip]}"
-  done >> "${state_file}.tmp"
+  if [ ${#current_bytes[@]} -gt 0 ]; then
+    for ip in "${!current_bytes[@]}"; do
+      [ "$DEBUG" = "1" ] && echo "[debug] new IP $ip: ${current_bytes[$ip]} bytes"
+      echo "${ip},${current_bytes[$ip]}"
+    done >> "${state_file}.tmp"
+  fi
 
   mv "${state_file}.tmp" "$state_file"
   
