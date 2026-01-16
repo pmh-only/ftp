@@ -2,6 +2,7 @@
 set -e
 
 SYNC_MODE=${SYNC_MODE:-"normal"}
+SYNC_OFFSET=${SYNC_OFFSET:-1067}
 INTERVAL=3600
 
 _term() { 
@@ -44,7 +45,7 @@ if [[ $SYNC_MODE == "normal" ]]; then
   sleep $(($INTERVAL - $(date +%s) % $INTERVAL))
 
   while true; do
-    sleep $((RANDOM % $INTERVAL))
+    sleep $SYNC_OFFSET
 
     /app/syncrepo.sh &
 
