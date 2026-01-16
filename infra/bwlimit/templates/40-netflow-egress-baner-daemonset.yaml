@@ -38,9 +38,16 @@ spec:
           volumeMounts:
             - name: netflow
               mountPath: /data
-              readOnly: true
+              readOnly: false
+            - name: netflow-ban
+              mountPath: /var/lib/netflow-ban
+              readOnly: false
       volumes:
         - name: netflow
           hostPath:
             path: /var/netflow
+            type: DirectoryOrCreate
+        - name: netflow-ban
+          hostPath:
+            path: /var/netflow-ban
             type: DirectoryOrCreate
