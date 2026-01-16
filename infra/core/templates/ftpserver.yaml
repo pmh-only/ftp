@@ -46,7 +46,7 @@ spec:
           - sh
           - -c
           - |
-            EXT_IP="$(curl myip.wtf/text)"
+            EXT_IP="$(wget myip.wtf/text -O - 2>/dev/null)"
             sed "s|__PASV_ADDRESS__|${EXT_IP}|g" /template/vsftpd.conf.template > /config/vsftpd.conf
           volumeMounts:
           - name: config
