@@ -77,8 +77,8 @@ update_minute_stats() {
     [ -z "$itemstr" ] && continue
     
     items=($itemstr)
-    ip=${items[0]}
-    bytes=${items[1]}
+    ip=${items[0]:-}
+    bytes=${items[1]:-}
 
     [ -z "$ip" ] && continue
     [ -z "$bytes" ] && continue
@@ -87,7 +87,8 @@ update_minute_stats() {
     current_bytes["$ip"]=$bytes
   done < <(printf '%s\n' "$out")
 
-  [ "$DEBUG" = "1" ] && echo "[debug] found ${#current_bytes[@]} unique IPs in current interval"
+  local num_ips=${#current_bytes[@]}
+  [ "$DEBUG" = "1" ] && echo "[debug] found $num_ips unique IPs in current interval"
 
   # Create/clear temp file
   > "${state_file}.tmp"
@@ -100,7 +101,7 @@ update_minute_stats() {
       [ -z "$ip" ] && continue
       [[ ! "$cumulative_bytes" =~ ^[0-9]+$ ]] && continue
       
-      if [ -v current_bytes["$ip"] ]; then
+      if [ $num_ips -gt 0 ] && [ -v current_bytes["$ip"] ]; then
         cumulative_bytes=$((cumulative_bytes + current_bytes["$ip"]))
         [ "$DEBUG" = "1" ] && echo "[debug] updated $ip: new total=$cumulative_bytes"
         unset current_bytes["$ip"]
@@ -111,7 +112,7 @@ update_minute_stats() {
   fi
 
   # Add any new IPs from current interval
-  if [ ${#current_bytes[@]} -gt 0 ]; then
+  if [ $num_ips -gt 0 ]; then
     for ip in "${!current_bytes[@]}"; do
       [ "$DEBUG" = "1" ] && echo "[debug] new IP $ip: ${current_bytes[$ip]} bytes"
       echo "${ip},${current_bytes[$ip]}"
