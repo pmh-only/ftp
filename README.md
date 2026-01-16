@@ -35,33 +35,33 @@
 ## Component Relations
 
 ```mermaid
-graph TB
+graph LR
     UpperTier[Upper-tier Mirrors]
     LowerTier[Lower-tier Mirrors]
     Users[Users / Browsers]
-    Storage[(Package Storage)]
+    Storage[(File Storage)]
     DNS[DNS Records]
 
     subgraph "Core Components"
-        syncrepo[syncrepo<br/>pet]
-        indexer[indexer<br/>cattle]
-        webserver[webserver<br/>cattle]
+        syncrepo[syncrepo]
+        indexer[indexer]
+        webserver[webserver]
     end
 
     subgraph "Access Protocols"
-        ftpserver[ftpserver<br/>pet]
-        rsyncserver[rsyncserver<br/>cattle]
+        ftpserver[ftpserver]
+        rsyncserver[rsyncserver]
     end
 
     subgraph "Frontend & Monitoring"
-        frontend[frontend<br/>React App]
-        statcat_hub[statcat hub<br/>pet]
-        statcat_spoke[statcat spoke<br/>cattle]
+        frontend[frontend]
+        statcat_hub[statcat hub]
+        statcat_spoke[statcat spoke]
     end
 
     subgraph "Infrastructure & Security"
-        healthz[healthz<br/>Cloudflare Worker]
-        bwlimit[bwlimit<br/>cattle]
+        healthz[healthz]
+        bwlimit[bwlimit]
         infra[infra<br/>GitOps]
     end
 
@@ -89,7 +89,7 @@ graph TB
     statcat_hub -->|SSE stats| frontend
 
     healthz -->|check /lastsync| webserver
-    healthz -->|update A/AAAA| DNS
+    healthz -->|update A/HTTPS| DNS
 
     bwlimit -->|monitor traffic| webserver
     bwlimit -->|block IPs| webserver
