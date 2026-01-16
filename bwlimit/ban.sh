@@ -159,13 +159,13 @@ while true; do
   if [ "$day" != "$last_day" ]; then
     ipset flush "$IPSET_NAME" || true
     cleanup_old_files
-    cleanup_netflow_files
     echo "[ban] $(date -Is) midnight rollover: flushed ipset=${IPSET_NAME}"
     last_day="$day"
   fi
 
   update_minute_stats
   check_and_ban
+  cleanup_netflow_files
 
   sleep "$INTERVAL_SEC"
 done
