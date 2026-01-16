@@ -106,6 +106,10 @@ graph LR
     DNS -->|route to healthy nodes| Users
 ```
 
+## How to deploy
+
+See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) file for more information.
+
 ## Rights
 
 &copy; 2025-2026. Minhyeok Park <pmh_only@pmh.codes>. \
