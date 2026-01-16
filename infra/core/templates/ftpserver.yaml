@@ -34,7 +34,7 @@ spec:
               mountPath: /data
               readOnly: true
         - name: render-vsftpd-conf
-          image: bitnami/kubectl:latest
+          image: alpine:latest
           securityContext:
             runAsUser: 0
           env:
@@ -46,11 +46,7 @@ spec:
           - sh
           - -c
           - |
-            EXT_IP="$(kubectl get node "${NODE_NAME}" -o jsonpath='{.status.addresses[?(@.type=="ExternalIP")].address}')"
-            if [ -z "$EXT_IP" ]; then
-              echo "No ExternalIP on node ${NODE_NAME}" >&2
-              exit 1
-            fi
+            EXT_IP="$(curl myip.wtf/text)"
             sed "s|__PASV_ADDRESS__|${EXT_IP}|g" /template/vsftpd.conf.template > /config/vsftpd.conf
           volumeMounts:
           - name: config
