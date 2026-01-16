@@ -106,7 +106,7 @@ update_minute_stats() {
       [ -z "$ip" ] && continue
       [[ ! "$cumulative_bytes" =~ ^[0-9]+$ ]] && continue
       
-      if [ $num_ips -gt 0 ] && [ -v current_bytes["$ip"] ]; then
+      if [ $num_ips -gt 0 ] && [[ -n "${current_bytes[$ip]+isset}" ]]; then
         cumulative_bytes=$((cumulative_bytes + current_bytes["$ip"]))
         [ "$DEBUG" = "1" ] && echo "[debug] updated $ip: new total=$cumulative_bytes"
         unset current_bytes["$ip"]
