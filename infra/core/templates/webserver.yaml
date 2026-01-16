@@ -22,6 +22,7 @@ spec:
         app: webserver
         node: {{ .Values.nodeName }}
     spec:
+      priorityClassName: webserver
       nodeName: {{ .Values.nodeName }}
       terminationGracePeriodSeconds: 30
       restartPolicy: Always

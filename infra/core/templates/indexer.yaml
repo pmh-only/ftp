@@ -17,6 +17,7 @@ spec:
         app: indexer
         node: {{ .Values.nodeName }}
     spec:
+      priorityClassName: other-core
       nodeName: {{ .Values.nodeName }}
       imagePullSecrets:
         - name: registry-secret

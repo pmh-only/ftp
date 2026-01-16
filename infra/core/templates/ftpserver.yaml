@@ -17,6 +17,7 @@ spec:
         app: ftpserver
         node: {{ .Values.nodeName }}
     spec:
+      priorityClassName: other-core
       serviceAccountName: ftpserver
       nodeName: {{ .Values.nodeName }}
       imagePullSecrets:

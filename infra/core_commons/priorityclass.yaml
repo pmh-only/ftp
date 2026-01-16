@@ -1,0 +1,23 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: webserver
+value: 100000
+globalDefault: false
+description: "This priority class should be used for webserver service pods only."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: other-core
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for core service pods only."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: normal-priority
+value: 0
+globalDefault: true
+description: "This priority class is the default value for all normal pods."

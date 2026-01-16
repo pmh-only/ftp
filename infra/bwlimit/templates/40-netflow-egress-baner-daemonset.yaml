@@ -35,6 +35,11 @@ spec:
               value: "ban_egress_dst"
           securityContext:
             privileged: true
+          resources:
+            requests:
+              cpu: 100m
+            limits:
+              cpu: 100m
           volumeMounts:
             - name: netflow
               mountPath: /data

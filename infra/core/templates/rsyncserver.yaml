@@ -22,6 +22,7 @@ spec:
         app: rsyncserver
         node: {{ .Values.nodeName }}
     spec:
+      priorityClassName: other-core
       nodeName: {{ .Values.nodeName }}
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
