@@ -33,8 +33,6 @@ spec:
               value: "30"
             - name: IPSET_NAME
               value: "ban_egress_dst"
-            - name: DEBUG
-              value: '1'
           securityContext:
             privileged: true
           volumeMounts:
