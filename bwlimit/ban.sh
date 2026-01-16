@@ -39,7 +39,7 @@ cleanup_old_files() {
 cleanup_netflow_files() {
   local cutoff_time=$(($(date +%s) - ${INTERVAL_SEC}))
   
-  find "$NETFLOW_DIR" -type f -name "*.nfcapd.*" ! -name "*current*" | while read -r file; do
+  find "$NETFLOW_DIR" -type f -name "nfcapd.*" ! -name "*current*" | while read -r file; do
     local file_mtime=$(stat -c %Y "$file" 2>/dev/null || echo 0)
     
     if [ "$file_mtime" -lt "$cutoff_time" ]; then
@@ -58,7 +58,7 @@ update_minute_stats() {
   local state_file=$(get_state_file)
   
   # Skip if no netflow files exist
-  if ! find "$NETFLOW_DIR" -type f -name "*.nfcapd.*" ! -name "*current*" -print -quit | grep -q .; then
+  if ! find "$NETFLOW_DIR" -type f -name "nfcapd.*" ! -name "*current*" -print -quit | grep -q .; then
     [ "$DEBUG" = "1" ] && echo "[debug] no netflow files found, skipping"
     return 0
   fi
