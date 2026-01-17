@@ -1,0 +1,6 @@
+{
+  "allNodes": "모든 노드",
+  "rx": "수신:",
+  "tx": "송신:",
+  "packetPerSecond": "패킷/초"
+}

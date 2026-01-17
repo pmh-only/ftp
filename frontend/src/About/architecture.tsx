@@ -1,6 +1,9 @@
 import { BookText, FolderSync, Globe } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
 
 function AboutArchitecture() {
+  const { t } = useTranslation(['architecture', 'common'])
+
   return (
     <div
       id="architecture"
@@ -8,8 +11,8 @@ function AboutArchitecture() {
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
-          Reliable{' '}
-          <span className="underline decoration-accent">Architectures</span>.
+          {t('title.reliable')}{' '}
+          <span className="underline decoration-accent">{t('title.architectures')}</span>.
         </h2>
 
         <div className="flex flex-col items-center gap-6">
@@ -26,19 +29,19 @@ function AboutArchitecture() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Indexer.</span>
+                  <span>{t('cards.indexer.title')}</span>
                   <span className="text-5xl opacity-25">
                     <BookText className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  The indexer is a Go-based service that scans synchronized
-                  repositories and pre-generates directory listings.
+                  {t('cards.indexer.description1')}
                 </p>
                 <p>
-                  It produces both <code>.html</code> and <code>.json</code>{' '}
-                  index files, enabling fast static delivery and programmatic
-                  access without per-request processing.
+                  <Trans i18nKey="cards.indexer.description2" ns="architecture">
+                    <code></code>
+                    <code></code>
+                  </Trans>
                 </p>
                 <div className="card-actions justify-end">
                   <a
@@ -46,7 +49,7 @@ function AboutArchitecture() {
                     target="_blank"
                     className="btn btn-accent"
                   >
-                    Show Source
+                    {t('common:buttons.showSource')}
                   </a>
                 </div>
               </div>
@@ -54,19 +57,18 @@ function AboutArchitecture() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Web Server.</span>
+                  <span>{t('cards.webServer.title')}</span>
                   <span className="text-5xl opacity-25">
                     <Globe className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  The web server is powered by <strong>nginx</strong> and serves
-                  package files, pre-generated indexes, and frontend assets.
+                  <Trans i18nKey="cards.webServer.description1" ns="architecture">
+                    <strong></strong>
+                  </Trans>
                 </p>
                 <p>
-                  By serving static content directly, it delivers high
-                  performance and consistent response times, even for very large
-                  directories.
+                  {t('cards.webServer.description2')}
                 </p>
                 <div className="card-actions justify-end">
                   <a
@@ -74,7 +76,7 @@ function AboutArchitecture() {
                     target="_blank"
                     className="btn btn-accent"
                   >
-                    Show Source
+                    {t('common:buttons.showSource')}
                   </a>
                 </div>
               </div>
@@ -82,19 +84,16 @@ function AboutArchitecture() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>SyncRepo.</span>
+                  <span>{t('cards.syncRepo.title')}</span>
                   <span className="text-5xl opacity-25">
                     <FolderSync className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  SyncRepo is a shell-based synchronization process that mirrors
-                  upstream repositories to each Kubernetes node.
+                  {t('cards.syncRepo.description1')}
                 </p>
                 <p>
-                  After syncing completes, it automatically triggers the indexer
-                  to regenerate directory listings, ensuring content stays up to
-                  date.
+                  {t('cards.syncRepo.description2')}
                 </p>
                 <div className="card-actions justify-end">
                   <a
@@ -102,7 +101,7 @@ function AboutArchitecture() {
                     target="_blank"
                     className="btn btn-accent"
                   >
-                    Show Source
+                    {t('common:buttons.showSource')}
                   </a>
                 </div>
               </div>

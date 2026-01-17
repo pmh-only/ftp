@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "the": "The",
+    "qualities": {
+      "brightlyShining": "Brightly shining",
+      "performanceReady": "Performance-ready",
+      "highlyAvailable": "Highly available",
+      "privacyFirst": "Privacy-first",
+      "fullyTransparent": "Fully transparent"
+    },
+    "mirrorForArchLinux": "Mirror for Arch Linux",
+    "description": {
+      "part1": "이 도메인,",
+      "part2": "은 \"단순함을 유지하라\"는 철학을 따르는 경량이고 유연한 Linux® 배포판인",
+      "part3": "를 위한 빠르고 안정적인 패키지 미러를 제공합니다."
+    }
+  },
+  "howToApply": {
+    "title": "패키지 미러 적용 방법:",
+    "comment1": "##",
+    "comment2": "## Arch Linux repository mirrorlist",
+    "comment3": "## Generated on ...",
+    "comment4": "##",
+    "comment5": "# HTTP 또는 HTTPS 중 하나를 사용하세요"
+  },
+  "scrollDown": {
+    "text": "아래로 스크롤하여",
+    "learnMore": "더 알아보기"
+  },
+  "metrics": {
+    "lastSync": "마지막 동기화:",
+    "lastUpdate": "마지막 업데이트:"
+  }
+}

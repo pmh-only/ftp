@@ -2,14 +2,18 @@ import { useAtomValue } from 'jotai'
 import About from '../About'
 import FileLister from '../FileLister'
 import Hero from '../Hero'
-import { tabState } from '../state'
+import LanguagePrompt from '../LanguagePrompt'
+import { languagePromptShownState, tabState } from '../state'
 import './style.css'
 
 function App() {
   const tab = useAtomValue(tabState)
+  const languagePromptShown = useAtomValue(languagePromptShownState)
 
   return (
     <div className="w-dvw h-dvh flex justify-center overflow-hidden">
+      {!languagePromptShown && <LanguagePrompt />}
+
       <div className="flex w-full max-w-400 flex-col p-6 pr-0 sm:pr-6 md:flex-row gap-6">
         <Hero className="" />
 

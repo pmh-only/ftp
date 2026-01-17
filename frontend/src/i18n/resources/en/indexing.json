@@ -1,0 +1,23 @@
+{
+  "title": {
+    "directoryListing": "Directory Listing,",
+    "modernized": "modernized."
+  },
+  "speedSection": {
+    "title": "Need more speed?",
+    "description": "Directory listings on ftp.io.kr are pre-generated during repository sync rather than per request, resulting in faster and more reliable page loads."
+  },
+  "domSection": {
+    "title": "Too many DOM nodes?",
+    "description": "ftp.io.kr uses React with list virtualization to efficiently render large directories without overwhelming the browser.",
+    "button": "Let's try large list."
+  },
+  "terminalSection": {
+    "title": "Terminal browsers? No problem.",
+    "description": "ftp.io.kr automatically detects your browsing environment and provides as much relevant information as possible. Terminal browsers such as lynx and w3m are fully supported."
+  },
+  "machineSection": {
+    "title": "Machine Readable.",
+    "description": "ftp.io.kr supports JSON output for indexing. Add <0>Accept: application/json</0> to the request header, which is what the React frontend uses."
+  }
+}

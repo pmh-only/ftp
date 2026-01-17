@@ -1,0 +1,14 @@
+{
+  "navigation": {
+    "item": "개",
+    "items": "개의",
+    "found": "항목을 찾았습니다!",
+    "redirectedFrom": "리디렉션 출처:"
+  },
+  "empty": "음... 비어있는 것 같네요",
+  "linkedTo": "{{path}}로 연결됨",
+  "directoryItems": "{{count}}개 항목",
+  "footer": {
+    "withLove": "사랑을 담아."
+  }
+}

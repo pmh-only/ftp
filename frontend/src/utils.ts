@@ -1,9 +1,11 @@
+import i18n from './i18n'
+
 const now = Date.now()
-const rtf = new Intl.RelativeTimeFormat('en')
 
 export function getRelative(
   date: string | number | undefined
 ): [string, string] {
+  const rtf = new Intl.RelativeTimeFormat(i18n.language || 'en')
   if (!date) {
     return ['', '']
   }

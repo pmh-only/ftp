@@ -1,0 +1,14 @@
+{
+  "navigation": {
+    "item": "item",
+    "items": "items",
+    "found": "found!",
+    "redirectedFrom": "Redirected from:"
+  },
+  "empty": "hmm... seems empty",
+  "linkedTo": "Linked to {{path}}",
+  "directoryItems": "{{count}} items",
+  "footer": {
+    "withLove": "with love."
+  }
+}

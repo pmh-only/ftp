@@ -1,0 +1,23 @@
+{
+  "title": {
+    "directoryListing": "디렉토리 목록,",
+    "modernized": "현대화되다."
+  },
+  "speedSection": {
+    "title": "더 빠른 속도가 필요하신가요?",
+    "description": "ftp.io.kr의 디렉토리 목록은 요청당 생성이 아닌 저장소 동기화 중에 미리 생성되어, 더 빠르고 안정적인 페이지 로딩을 제공합니다."
+  },
+  "domSection": {
+    "title": "DOM 노드가 너무 많나요?",
+    "description": "ftp.io.kr은 React와 리스트 가상화를 사용하여 브라우저에 부담을 주지 않고 대용량 디렉토리를 효율적으로 렌더링합니다.",
+    "button": "대용량 목록 체험하기."
+  },
+  "terminalSection": {
+    "title": "터미널 브라우저도 문제없습니다.",
+    "description": "ftp.io.kr은 사용자의 브라우징 환경을 자동으로 감지하고 가능한 한 많은 관련 정보를 제공합니다. lynx 및 w3m과 같은 터미널 브라우저를 완벽하게 지원합니다."
+  },
+  "machineSection": {
+    "title": "기계 판독 가능.",
+    "description": "ftp.io.kr은 인덱싱을 위한 JSON 출력을 지원합니다. 요청 헤더에 <0>Accept: application/json</0>을 추가하세요. 이것은 React 프론트엔드가 사용하는 방식입니다."
+  }
+}

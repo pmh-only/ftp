@@ -1,4 +1,6 @@
 import { useAtom } from 'jotai'
+import { useTranslation } from 'react-i18next'
+import LanguageSelector from '../LanguageSelector'
 import { tabState } from '../state'
 import './style.css'
 
@@ -8,6 +10,7 @@ interface Props {
 
 function Hero({ className }: Props) {
   const [tab, setTab] = useAtom(tabState)
+  const { t } = useTranslation(['hero', 'common'])
 
   return (
     <div
@@ -23,12 +26,12 @@ function Hero({ className }: Props) {
           </h1>
           {tab === 'ABOUT' && (
             <div className="text-xs self-end bg-accent text-accent-content px-2">
-              about mirror
+              {t('hero:tagline.aboutMirror')}
             </div>
           )}
           {tab === 'DIR_EXPLORER' && (
             <div className="text-xs self-end bg-accent text-accent-content px-2">
-              file explorer
+              {t('hero:tagline.fileExplorer')}
             </div>
           )}
         </div>
@@ -36,51 +39,51 @@ function Hero({ className }: Props) {
 
       <div className="hidden md:flex text-xs flex-col gap-6 flex-1 grow overflow-y-auto">
         <div>
-          <p>The</p>
-          <p>Archlinux</p>
-          <p>package mirror.</p>
+          <p>{t('hero:sidebar.the')}</p>
+          <p>{t('hero:sidebar.archlinux')}</p>
+          <p>{t('hero:sidebar.packageMirror')}</p>
         </div>
 
         <div>
-          <p>By</p>
+          <p>{t('hero:sidebar.by')}</p>
           <p>
             <a href="https://github.com/pmh-only" target="_blank">
-              Minhyeok Park.
+              {t('hero:sidebar.author')}
             </a>
           </p>
         </div>
 
         <div>
-          <p>In</p>
-          <p>Chuncheon-si,</p>
-          <p>Republic of Korea.</p>
+          <p>{t('hero:sidebar.in')}</p>
+          <p>{t('hero:sidebar.location1')}</p>
+          <p>{t('hero:sidebar.location2')}</p>
         </div>
 
         <div>
-          <p>Contact</p>
+          <p>{t('hero:sidebar.contact')}</p>
           <p>
             <a href="https://github.com/pmh-only/ftp/issues" target="_blank">
-              GitHub issue tracker.
+              {t('hero:sidebar.githubIssue')}
             </a>
           </p>
           <p>
             <a href="mailto:pmh_only@pmh.codes" target="_blank">
-              Direct email.
+              {t('hero:sidebar.directEmail')}
             </a>
           </p>
-          <p>Discord (@pmh_only)</p>
+          <p>{t('hero:sidebar.discord')}</p>
         </div>
 
         <div>
-          <p>More?</p>
+          <p>{t('hero:sidebar.more')}</p>
           <p>
             <a href="https://github.com/pmh-only/ftp" target="_blank">
-              Source Code for Infra.
+              {t('hero:sidebar.sourceCode')}
             </a>
           </p>
           <p>
             <a href="https://dash.ftp.io.kr" target="_blank">
-              Monitoring Dashboard.
+              {t('hero:sidebar.dashboard')}
             </a>
           </p>
           <p>
@@ -88,13 +91,16 @@ function Hero({ className }: Props) {
               href="https://argo.ftp.io.kr/applications/argocd/core-pmhmirror"
               target="_blank"
             >
-              Cont. Deployments.
+              {t('hero:sidebar.deployments')}
             </a>
           </p>
           <p>
             <a href="#credit" onClick={() => setTab('ABOUT')}>
-              Legal infos & policy.
+              {t('hero:sidebar.legal')}
             </a>
+          </p>
+          <p>
+            <LanguageSelector />
           </p>
         </div>
       </div>
@@ -106,14 +112,14 @@ function Hero({ className }: Props) {
             onClick={() => setTab('ABOUT')}
             className={'tab ' + (tab === 'ABOUT' && 'tab-active')}
           >
-            About
+            {t('common:tabs.about')}
           </button>
           <button
             role="tab"
             onClick={() => setTab('DIR_EXPLORER')}
             className={'tab ' + (tab === 'DIR_EXPLORER' && 'tab-active')}
           >
-            Files
+            {t('common:tabs.files')}
           </button>
         </div>
       </div>

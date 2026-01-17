@@ -1,0 +1,23 @@
+{
+  "title": {
+    "reliable": "Reliable",
+    "architectures": "Architectures"
+  },
+  "cards": {
+    "indexer": {
+      "title": "Indexer.",
+      "description1": "The indexer is a Go-based service that scans synchronized repositories and pre-generates directory listings.",
+      "description2": "It produces both <0>.html</0> and <1>.json</1> index files, enabling fast static delivery and programmatic access without per-request processing."
+    },
+    "webServer": {
+      "title": "Web Server.",
+      "description1": "The web server is powered by <0>nginx</0> and serves package files, pre-generated indexes, and frontend assets.",
+      "description2": "By serving static content directly, it delivers high performance and consistent response times, even for very large directories."
+    },
+    "syncRepo": {
+      "title": "SyncRepo.",
+      "description1": "SyncRepo is a shell-based synchronization process that mirrors upstream repositories to each Kubernetes node.",
+      "description2": "After syncing completes, it automatically triggers the indexer to regenerate directory listings, ensuring content stays up to date."
+    }
+  }
+}

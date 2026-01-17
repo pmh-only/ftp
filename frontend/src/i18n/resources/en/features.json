@@ -1,0 +1,29 @@
+{
+  "title": {
+    "the": "The",
+    "features": "Features."
+  },
+  "cards": {
+    "performance": {
+      "title": "Performance.",
+      "description": "ftp.io.kr delivers <0>4 Gbps</0> of stable egress bandwidth with no limits on parallel connections."
+    },
+    "reliable": {
+      "title": "Reliable.",
+      "description": "ftp.io.kr is designed for <0>99.99%</0> monthly availability and delivers <1>zero-downtime</1> rolling updates through Kubernetes deployment strategies."
+    },
+    "anonymous": {
+      "title": "Anonymous.",
+      "description": "ftp.io.kr <0>does not</0> collect any tracking data, cookies, or <1>IP addresses</1><2>[1]</2>. Privacy-conscious users can verify this directly in the nginx configuration."
+    },
+    "transparent": {
+      "title": "Transparent.",
+      "description": "ftp.io.kr's source code is <0>publicly available</0>, including all Kubernetes manifests, nginx configurations, indexer source code, and supporting shell scripts."
+    },
+    "shortUrl": {
+      "title": "And... Short URL.",
+      "description": "<0>ftp.io.kr</0> is short by design. With only Arch Linux packages hosted, access requires no path prefix."
+    }
+  },
+  "moreTeaser": "But wait, there's more..."
+}

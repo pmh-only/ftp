@@ -1,9 +1,11 @@
 import { useSetAtom } from 'jotai'
+import { Trans, useTranslation } from 'react-i18next'
 import { pathState, tabState } from '../state'
 
 function AboutIndexing() {
   const setTab = useSetAtom(tabState)
   const setPath = useSetAtom(pathState)
+  const { t } = useTranslation('indexing')
 
   return (
     <div
@@ -11,23 +13,20 @@ function AboutIndexing() {
       className="w-full mt-16 py-16 flex flex-col gap-16 items-center"
     >
       <h2 className="font-display italic text-4xl px-2 font-bold text-center">
-        <span className="underline decoration-accent">Directory Listing,</span>{' '}
-        modernized.
+        <span className="underline decoration-accent">{t('title.directoryListing')}</span>{' '}
+        {t('title.modernized')}
       </h2>
 
       <div className="flex flex-col-reverse lg:flex-row sm:px-6 max-w-6xl gap-4 items-stretch">
         <div className="flex-1 flex flex-col items-start p-4 sm:p-8">
-          <h3 className="text-xl font-bold">Need more speed?</h3>
+          <h3 className="text-xl font-bold">{t('speedSection.title')}</h3>
           <p>
-            Directory listings on ftp.io.kr are pre-generated during repository
-            sync rather than per request, resulting in faster and more reliable
-            page loads.
+            {t('speedSection.description')}
           </p>
 
-          <h3 className="mt-6 text-xl font-bold">Too many DOM nodes?</h3>
+          <h3 className="mt-6 text-xl font-bold">{t('domSection.title')}</h3>
           <p>
-            ftp.io.kr uses React with list virtualization to efficiently render
-            large directories without overwhelming the browser.
+            {t('domSection.description')}
           </p>
 
           <button
@@ -37,7 +36,7 @@ function AboutIndexing() {
             }}
             className="btn btn-accent mt-6 sm:block"
           >
-            Let's try large list.
+            {t('domSection.button')}
           </button>
         </div>
 
@@ -78,20 +77,16 @@ function AboutIndexing() {
           <div></div>
         </div>
         <div className="flex-1 flex flex-col  p-4 sm:p-8">
-          <h3 className="text-xl font-bold">Terminal browsers? No problem.</h3>
+          <h3 className="text-xl font-bold">{t('terminalSection.title')}</h3>
           <p>
-            ftp.io.kr automatically detects your browsing environment and
-            provides as much relevant information as possible. Terminal browsers
-            such as lynx and w3m are fully supported.
+            {t('terminalSection.description')}
           </p>
 
-          <h3 className="mt-6 text-xl font-bold">Machine Readable.</h3>
+          <h3 className="mt-6 text-xl font-bold">{t('machineSection.title')}</h3>
           <p>
-            ftp.io.kr supports JSON output for indexing. Add
-            <code className="font-mono px-1 text-secondary bg-base-100 mx-1 rounded select-text selection:bg-secondary-content">
-              Accept: application/json
-            </code>
-            to the request header, which is what the React frontend uses.
+            <Trans i18nKey="machineSection.description" ns="indexing">
+              <code className="font-mono px-1 text-secondary bg-base-100 mx-1 rounded select-text selection:bg-secondary-content"></code>
+            </Trans>
           </p>
         </div>
       </div>

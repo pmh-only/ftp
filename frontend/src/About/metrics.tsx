@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { humanFileSize } from '../utils'
 
 interface Metric {
@@ -31,6 +32,7 @@ function MetricCard({
   txPps,
   history
 }: MetricCardProps) {
+  const { t } = useTranslation('metrics')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -120,15 +122,15 @@ function MetricCard({
         <div className="flex flex-wrap justify-around text-sm">
           <div>
             <p>
-              rx: <b>{humanFileSize(rxBps)}</b>
+              {t('rx')} <b>{humanFileSize(rxBps)}</b>
             </p>
-            <p className="text-xs">{rxPps} packet/s</p>
+            <p className="text-xs">{rxPps} {t('packetPerSecond')}</p>
           </div>
           <div>
             <p>
-              tx: <b>{humanFileSize(txBps)}</b>
+              {t('tx')} <b>{humanFileSize(txBps)}</b>
             </p>
-            <p className="text-xs">{txPps} packet/s</p>
+            <p className="text-xs">{txPps} {t('packetPerSecond')}</p>
           </div>
         </div>
       </div>
@@ -137,6 +139,7 @@ function MetricCard({
 }
 
 function AboutMetrics() {
+  const { t } = useTranslation('metrics')
   const [metrics, setMetrics] = useState<Metric[]>([])
   const maxHistoryLength = 60
   const [history, setHistory] = useState<Map<string, HistoricalData>>(() => {
@@ -209,7 +212,7 @@ function AboutMetrics() {
   return (
     <div className="hidden xl:grid grid-cols-2 gap-2 mt-2">
       <MetricCard
-        label="All Nodes"
+        label={t('allNodes')}
         rxBps={totalRxBps}
         txBps={totalTxBps}
         rxPps={totalRxPps}

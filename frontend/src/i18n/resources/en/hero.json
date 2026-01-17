@@ -1,0 +1,25 @@
+{
+  "tagline": {
+    "aboutMirror": "about mirror",
+    "fileExplorer": "file explorer"
+  },
+  "sidebar": {
+    "the": "The",
+    "archlinux": "Archlinux",
+    "packageMirror": "package mirror.",
+    "by": "By",
+    "author": "Minhyeok Park.",
+    "in": "In",
+    "location1": "Chuncheon-si,",
+    "location2": "Republic of Korea.",
+    "contact": "Contact",
+    "githubIssue": "GitHub issue tracker.",
+    "directEmail": "Direct email.",
+    "discord": "Discord (@pmh_only)",
+    "more": "More?",
+    "sourceCode": "Source Code for Infra.",
+    "dashboard": "Monitoring Dashboard.",
+    "deployments": "Cont. Deployments.",
+    "legal": "Legal infos & policy."
+  }
+}

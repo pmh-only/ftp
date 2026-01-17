@@ -1,6 +1,7 @@
 import { useSetAtom } from 'jotai'
 import { ChevronsDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import FileLister from '../FileLister'
 import { tabState } from '../state'
 import { getRelative } from '../utils'
@@ -17,6 +18,7 @@ interface Props {
 
 function About({ className }: Props) {
   const setTab = useSetAtom(tabState)
+  const { t } = useTranslation(['about', 'common'])
   const [updateData, setUpdateData] = useState({
     lastSync: Date.now(),
     lastUpdate: Date.now()
@@ -52,31 +54,30 @@ function About({ className }: Props) {
           >
             <h2 className="text-2xl font-bold">
               <div>
-                The{' '}
+                {t('about:hero.the')}{' '}
                 <span className="text-rotate">
                   <span>
-                    <span>Brightly shining</span>
-                    <span>Performance-ready</span>
-                    <span>Highly available</span>
-                    <span>Privacy-first</span>
-                    <span>Fully transparent</span>
+                    <span>{t('about:hero.qualities.brightlyShining')}</span>
+                    <span>{t('about:hero.qualities.performanceReady')}</span>
+                    <span>{t('about:hero.qualities.highlyAvailable')}</span>
+                    <span>{t('about:hero.qualities.privacyFirst')}</span>
+                    <span>{t('about:hero.qualities.fullyTransparent')}</span>
                   </span>
                 </span>
               </div>
-              <div>Mirror for Arch Linux</div>
+              <div>{t('about:hero.mirrorForArchLinux')}</div>
             </h2>
 
             <p className="mt-3 max-w-lg">
-              This domain,{' '}
+              {t('about:hero.description.part1')}{' '}
               <a className="font-bold" href="#architecture">
                 ftp.io.kr
               </a>{' '}
-              provides a fast, reliable package mirror for{' '}
+              {t('about:hero.description.part2')}{' '}
               <a href="https://archlinux.org/" target="_blank">
                 Arch Linux
               </a>
-              , a lightweight and flexible Linux® distribution that follows the
-              “Keep It Simple” philosophy.
+              {t('about:hero.description.part3')}
             </p>
 
             <div className="flex gap-2 mt-3">
@@ -85,42 +86,42 @@ function About({ className }: Props) {
                 href="/iso/latest/archlinux-x86_64.iso"
                 className="btn btn-accent"
               >
-                Download Latest .iso
+                {t('common:buttons.downloadIso')}
               </a>
 
               <button
                 onClick={() => setTab('DIR_EXPLORER')}
                 className="btn hidden sm:block"
               >
-                Browse Files
+                {t('common:buttons.browseFiles')}
               </button>
             </div>
           </div>
 
           <div className="mockup-code w-full bg-base-300 select-text selection:bg-accent-content mt-2 hidden sm:block">
             <pre data-prefix="" className="text-accent font-bold">
-              <code>How to apply a package mirror:</code>
+              <code>{t('about:howToApply.title')}</code>
             </pre>
             <pre data-prefix="$">
               <code>sudo vi /etc/pacman.d/mirrorlist</code>
             </pre>
             <pre data-prefix="1" className="text-info">
-              <code>##</code>
+              <code>{t('about:howToApply.comment1')}</code>
             </pre>
             <pre data-prefix="2" className="text-info">
-              <code>## Arch Linux repository mirrorlist</code>
+              <code>{t('about:howToApply.comment2')}</code>
             </pre>
             <pre data-prefix="3" className="text-info">
-              <code>## Generated on ...</code>
+              <code>{t('about:howToApply.comment3')}</code>
             </pre>
             <pre data-prefix="4" className="text-info">
-              <code>##</code>
+              <code>{t('about:howToApply.comment4')}</code>
             </pre>
             <pre data-prefix="5">
               <code></code>
             </pre>
             <pre data-prefix="6" className="text-info">
-              <code># Use either HTTP or HTTPS</code>
+              <code>{t('about:howToApply.comment5')}</code>
             </pre>
             <pre data-prefix="7">
               <code>
@@ -143,7 +144,7 @@ function About({ className }: Props) {
           >
             <ChevronsDown />
             <p className="grow">
-              Scroll down to <b>learn more</b>
+              {t('about:scrollDown.text')} <b>{t('about:scrollDown.learnMore')}</b>
             </p>
             <ChevronsDown />
           </a>
@@ -156,10 +157,10 @@ function About({ className }: Props) {
 
           <div className="mt-2 flex text-sm gap-2">
             <p className="flex-1 font-light text-center bg-base-300 p-2 rounded-lg">
-              Last sync: <b className="font-semibold">{lastSync}</b>
+              {t('about:metrics.lastSync')} <b className="font-semibold">{lastSync}</b>
             </p>
             <p className="flex-1 font-light text-center bg-base-300 p-2 rounded-lg">
-              Last update: <b className="font-semibold">{lastUpdate}</b>
+              {t('about:metrics.lastUpdate')} <b className="font-semibold">{lastUpdate}</b>
             </p>
           </div>
         </div>

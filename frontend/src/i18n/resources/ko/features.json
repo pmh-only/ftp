@@ -1,0 +1,29 @@
+{
+  "title": {
+    "the": "",
+    "features": "주요 기능."
+  },
+  "cards": {
+    "performance": {
+      "title": "성능.",
+      "description": "ftp.io.kr은 병렬 연결 제한 없이 <0>4 Gbps</0>의 안정적인 송신 대역폭을 제공합니다."
+    },
+    "reliable": {
+      "title": "안정성.",
+      "description": "ftp.io.kr은 월간 <0>99.99%</0> 가용성을 목표로 설계되었으며, Kubernetes 배포 전략을 통해 <1>무중단</1> 롤링 업데이트를 제공합니다."
+    },
+    "anonymous": {
+      "title": "익명성.",
+      "description": "ftp.io.kr은 추적 데이터, 쿠키 또는 <1>IP 주소</1><2>[1]</2>를 수집하지 <0>않습니다</0>. 프라이버시를 중요시하는 사용자는 nginx 설정에서 이를 직접 확인할 수 있습니다."
+    },
+    "transparent": {
+      "title": "투명성.",
+      "description": "ftp.io.kr의 소스 코드는 모든 Kubernetes 매니페스트, nginx 설정, 인덱서 소스 코드 및 지원 셸 스크립트를 포함하여 <0>공개적으로 제공</0>됩니다."
+    },
+    "shortUrl": {
+      "title": "그리고... 짧은 URL.",
+      "description": "<0>ftp.io.kr</0>은 의도적으로 짧게 설계되었습니다. 오직 Arch Linux 패키지만 호스팅하므로, 경로 접두사가 필요하지 않습니다."
+    }
+  },
+  "moreTeaser": "하지만 잠깐, 더 있습니다..."
+}

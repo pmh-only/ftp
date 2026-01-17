@@ -1,0 +1,11 @@
+{
+  "tabs": {
+    "about": "About",
+    "files": "Files"
+  },
+  "buttons": {
+    "downloadIso": "Download Latest .iso",
+    "browseFiles": "Browse Files",
+    "showSource": "Show Source"
+  }
+}

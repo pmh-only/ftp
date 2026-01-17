@@ -1,0 +1,11 @@
+{
+  "tabs": {
+    "about": "소개",
+    "files": "파일"
+  },
+  "buttons": {
+    "downloadIso": "최신 .iso 다운로드",
+    "browseFiles": "파일 탐색",
+    "showSource": "소스 보기"
+  }
+}

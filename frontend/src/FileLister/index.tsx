@@ -7,6 +7,7 @@ import {
   LucideFolderSearch2
 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { List } from 'react-window'
 import FileListerItem from '../FileListItem'
@@ -19,6 +20,7 @@ interface Props {
 }
 
 function FileLister({ className }: Props) {
+  const { t } = useTranslation('filelister')
   const [items, setItems] = useState<FileModel | undefined>()
   const [path, setPath] = useAtom(pathState)
   const [linkedFrom, setLinkedFrom] = useState<string>('')
@@ -153,13 +155,12 @@ function FileLister({ className }: Props) {
             {!loading && <div className="status status-success "></div>}
           </div>
           <p className="grow flex-1">
-            <b>{items?.directChildren?.length ?? 0}</b> item
-            {items?.directChildren?.length === 1 ? '' : 's'} (
-            {items?.bytesReadable ?? '0 Bytes'}) found!
+            <b>{items?.directChildren?.length ?? 0}</b> {items?.directChildren?.length === 1 ? t('navigation.item') : t('navigation.items')} (
+            {items?.bytesReadable ?? '0 Bytes'}) {t('navigation.found')}
           </p>
           {linkedFrom.length > 0 ? (
             <p className="gap-2 hidden sm:flex">
-              Redirected from:
+              {t('navigation.redirectedFrom')}
               <a
                 className="flex items-center gap-1"
                 onClick={(ev) => {
@@ -183,7 +184,7 @@ function FileLister({ className }: Props) {
           <p className="text-2xl">
             <LucideFolderSearch2 className="w-[1em] h-[1em]" />
           </p>
-          <p>hmm... seems empty</p>
+          <p>{t('empty')}</p>
         </div>
       )}
 
@@ -243,7 +244,7 @@ function FileLister({ className }: Props) {
         </div>
         <p className="text-sm hidden sm:block">
           <a href="//youtu.be/sgNkCrAhTGc" target="_blank">
-            with love.
+            {t('footer.withLove')}
           </a>
         </p>
       </div>

@@ -1,0 +1,28 @@
+{
+  "title": {
+    "frequentlyAsked": "Frequently Asked",
+    "questions": "Questions."
+  },
+  "questions": {
+    "overEngineered": {
+      "question": "Okay, this thing is really over-engineered",
+      "answer": "I know — but most of this doesn't affect the basic mirror functionality. I was bored, so I built it this way."
+    },
+    "protocols": {
+      "question": "What protocols does this mirror support?",
+      "answer": "This mirror supports HTTP, HTTPS (HTTP/2 and HTTP/3 via QUIC), FTP, rsync, and rsync over SSL."
+    },
+    "formats": {
+      "question": "What directory listing formats are supported?",
+      "answer": "The server supports both HTML and JSON directory listings. You can control the output format using the <0>Accept</0> request header."
+    },
+    "curl": {
+      "question": "Why does <0>curl ftp.io.kr</0> show unexpected output?",
+      "answer": "Because the domain starts with <0>ftp</0>, curl attempts the FTP protocol first. Although the FTP protocol still works, if you want HTML output, explicitly prefix the URL with <1>http://</1> or <2>https://</2>."
+    },
+    "rsync": {
+      "question": "How do I use <0>rsync</0> with this mirror?",
+      "answer": "The mirror exposes an rsync module named <0>arch</0>. You can test it with: <1>rsync-ssl --list-only ftp.io.kr::arch</1>"
+    }
+  }
+}

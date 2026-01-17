@@ -6,6 +6,7 @@ import {
   Folder,
   FolderSymlink
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type { RowComponentProps } from 'react-window'
 import type { FileModel } from '../model'
 import { tabState } from '../state'
@@ -24,6 +25,7 @@ function FileListerItem({
   navigate: (path: string, linkedFrom?: string, base?: string) => void
 }>) {
   const tab = useAtomValue(tabState)
+  const { t } = useTranslation('filelister')
 
   const item = items.directChildren?.[index]
   if (!item) return <></>
@@ -64,7 +66,7 @@ function FileListerItem({
         <span
           className="overflow-hidden text-ellipsis"
           data-tooltip-id="tooltip"
-          data-tooltip-content={'Linked to ' + item.linkedTo}
+          data-tooltip-content={item.linkedTo ? t('linkedTo', { path: item.linkedTo }) : ''}
           data-tooltip-hidden={item.linkedTo === undefined}
           data-tooltip-place="right"
         >
@@ -72,7 +74,7 @@ function FileListerItem({
         </span>
 
         <span className="text-xs">
-          {item.type === 'DIRECTORY' && `${item.totalChildrenCount} items`}
+          {item.type === 'DIRECTORY' && t('directoryItems', { count: item.totalChildrenCount })}
         </span>
       </a>
 

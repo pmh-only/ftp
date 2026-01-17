@@ -1,6 +1,9 @@
 import { Gauge, HatGlasses, Laugh, Pizza, SearchCheck } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
 
 function AboutFeatures() {
+  const { t } = useTranslation('features')
+
   return (
     <div
       id="features"
@@ -8,7 +11,7 @@ function AboutFeatures() {
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
-          The <span className="underline decoration-accent">Features.</span>
+          {t('title.the')} <span className="underline decoration-accent">{t('title.features')}</span>
         </h2>
 
         <div className="flex justify-center gap-6 flex-wrap">
@@ -16,15 +19,15 @@ function AboutFeatures() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Performance.</span>
+                  <span>{t('cards.performance.title')}</span>
                   <span className="text-5xl opacity-25">
                     <Gauge className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr delivers <b className="text-accent">4 Gbps</b> of
-                  stable egress bandwidth with no limits on parallel
-                  connections.
+                  <Trans i18nKey="cards.performance.description" ns="features">
+                    <b className="text-accent"></b>
+                  </Trans>
                 </p>
               </div>
             </div>
@@ -44,16 +47,16 @@ function AboutFeatures() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Reliable.</span>
+                  <span>{t('cards.reliable.title')}</span>
                   <span className="text-5xl opacity-25">
                     <Laugh className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr is designed for{' '}
-                  <b className="text-accent">99.99%</b> monthly availability and
-                  delivers <b className="text-accent">zero-downtime</b> rolling
-                  updates through Kubernetes deployment strategies.
+                  <Trans i18nKey="cards.reliable.description" ns="features">
+                    <b className="text-accent"></b>
+                    <b className="text-accent"></b>
+                  </Trans>
                 </p>
               </div>
             </div>
@@ -73,17 +76,17 @@ function AboutFeatures() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Anonymous.</span>
+                  <span>{t('cards.anonymous.title')}</span>
                   <span className="text-5xl opacity-25">
                     <HatGlasses className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr <b className="text-accent">does not</b> collect any
-                  tracking data, cookies, or{' '}
-                  <b className="text-accent">IP addresses</b>
-                  <sup>[1]</sup>. Privacy-conscious users can verify this
-                  directly in the nginx configuration.
+                  <Trans i18nKey="cards.anonymous.description" ns="features">
+                    <b className="text-accent"></b>
+                    <b className="text-accent"></b>
+                    <sup></sup>
+                  </Trans>
                 </p>
               </div>
             </div>
@@ -103,16 +106,15 @@ function AboutFeatures() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>Transparent.</span>
+                  <span>{t('cards.transparent.title')}</span>
                   <span className="text-5xl opacity-25">
                     <SearchCheck className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  ftp.io.kr's source code is{' '}
-                  <b className="text-accent">publicly available</b>, including
-                  all Kubernetes manifests, nginx configurations, indexer source
-                  code, and supporting shell scripts.
+                  <Trans i18nKey="cards.transparent.description" ns="features">
+                    <b className="text-accent"></b>
+                  </Trans>
                 </p>
               </div>
             </div>
@@ -132,15 +134,15 @@ function AboutFeatures() {
             <div className="card w-full lg:w-82 shadow-sm">
               <div className="card-body bg-base-200 rounded-xl">
                 <h2 className="card-title flex justify-between items-end">
-                  <span>And... Short URL.</span>
+                  <span>{t('cards.shortUrl.title')}</span>
                   <span className="text-5xl opacity-25">
                     <Pizza className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
                 <p>
-                  <b className="text-accent">ftp.io.kr</b> is short by design.
-                  With only Arch Linux packages hosted, access requires no path
-                  prefix.
+                  <Trans i18nKey="cards.shortUrl.description" ns="features">
+                    <b className="text-accent"></b>
+                  </Trans>
                 </p>
               </div>
             </div>
@@ -158,7 +160,7 @@ function AboutFeatures() {
         </div>
 
         <h2 className="italic font-light text-center">
-          But wait, there's more...
+          {t('moreTeaser')}
         </h2>
       </div>
     </div>

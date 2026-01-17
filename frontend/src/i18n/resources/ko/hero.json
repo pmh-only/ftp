@@ -1,0 +1,25 @@
+{
+  "tagline": {
+    "aboutMirror": "미러 소개",
+    "fileExplorer": "파일 탐색기"
+  },
+  "sidebar": {
+    "the": "",
+    "archlinux": "아치 리눅스",
+    "packageMirror": "패키지 미러.",
+    "by": "운영:",
+    "author": "Minhyeok Park.",
+    "in": "위치:",
+    "location1": "강원도",
+    "location2": "춘천시, 대한민국.",
+    "contact": "문의",
+    "githubIssue": "GitHub 이슈 트래커.",
+    "directEmail": "이메일.",
+    "discord": "디스코드 (@pmh_only)",
+    "more": "더 보기",
+    "sourceCode": "인프라 소스 코드.",
+    "dashboard": "모니터링 대시보드.",
+    "deployments": "지속적 배포.",
+    "legal": "법적 고지 및 정책."
+  }
+}
