@@ -30,7 +30,7 @@ function LanguagePrompt() {
             onClick={() => handleLanguageSelect('ko')}
             className="btn btn-lg btn-accent"
           >
-            🇰🇷 한국어
+            🇰🇷 한국어 (기계번역)
           </button>
         </div>
       </div>
