@@ -66,7 +66,9 @@ function FileListerItem({
         <span
           className="overflow-hidden text-ellipsis"
           data-tooltip-id="tooltip"
-          data-tooltip-content={item.linkedTo ? t('linkedTo', { path: item.linkedTo }) : ''}
+          data-tooltip-content={
+            item.linkedTo ? t('linkedTo', { path: item.linkedTo }) : ''
+          }
           data-tooltip-hidden={item.linkedTo === undefined}
           data-tooltip-place="right"
         >
@@ -74,7 +76,8 @@ function FileListerItem({
         </span>
 
         <span className="text-xs">
-          {item.type === 'DIRECTORY' && t('directoryItems', { count: item.totalChildrenCount })}
+          {item.type === 'DIRECTORY' &&
+            t('directoryItems', { count: item.totalChildrenCount })}
         </span>
       </a>
 

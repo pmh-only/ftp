@@ -14,14 +14,14 @@ function LanguageSelector() {
     <div className="flex gap-2 items-center">
       <button
         onClick={() => handleLanguageChange('en')}
-        className={`text-xs ${currentLanguage === 'en' ? 'font-bold underline' : 'opacity-50 hover:opacity-100'}`}
+        className={`text-xs cursor-pointer ${currentLanguage === 'en' ? 'font-bold underline' : 'opacity-50 hover:opacity-100'}`}
       >
         EN
       </button>
       <span className="text-xs opacity-30">|</span>
       <button
         onClick={() => handleLanguageChange('ko')}
-        className={`text-xs ${currentLanguage === 'ko' ? 'font-bold underline' : 'opacity-50 hover:opacity-100'}`}
+        className={`text-xs cursor-pointer ${currentLanguage === 'ko' ? 'font-bold underline' : 'opacity-50 hover:opacity-100'}`}
       >
         KO
       </button>

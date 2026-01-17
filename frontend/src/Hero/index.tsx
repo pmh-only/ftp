@@ -99,10 +99,10 @@ function Hero({ className }: Props) {
               {t('hero:sidebar.legal')}
             </a>
           </p>
-          <p>
-            <LanguageSelector />
-          </p>
         </div>
+        <p>
+          <LanguageSelector />
+        </p>
       </div>
 
       <div className="flex md:w-full justify-center">

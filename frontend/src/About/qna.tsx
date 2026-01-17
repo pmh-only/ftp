@@ -11,7 +11,9 @@ function AboutQnA() {
       <div className="flex flex-col gap-8 items-center">
         <h2 className="font-display italic text-4xl font-bold text-center ">
           {t('title.frequentlyAsked')}{' '}
-          <span className="underline decoration-accent">{t('title.questions')}</span>
+          <span className="underline decoration-accent">
+            {t('title.questions')}
+          </span>
         </h2>
 
         <div className="w-full max-w-2xl">

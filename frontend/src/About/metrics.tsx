@@ -124,13 +124,17 @@ function MetricCard({
             <p>
               {t('rx')} <b>{humanFileSize(rxBps)}</b>
             </p>
-            <p className="text-xs">{rxPps} {t('packetPerSecond')}</p>
+            <p className="text-xs">
+              {rxPps} {t('packetPerSecond')}
+            </p>
           </div>
           <div>
             <p>
               {t('tx')} <b>{humanFileSize(txBps)}</b>
             </p>
-            <p className="text-xs">{txPps} {t('packetPerSecond')}</p>
+            <p className="text-xs">
+              {txPps} {t('packetPerSecond')}
+            </p>
           </div>
         </div>
       </div>

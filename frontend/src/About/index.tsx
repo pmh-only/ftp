@@ -144,7 +144,8 @@ function About({ className }: Props) {
           >
             <ChevronsDown />
             <p className="grow">
-              {t('about:scrollDown.text')} <b>{t('about:scrollDown.learnMore')}</b>
+              {t('about:scrollDown.text')}{' '}
+              <b>{t('about:scrollDown.learnMore')}</b>
             </p>
             <ChevronsDown />
           </a>
@@ -157,10 +158,12 @@ function About({ className }: Props) {
 
           <div className="mt-2 flex text-sm gap-2">
             <p className="flex-1 font-light text-center bg-base-300 p-2 rounded-lg">
-              {t('about:metrics.lastSync')} <b className="font-semibold">{lastSync}</b>
+              {t('about:metrics.lastSync')}{' '}
+              <b className="font-semibold">{lastSync}</b>
             </p>
             <p className="flex-1 font-light text-center bg-base-300 p-2 rounded-lg">
-              {t('about:metrics.lastUpdate')} <b className="font-semibold">{lastUpdate}</b>
+              {t('about:metrics.lastUpdate')}{' '}
+              <b className="font-semibold">{lastUpdate}</b>
             </p>
           </div>
         </div>

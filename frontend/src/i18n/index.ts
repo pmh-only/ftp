@@ -1,30 +1,30 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
 
 // Import English translations
-import enCommon from './resources/en/common.json';
-import enHero from './resources/en/hero.json';
-import enAbout from './resources/en/about.json';
-import enFeatures from './resources/en/features.json';
-import enArchitecture from './resources/en/architecture.json';
-import enIndexing from './resources/en/indexing.json';
-import enQna from './resources/en/qna.json';
-import enCredit from './resources/en/credit.json';
-import enFilelister from './resources/en/filelister.json';
-import enMetrics from './resources/en/metrics.json';
+import enCommon from './resources/en/common.json'
+import enHero from './resources/en/hero.json'
+import enAbout from './resources/en/about.json'
+import enFeatures from './resources/en/features.json'
+import enArchitecture from './resources/en/architecture.json'
+import enIndexing from './resources/en/indexing.json'
+import enQna from './resources/en/qna.json'
+import enCredit from './resources/en/credit.json'
+import enFilelister from './resources/en/filelister.json'
+import enMetrics from './resources/en/metrics.json'
 
 // Import Korean translations
-import koCommon from './resources/ko/common.json';
-import koHero from './resources/ko/hero.json';
-import koAbout from './resources/ko/about.json';
-import koFeatures from './resources/ko/features.json';
-import koArchitecture from './resources/ko/architecture.json';
-import koIndexing from './resources/ko/indexing.json';
-import koQna from './resources/ko/qna.json';
-import koCredit from './resources/ko/credit.json';
-import koFilelister from './resources/ko/filelister.json';
-import koMetrics from './resources/ko/metrics.json';
+import koCommon from './resources/ko/common.json'
+import koHero from './resources/ko/hero.json'
+import koAbout from './resources/ko/about.json'
+import koFeatures from './resources/ko/features.json'
+import koArchitecture from './resources/ko/architecture.json'
+import koIndexing from './resources/ko/indexing.json'
+import koQna from './resources/ko/qna.json'
+import koCredit from './resources/ko/credit.json'
+import koFilelister from './resources/ko/filelister.json'
+import koMetrics from './resources/ko/metrics.json'
 
 const resources = {
   en: {
@@ -37,7 +37,7 @@ const resources = {
     qna: enQna,
     credit: enCredit,
     filelister: enFilelister,
-    metrics: enMetrics,
+    metrics: enMetrics
   },
   ko: {
     common: koCommon,
@@ -49,9 +49,9 @@ const resources = {
     qna: koQna,
     credit: koCredit,
     filelister: koFilelister,
-    metrics: koMetrics,
-  },
-};
+    metrics: koMetrics
+  }
+}
 
 i18n
   .use(LanguageDetector)
@@ -60,21 +60,32 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'hero', 'about', 'features', 'architecture', 'indexing', 'qna', 'credit', 'filelister', 'metrics'],
+    ns: [
+      'common',
+      'hero',
+      'about',
+      'features',
+      'architecture',
+      'indexing',
+      'qna',
+      'credit',
+      'filelister',
+      'metrics'
+    ],
 
     detection: {
       order: ['localStorage', 'navigator'],
       lookupLocalStorage: 'ftp.io.kr.language',
-      caches: ['localStorage'],
+      caches: ['localStorage']
     },
 
     interpolation: {
-      escapeValue: false, // React already escapes values
+      escapeValue: false // React already escapes values
     },
 
     react: {
-      useSuspense: true,
-    },
-  });
+      useSuspense: true
+    }
+  })
 
-export default i18n;
+export default i18n

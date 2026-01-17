@@ -11,7 +11,10 @@ function AboutFeatures() {
     >
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
-          {t('title.the')} <span className="underline decoration-accent">{t('title.features')}</span>
+          {t('title.the')}{' '}
+          <span className="underline decoration-accent">
+            {t('title.features')}
+          </span>
         </h2>
 
         <div className="flex justify-center gap-6 flex-wrap">
@@ -159,9 +162,7 @@ function AboutFeatures() {
           </div>
         </div>
 
-        <h2 className="italic font-light text-center">
-          {t('moreTeaser')}
-        </h2>
+        <h2 className="italic font-light text-center">{t('moreTeaser')}</h2>
       </div>
     </div>
   )

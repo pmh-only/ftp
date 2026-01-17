@@ -12,7 +12,10 @@ function AboutArchitecture() {
       <div className="flex flex-col gap-8">
         <h2 className="font-display italic text-4xl font-bold text-center">
           {t('title.reliable')}{' '}
-          <span className="underline decoration-accent">{t('title.architectures')}</span>.
+          <span className="underline decoration-accent">
+            {t('title.architectures')}
+          </span>
+          .
         </h2>
 
         <div className="flex flex-col items-center gap-6">
@@ -34,9 +37,7 @@ function AboutArchitecture() {
                     <BookText className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
-                <p>
-                  {t('cards.indexer.description1')}
-                </p>
+                <p>{t('cards.indexer.description1')}</p>
                 <p>
                   <Trans i18nKey="cards.indexer.description2" ns="architecture">
                     <code></code>
@@ -63,13 +64,14 @@ function AboutArchitecture() {
                   </span>
                 </h2>
                 <p>
-                  <Trans i18nKey="cards.webServer.description1" ns="architecture">
+                  <Trans
+                    i18nKey="cards.webServer.description1"
+                    ns="architecture"
+                  >
                     <strong></strong>
                   </Trans>
                 </p>
-                <p>
-                  {t('cards.webServer.description2')}
-                </p>
+                <p>{t('cards.webServer.description2')}</p>
                 <div className="card-actions justify-end">
                   <a
                     href="https://github.com/pmh-only/ftp/tree/main/webserver"
@@ -89,12 +91,8 @@ function AboutArchitecture() {
                     <FolderSync className="w-[1em] h-[1em]" />
                   </span>
                 </h2>
-                <p>
-                  {t('cards.syncRepo.description1')}
-                </p>
-                <p>
-                  {t('cards.syncRepo.description2')}
-                </p>
+                <p>{t('cards.syncRepo.description1')}</p>
+                <p>{t('cards.syncRepo.description2')}</p>
                 <div className="card-actions justify-end">
                   <a
                     href="https://github.com/pmh-only/ftp/tree/main/syncrepo"
