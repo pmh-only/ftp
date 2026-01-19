@@ -82,6 +82,11 @@ function Hero({ className }: Props) {
             </a>
           </p>
           <p>
+            <a href="https://up.ftp.io.kr/" target="_blank">
+              {t('hero:sidebar.uptime')}
+            </a>
+          </p>
+          <p>
             <a href="https://dash.ftp.io.kr" target="_blank">
               {t('hero:sidebar.dashboard')}
             </a>
