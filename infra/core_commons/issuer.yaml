@@ -6,6 +6,7 @@ metadata:
 spec:
   acme:
     email: pmh_only@pmh.codes
+    profile: shortlived
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-issuer-account-key
