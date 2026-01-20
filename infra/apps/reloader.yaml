@@ -19,6 +19,7 @@ spec:
           reloadOnDelete: true
           syncAfterRestart: true
           autoReloadAll: true
+          ignoreNamespaces: net
   syncPolicy:
     automated:
       prune: true
