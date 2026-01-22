@@ -1,5 +1,5 @@
 nfdump:
-  image: ghcr.io/pmh-only/nfdump:latest@sha256:9b61d9385a22e5ebdc446a2540bfb10b33d55bb7b1523b2af4ea3a2785548e1d
+  image: ghcr.io/pmh-only/nfdump:latest@sha256:b3fe50d58dd520fcc5f92e7a3d8196ebc021cc1ad55df2a9220e7ba3460d3871
 nfdumpban:
   image: ghcr.io/pmh-only/nfdumpban:latest@sha256:257f2b5a746bf96c0996fbc38c47960bba358a20c412d4462fa80722db869914
 pmacct:
