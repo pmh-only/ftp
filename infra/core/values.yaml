@@ -9,3 +9,5 @@ ftpserver:
   image: ghcr.io/pmh-only/ftpserver:latest@sha256:11ea0ee4aace95ae88ab724902974b56ae6c999871ff69d6eb29f51afe1a1116
 rsyncserver:
   image: ghcr.io/pmh-only/rsyncserver:latest@sha256:cf56a95f4a2f5d4bc2c6de32c5eae60cec7a5d91567ed9c010b083004b34cd46
+ipv6edge:
+  image: ghcr.io/pmh-only/ipv6edge:latest

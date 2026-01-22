@@ -7,8 +7,8 @@ spec:
   commonUpdateSettings:
     updateStrategy: "digest"
   writeBackConfig:
-    method: argocd
-    # method: git:secret:argocd/repository-secret
+    # method: argocd
+    method: git:secret:argocd/repository-secret
     gitConfig:
       writeBackTarget: helmvalues
   applicationRefs:
@@ -49,3 +49,10 @@ spec:
               tag: "indexer.tag"
               name: "indexer.name"
               spec: "indexer.image"
+        - alias: "ipv6edge"
+          imageName: "ghcr.io/pmh-only/ipv6edge:latest"
+          manifestTargets:
+            helm:
+              tag: "ipv6edge.tag"
+              name: "ipv6edge.name"
+              spec: "ipv6edge.image"
