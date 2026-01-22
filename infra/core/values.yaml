@@ -1,8 +1,8 @@
 nodeName: example
 syncrepo:
-  image: ghcr.io/pmh-only/syncrepo:latest@sha256:cfca00992192bbcdaf40760a3fb079b4faec61daa383babacdc94020ed7ac63b
+  image: ghcr.io/pmh-only/syncrepo:latest@sha256:6e22da5028bb9d87210340eea515b5bdf2ae76a92084a69316373f8381437f81
 webserver:
-  image: ghcr.io/pmh-only/webserver:latest@sha256:31bdbe8d7e898ce18667bb3d8025b391f4c3291de33edaafabb202ca4d38b2c0
+  image: ghcr.io/pmh-only/webserver:latest@sha256:954d55d500cd57ee870103a48654d9975d0e9a188d0d85bf483d2208255f2b02
 indexer:
   image: ghcr.io/pmh-only/indexer:latest@sha256:fd79362775a8947d97fd62a8050c8ba4eecf84a3cbbe8844f722355b06b52e5d
 ftpserver:
@@ -10,4 +10,4 @@ ftpserver:
 rsyncserver:
   image: ghcr.io/pmh-only/rsyncserver:latest@sha256:cf56a95f4a2f5d4bc2c6de32c5eae60cec7a5d91567ed9c010b083004b34cd46
 ipv6edge:
-  image: ghcr.io/pmh-only/ipv6edge:latest
+  image: ghcr.io/pmh-only/ipv6edge:latest@sha256:25c4919fb24cd877d12666d0d35c7f3c521f669bdf8a670873913e1c682b791c
