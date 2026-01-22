@@ -7,7 +7,7 @@ data:
   pmacctd.conf: |
     daemonize: false
     pcap_interface: enp0s6
-    pcap_filter: outbound and ip and not (dst net 0.0.0.0/8 or dst net 10.0.0.0/8 or dst net 127.0.0.0/8 or dst net 169.254.0.0/16 or dst net 172.16.0.0/12 or dst net 192.168.0.0/16 or dst net 224.0.0.0/4 or dst net 100.64.0.0/10 or dst net 192.0.0.0/24 or dst net 192.0.2.0/24 or dst net 198.18.0.0/15 or dst net 198.51.100.0/24 or dst net 203.0.113.0/24 or dst net 240.0.0.0/4)
+    pcap_filter: outbound and (ip or ip6) and not ((ip and (dst net 0.0.0.0/8 or dst net 10.0.0.0/8 or dst net 127.0.0.0/8 or dst net 169.254.0.0/16 or dst net 172.16.0.0/12 or dst net 192.168.0.0/16 or dst net 224.0.0.0/4 or dst net 100.64.0.0/10 or dst net 192.0.0.0/24 or dst net 192.0.2.0/24 or dst net 198.18.0.0/15 or dst net 198.51.100.0/24 or dst net 203.0.113.0/24 or dst net 240.0.0.0/4)) or (ip6 and (dst net ::1/128 or dst net fe80::/10 or dst net fc00::/7 or dst net ff00::/8 or dst net 2001:db8::/32 or dst net 100::/64 or dst net 2002::/16)))
 
     plugins: nfprobe
     nfprobe_receiver: 127.0.0.1:2055
