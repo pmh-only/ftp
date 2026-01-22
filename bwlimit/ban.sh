@@ -37,8 +37,8 @@ ensure_rule_v6() {
 # Kube-router chains (IPv4 + IPv6)
 ensure_rule_v4 KUBE-ROUTER-FORWARD
 ensure_rule_v4 KUBE-ROUTER-OUTPUT
-ensure_rule_v6 KUBE-ROUTER-FORWARD
-ensure_rule_v6 KUBE-ROUTER-OUTPUT
+ensure_rule_v6 FORWARD
+ensure_rule_v6 OUTPUT
 
 last_day="$(date +%Y%m%d)"
 
