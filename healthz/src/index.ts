@@ -64,7 +64,7 @@ export default {
 
     const httpsRecordData = httpsRecord.result?.[0]
     if (typeof httpsRecordData?.id !== 'string') return
-    if (httpsRecordData.content !== `1 . alpn="h3,h2" ipv4hint="${acceptedIps.join(',')}"`) {
+    if (httpsRecordData.content !== `1 . alpn="h3,h2" ipv4hint="${acceptedIps.join(',')}" ipv6hint="${acceptedIp6s.join(',')}"`) {
       const httpsRecordResult = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records/${httpsRecordData.id}`, {
         method: 'PATCH',
         headers: {
