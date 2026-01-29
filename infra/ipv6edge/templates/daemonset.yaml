@@ -32,13 +32,15 @@ spec:
             sysctl -w net.ipv6.conf.all.forwarding=1
 
             nft -f - <<'EOF'
-            table inet nat {
+            table ip6 nat {
               chain prerouting {
                 type nat hook prerouting priority dstnat;
-                meta nfproto ipv6 tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat ip to 127.0.0.1
-                meta nfproto ipv6 udp dport 443 dnat ip to 127.0.0.1
+                tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat to ip 127.0.0.1
+                udp dport 443 dnat to ip 127.0.0.1
               }
+            }
 
+            table ip nat {
               chain postrouting {
                 type nat hook postrouting priority srcnat;
                 ip daddr 127.0.0.1 masquerade
