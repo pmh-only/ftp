@@ -1,0 +1,6 @@
+apiVersion: v2
+name: ipv6edge
+description: ipv4-ipv6 bridging components of ftp.io.kr
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
