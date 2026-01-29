@@ -51,7 +51,7 @@ spec:
               memory: 100Mi
             limits:
               cpu: 100m
-              memory: 200Mi
+              memory: 100Mi
           volumeMounts:
             - name: data
               mountPath: /data/static
