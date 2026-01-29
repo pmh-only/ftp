@@ -35,8 +35,8 @@ spec:
             table inet nat {
               chain prerouting {
                 type nat hook prerouting priority dstnat;
-                tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat to 127.0.0.1
-                udp dport 443 dnat to 127.0.0.1
+                meta nfproto ipv6 tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat ip to 127.0.0.1
+                meta nfproto ipv6 udp dport 443 dnat ip to 127.0.0.1
               }
 
               chain postrouting {
