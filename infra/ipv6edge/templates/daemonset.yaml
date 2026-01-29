@@ -36,15 +36,13 @@ spec:
               chain prerouting {
                 type nat hook prerouting priority dstnat;
 
-                tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat to 127.0.0.1
-                udp dport 443 dnat to 127.0.0.1
+                tcp dport { 80, 443, 20, 21, 873, 874, 30000-30100 } dnat to ::ffff:127.0.0.1
+                udp dport 443 dnat to ::ffff:127.0.0.1
               }
-            }
 
-            table ip nat {
               chain postrouting {
                 type nat hook postrouting priority srcnat;
-                ip daddr 127.0.0.1 masquerade
+                masquerade
               }
             }
             EOF
