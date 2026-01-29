@@ -48,9 +48,10 @@ spec:
                 command: ["sleep", "15"]
           resources:
             requests:
-              cpu: 500m
+              cpu: 200m
               memory: 100Mi
             limits:
+              cpu: 500m
               memory: 200Mi
           livenessProbe:
             exec:
