@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "ipv6edge-{{ .Values.nodeName }}"
+  namespace: core
+  labels:
+    app: ipv6edge 
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: ipv6edge 
+      node: {{ .Values.nodeName }}
+  template:
+    metadata:
+      labels:
+        app: ipv6edge 
+        node: {{ .Values.nodeName }}
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      priorityClassName: other-core
+      nodeName: {{ .Values.nodeName }}
+      imagePullSecrets:
+        - name: registry-secret
+      containers:
+      - name: ipv6edge 
+        image: {{ .Values.ipv6edge.image | default "ghcr.io/pmh-only/ipv6edge:latest" }}
+        resources:
+          requests:
+            cpu: 50m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 200Mi
