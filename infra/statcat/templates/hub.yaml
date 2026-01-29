@@ -26,9 +26,10 @@ spec:
                 command: ["sleep", "15"]
           resources:
             requests:
-              cpu: 200m
+              cpu: 50m
               memory: 100Mi
             limits:
+              cpu: 50m
               memory: 200Mi
 ---
 apiVersion: v1

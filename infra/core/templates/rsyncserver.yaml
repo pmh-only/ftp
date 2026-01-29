@@ -78,7 +78,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: "rsyncserver-{{ .Values.nodeName }}"
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 64
   metrics:
   - type: Resource
