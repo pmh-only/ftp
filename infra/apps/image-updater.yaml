@@ -11,7 +11,7 @@ spec:
   source:
     chart: argocd-image-updater
     helm:
-      values: |-
+      valuesObject:
         fullnameOverride: argocd-image-updater
         config:
           "log.level": debug
@@ -23,8 +23,13 @@ spec:
               prefix: ghcr.io
               api_url: https://ghcr.io
               credentials: pullsecret:argocd/registry-secret
-        extraArgs:
-          - --interval=30s
+          "webhook.enable": true
+        extraEnv:
+          - name: GHCR_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: repository-secret
+                key: webhookSecret
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: x
   syncPolicy:
