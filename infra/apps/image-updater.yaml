@@ -25,6 +25,8 @@ spec:
               credentials: pullsecret:argocd/registry-secret
           "webhook.enable": true
         extraEnv:
+          - name: IMAGE_UPDATER_INTERVAL
+            value: "0"
           - name: GHCR_WEBHOOK_SECRET
             valueFrom:
               secretKeyRef:
