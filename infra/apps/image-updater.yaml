@@ -24,14 +24,7 @@ spec:
               api_url: https://ghcr.io
               credentials: pullsecret:argocd/registry-secret
           "webhook.enable": true
-        extraEnv:
-          - name: IMAGE_UPDATER_INTERVAL
-            value: "0"
-          - name: GHCR_WEBHOOK_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: repository-secret
-                key: webhookSecret
+          interval: "0"
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: x
   syncPolicy:
