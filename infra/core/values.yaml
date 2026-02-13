@@ -2,7 +2,7 @@ nodeName: example
 syncrepo:
   image: ghcr.io/pmh-only/syncrepo:latest@sha256:6e22da5028bb9d87210340eea515b5bdf2ae76a92084a69316373f8381437f81
 webserver:
-  image: ghcr.io/pmh-only/webserver:latest@sha256:e39b677740f7b261dbae5b663cd070acb8e5a2649fd6ec1cc7942b39dd74fc96
+  image: ghcr.io/pmh-only/webserver:latest@sha256:8252d2be123b649a2502a27deb1e06aa71b1b2ea468b61f3d2cbe19db42276b8
 indexer:
   image: ghcr.io/pmh-only/indexer:latest@sha256:fd79362775a8947d97fd62a8050c8ba4eecf84a3cbbe8844f722355b06b52e5d
 ftpserver:
