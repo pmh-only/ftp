@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: candyjar
+  namespace: argocd
+spec:
+  destination:
+    namespace: candyjar
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: candyjar
+    helm:
+      valuesObject:
+        mode: hub-spoke
+        fullnameOverride: candyjar
+
+        spoke:
+          hostPort:
+            port: 22
+
+        config:
+          webUsername: pmh_only
+
+        existingSecret: "candyjar-secrets"
+
+        maxind:
+          existingSecret: "candyjar-secrets"
+
+        extraObjects:
+          - apiVersion: bitnami.com/v1alpha1
+            kind: SealedSecret
+            metadata:
+              name: candyjar-secrets
+              namespace: candyjar
+            spec:
+              template:
+                type: Opaque
+                metadata:
+                  name: candyjar-secrets
+                  namespace: candyjar
+              encryptedData:
+                HUB_TOKEN: AgAXByaLhhW9y45H7e9r+Jn2sQ/vhIDls/K+VbuOtp0cqjXlwxz8ipLGH9PSmnY7UzkZnpchEBnEflUhDgDE9HjsXuDO4l0Z4crj/Jge3lApOb7BsLdKa7OFnclndkch7w7CHmvx5dNjE1wozp4QGqemaULMD+f2jJwjUuItrJF5jWGFjgFBI6605xmD/1R6S9D8bRq6P7dXR8Jq29OKMJPMS/OLaYz4eqSodqRvNQELrJzOl4cWyYV+NdIqYTf2d110ojQd41Dwi0a1Z8TagFuz5CWpqhGnGZlm/ieB1EcEBSy+0JGnW5v11WqcZ/tnGUaglbvN+CioyzXbLQjGr81/DhQougKWg369b5olAZf6KBVhMRrPvbVR+RpgncdhbTiCqYZB7mxmYVrMvrqrafcsuicHCc5AOoRAxBvSCM0SgPxtLDIRjC4U2WeZHmLt8xnb2U/pV/j8mso8ystpSYVbYYx+28xQYAYE7p3OBU13NIe00sisF4LQSRcw7Vb7X0qW23JFoV7nk3P+wVfYOTGhoJxVVUPZx+dl+zteGlMHtvRHkIBxFLEAZottkaYDBfUA6xyBgpk9osArLM3Uv0vNwcidLxg4aI3AD0DcLAR/QgDxjDJMvhLwDzY22wY97zyqoVw3/UoqortnkxAmrC4AKvEwKhP05XQmnjBFHUywN1L7dEuMLDZcUsOdMKt7rIDNQTS+V3T241+Jp4WE02+F
+                MAXMIND_LICENSE_KEY: AgAuRV29ogL3LWUMkAVVVGVznfoTtm8CXVX0U8maHVB55FAODWQZuU7tUlcPfwYlcz7cOoStGaZGWyPY+uclZQejUd8VDw2KrOa03VG2R+gvef5y1N30s20XPNOf7jWhFOiJlUK915EeSHQhsHd0ONjA8PTfS1zAOa8Xv5qBCxItOSG+Ft8ySeV3FmdrkYFbFx9tjwS9JB6OZj+y197J8dXxdjiBezL+dBLXYi0C2+zCVD0S238nIPndd7AA6HJYav7CZm0NwhN0DuCvho9aGBxQ3Vh6V+rEyF+BRH/vwzYazMEvQQ5Q0ac3DBJ6MSeN9FeMmB+psaA+6nG8nbHHvuTcI0smzUTdmLsmFsxXNB24ndw538dDddxDihrSB+fZbXZFX6lsmpS/QszemddezlGBd8R5VCGWWabH6TBB4Kb05jYkORFNDos+l2ZDeWBsgeNuU0Z0ZOREK3jqHLdUyAD2r8gjS/rQttL05J6rKMCNaobcuDmOFQcbZVkCbhNgyBM/L7xkVhw9qgbmt9+Zhrd/RkOj2lXJLmuWqxJFgkjwcxhGgDrgkDb8ImnJKlrZc0fh4ZsALBKEcV/XPEwj98ug9bOHjNkYFAXOacoaGU3VpneQCDDz8gNVwgPC429AEHOK8bn94+ZVlMomJ+GlB8wqB5GtX21hkijtxzUMN3tX5uWbeJSH3YkZOj1OpG1uMbKVCwjBS4LSCumg0nBX20oDGgdr3XBkgc1pkixCDOsI7SesvlrHE8Ma
+                OPENAI_API_KEY: AgA7snmSGhZXsIkHoRszYJoqod10b7jA6bSI81ck6a3sUsXQFvW1R2clJlr20S4MZmWwNabnlkzP0qvEzFJ+22oCtcqlSdPOAzkoDKAtFJbGqUR5er2spm+X9Rr9RMhVM4eYwkasyjXpq4BqDber2QTbA1A7ryPp0wtqMiDmYmEsaPrmTqTqSlI+tHIzYGlkjHeQIYLocLLjadHyDJzPM4kAWVG7+eWMAkzF4Y82JwNRvR63rcOI1R/HKt4PyhzmrqmNYop8g8TDoph/WbsDP9oqD1XoPZwuhsyd82Kn1OdGy+NfWzICj1B8Giqyue5d5/FNTtjgFxW2ltqxr/e5xcLnLzvFyrYjPoyDN6vXkuLlCgmCl0eLUppb7gOMh4yLiR3FWoG8CrJhRTyKROU4Kl4vVarxEuEgOuGmh6pRNSGVAutZmcUwaeAJd7Y3pZ+wH+kzITSXJJ9kCTG81groGMSxFe8ETdpZ7aQ7l1lezafVJb3a5f4FFGzhH1KAEZ6et61ibYe6K226AXG/ATcTOWmCaFoNtREmtMpj+wn/WsMjaoW16Mub6cE5+YxBNDklGpj84Hi7z+cOCvXBFNQOp5KXU/r7chEZT4Sgyw+WutOyh2WHSUkwuZsj7WXWLfyjo6hUfwKx1fUQldnhcyo44FVnbKuQwcGlhr8GdHIWJu0R7/4ckKJmPKoiQ4fWYjsGYaizTYaEvpfy0hcMbRL/RNQKZKmn4kr/O6VTZjgZsWK2gI1XvLy2jNcaGaoRBG66Ap+NxgKBt1r6c9gPuM67+9AYxEHECWJlcK8oRFbYA5zMGj6ZIekSQPDNP8F0+gGrdgj45Bf2LQPYRmL/Yv4mldXKdCXppRTDfDtA5ncXbQv+XMTqlsl/u4S7BVUir2YUe5TDIj1Ki9Y4fRpzyvX6Q4y6FefoQA==
+                WEB_PASSWORD: AgAf91a3S92PyCDSl+2FqgVw3FIPQmIDlXb/ijNUynbYpXRLTsICMCz3K1f84aDr0/cDB71ooo6oKiclJB9UTLE90/oqhvi6SqAm4QIG5xPnlrKyGA7WoOvrw0CMhC48wFbHWHFeC7SwNzT0zvhIgtFkVyRC++M8/jouyEd3qxRHNkKtBCKNOOc6mmIzbmeVM+23t3M0IEprw+f2fKeZwXt/FZcJ/jM6XblFT2zKfyACYP3gdGI8ghT6e1Qkm+SPcf6hCkE/3cAqeAXbzjnBAWR4cgZzv0oFUI9jZi0zM92p8vpvGdRKM6XHRfJW6hKS/hCeUy9Kkrl8u+XID7SdF69qYyqxgD8woIe83eBaZl76Oy0jACIrC/pNPgWSBuVsOuQz9LRCxCRogT56gT3emTwJGmFeVC98cStEOmOoe97XV+1ZU76bDvNJG0HAFqLTcpLdFwwTo4zXdgmUnhiInMQLhaZBEr1OYCdo47FvfpaeawjQDOXYljs6728qDe871PED/7O73SYmybUIJtr3073thJyc8OhYEobvShEfedBb8O6kt5rntyf07H6MFf9M2vmAjRK2omdpw9LgSfjDLKWLwP7Oa2N/1khuH+jWHsPOi8o0h/NhxpSc+2RQe+l5F6G0aDN/6edXsCent86v/qrktw/BJIULC868Yr9XqRlMTpclqCGHKkNU2ovOgq7Eo8q1Nf1l/cinOFRQQQjw8g==
+    repoURL: https://pmh-only.github.io/candyjar
+    targetRevision: x
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
