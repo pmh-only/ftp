@@ -14,18 +14,21 @@ spec:
       valuesObject:
         mode: hub-spoke
         fullnameOverride: candyjar
+        existingSecret: "candyjar-secrets"
+
+        hub:
+          existingSecret: "candyjar-secrets"
 
         spoke:
+          existingSecret: "candyjar-secrets"
           hostPort:
             port: 22
 
-        config:
-          webUsername: pmh_only
-
-        existingSecret: "candyjar-secrets"
-
         maxind:
           existingSecret: "candyjar-secrets"
+
+        config:
+          webUsername: pmh_only
 
         extraObjects:
           - apiVersion: bitnami.com/v1alpha1
