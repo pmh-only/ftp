@@ -47,7 +47,7 @@ spec:
                 command: ["sleep", "15"]
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 300Mi
             limits:
               cpu: 100m

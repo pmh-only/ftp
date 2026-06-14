@@ -26,10 +26,10 @@ spec:
           image: {{ .Values.indexer.image | default "ghcr.io/pmh-only/indexer:latest" }}
           resources:
             requests:
-              cpu: 100m
+              cpu: 50m
               memory: 300Mi
             limits:
-              cpu: 200m
+              cpu: 100m
               memory: 300Mi
           ports:
             - containerPort: 8080
