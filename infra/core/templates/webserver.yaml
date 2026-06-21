@@ -46,13 +46,6 @@ spec:
             preStop:
               exec:
                 command: ["sleep", "15"]
-          resources:
-            requests:
-              cpu: 100m
-              memory: 500Mi
-            limits:
-              cpu: '1'
-              memory: 500Mi
           livenessProbe:
             exec:
               command:
