@@ -48,7 +48,7 @@ bwlimit=0
 # rsync://rsync.archlinux.org/ftp_tier1
 # Otherwise chose a tier 1 mirror from this list and use its rsync URL:
 # https://www.archlinux.org/mirrors/
-source_url="${SOURCE_URL:-"rsync://taipei.mirror.pkgbuild.com/packages/"}"
+source_url="${SOURCE_URL:-"rsync://rsync.archlinux.org/ftp_tier1"}"
 
 # Set to 0 if the mirror does not support TLS.
 tls=0
@@ -56,7 +56,7 @@ tls=0
 # An HTTP(S) URL pointing to the 'lastupdate' file on your chosen mirror.
 # If you are a tier 1 mirror use: https://rsync.archlinux.org/lastupdate
 # Otherwise use the HTTP(S) URL from your chosen mirror.
-lastupdate_url="${LASTUPDATE_URL:-"https://taipei.mirror.pkgbuild.com/lastupdate"}"
+lastupdate_url="${LASTUPDATE_URL:-"https://rsync.archlinux.org/lastupdate"}"
 
 #### END CONFIG
 
