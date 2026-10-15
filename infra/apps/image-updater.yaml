@@ -25,6 +25,8 @@ spec:
               credentials: pullsecret:argocd/registry-secret
           "webhook.enable": true
           interval: "0"
+        extraArg:
+          - '--disable-tls'
     repoURL: https://argoproj.github.io/argo-helm
     targetRevision: x
   syncPolicy:
