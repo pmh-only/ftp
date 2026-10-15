@@ -1,6 +1,6 @@
 nodeName: example
 syncrepo:
-  image: ghcr.io/pmh-only/syncrepo:latest@sha256:6e22da5028bb9d87210340eea515b5bdf2ae76a92084a69316373f8381437f81
+  image: ghcr.io/pmh-only/syncrepo:latest@sha256:9da928626742610b5ce982fd1ec33b2b3a886de88666c5ef6d2c346d2cb9ee8e
 webserver:
   image: ghcr.io/pmh-only/webserver:latest@sha256:f61e13d3b21dbdfafa549b85c742897195a9903ab662a8c920884327eab774e0
 indexer:
