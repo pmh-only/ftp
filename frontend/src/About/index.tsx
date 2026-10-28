@@ -1,16 +1,11 @@
 import { useSetAtom } from 'jotai'
-import { ChevronsDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import FileLister from '../FileLister'
 import { tabState } from '../state'
 import { getRelative } from '../utils'
-import AboutArchitecture from './architecture'
 import AboutCredit from './credit'
-import AboutFeatures from './features'
-import AboutIndexing from './indexing'
 import AboutMetrics from './metrics'
-import AboutQnA from './qna'
 
 interface Props {
   className?: string
@@ -70,9 +65,7 @@ function About({ className }: Props) {
 
             <p className="mt-3 max-w-lg">
               {t('about:hero.description.part1')}{' '}
-              <a className="font-bold" href="#architecture">
-                ftp.io.kr
-              </a>{' '}
+              <b>ftp.io.kr</b>{' '}
               {t('about:hero.description.part2')}{' '}
               <a href="https://archlinux.org/" target="_blank">
                 Arch Linux
@@ -137,18 +130,6 @@ function About({ className }: Props) {
               <code></code>
             </pre>
           </div>
-
-          <a
-            href="#features"
-            className="text-center text-sm mt-2 cursor-pointer btn btn-ghost font-normal no-underline flex"
-          >
-            <ChevronsDown />
-            <p className="grow">
-              {t('about:scrollDown.text')}{' '}
-              <b>{t('about:scrollDown.learnMore')}</b>
-            </p>
-            <ChevronsDown />
-          </a>
         </div>
 
         <div className="flex-1 lg:flex hidden flex-col">
@@ -169,10 +150,6 @@ function About({ className }: Props) {
         </div>
       </div>
 
-      <AboutFeatures />
-      <AboutIndexing />
-      <AboutArchitecture />
-      <AboutQnA />
       <AboutCredit />
     </div>
   )
